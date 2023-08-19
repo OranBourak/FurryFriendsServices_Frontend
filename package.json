@@ -1,0 +1,33 @@
+{
+  "name": "furryfriendsservices_frontend",
+  "version": "1.0.0",
+  "description": "A Website that provides services for pets",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "lint":"eslint src/*",
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "test": "mocha test/*.spec.js --color"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OranBourak/FurryFriendsServices_Frontend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OranBourak/FurryFriendsServices_Frontend/issues"
+  },
+  "homepage": "https://github.com/OranBourak/FurryFriendsServices_Frontend#readme",
+  "devDependencies": {
+    "@types/chai": "^4.3.5",
+    "@types/mocha": "^10.0.1",
+    "chai": "^4.3.7",
+    "eslint": "^8.47.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.33.2",
+    "mocha": "^10.2.0",
+    "nodemon": "^3.0.1"
+  }
+}
