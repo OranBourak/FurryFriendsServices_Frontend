@@ -1,10 +1,11 @@
 import './App.css';
-import TestNavbar from './components/TestNavbar.jsx';
+import Btn from './components/TypesExample.jsx';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
     <>
-      <TestNavbar />
+      <Btn />
       <h1>Hello World</h1>
     </>
   );
