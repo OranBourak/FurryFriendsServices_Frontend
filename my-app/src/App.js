@@ -1,14 +1,26 @@
 import './App.css';
-import Btn from './components/TypesExample.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import NavbarCustom from './components/NavbarCustom.jsx';
 
 function App() {
+  let component;
+
+  switch (window.location.pathname) {
+    case '/':
+      component = <h1>Home</h1>;
+      break;
+    case '/login':
+      component = <h1>Login</h1>;
+      break;
+    default:
+      component = <h1>404</h1>;
+      break;
+  }
   return (
     <>
-      <Btn />
-      <h1>Hello World</h1>
+      <NavbarCustom />
+      {component}
     </>
   );
-}
-
+};
 export default App;
