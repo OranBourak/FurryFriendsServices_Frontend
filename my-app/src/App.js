@@ -1,6 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NavbarCustom from './components/NavbarCustom.jsx';
+import LoginPage from './components/LoginPage.jsx';
 
 function App() {
   let component;
@@ -10,7 +11,7 @@ function App() {
       component = <h1>Home</h1>;
       break;
     case '/login':
-      component = <h1>Login</h1>;
+      component = <LoginPage />;
       break;
     default:
       component = <h1>404</h1>;
