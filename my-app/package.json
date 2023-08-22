@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint src/*.js* src/components/*.jsx --fix",
-    "test": "mocha test/*.spec.js --color"
+    "test": "mocha test/* --color"
   },
   "eslintConfig": {
     "extends": [
