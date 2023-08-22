@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import dogImage from "../images/loginbackground.jpg";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+
 
 /**
  * Login page component.
@@ -92,42 +90,41 @@ function LoginPage({onLogin}) {
                 backgroundImage: `url(${dogImage})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                position: "filled",
+                display: "flex", // Use flexbox
+                justifyContent: "center", // Horizontally center
+                // alignItems: "center", // Vertically center
+                position: "fixed",
                 top: 0,
                 left: 0,
                 width: "100%",
                 height: "100%",
-                overflow: "auto"}}
+                overflow: "auto",
+            }}
         >
-            <Form className="bg-dark text-light p-4" onSubmit={handleSubmit}>
-                {error && <div className="text-danger mb-3">{error}</div>}
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control name="email" type="email" placeholder="Enter email" onChange={handleEmail} required value={email} />
-                    <Form.Text className="text-muted">We`ll never share your email with anyone else.</Form.Text>
-                </Form.Group>
+            <div className="container">
+                <Form className="bg-dark text-light p-4" onSubmit={handleSubmit}>
+                    {error && <div className="text-danger mb-3">{error}</div>}
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control name="email" type="email" placeholder="Enter email" onChange={handleEmail} required value={email} />
+                        <Form.Text className="text-muted">We`ll never share your email with anyone else.</Form.Text>
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control name="password" type="password" placeholder="Password" onChange={handlePassword} required value={password} />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control name="password" type="password" placeholder="Password" onChange={handlePassword} required value={password} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                    </Form.Group>
 
-                <Container className="fluid">
-                    <Row>
-                        <Col>
-                            <Button variant="primary" type="submit" disabled={isFormIncomplete}>
-                            Login
-                            </Button>
-                        </Col>
-                        <Col><a href="/forgot-password">Forgot Password?</a></Col>
-                    </Row>
-                </Container>
+                    <Button variant="primary" type="submit" disabled={isFormIncomplete}>
+                                Login
+                    </Button>
+                    {" "}
+                    <Button variant="secondary">Forgot Password?</Button>
 
-            </Form>
-            <div className="text-center mt-2">
-                <img src={dogImage} alt="Furry Friends" className="img-fluid mb-4" />
+
+                </Form>
             </div>
         </div>
     );
