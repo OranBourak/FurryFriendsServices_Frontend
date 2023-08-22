@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import NavbarCustom from "./components/NavbarCustom.jsx";
 import LoginPage from "./components/LoginPage.jsx";
 import {useState} from "react";
-import Alert from "./components/Alert.jsx";
+import LoginAlert from "./components/LoginAlert.jsx";
 import Home from "./components/Home.jsx";
 
 /**
@@ -35,7 +35,7 @@ function App() {
         <>
             <NavbarCustom />
             {!loggedInUserName&& component}
-            {loggedInUserName&&<Alert name={loggedInUserName} />}
+            {loggedInUserName&&<LoginAlert name={loggedInUserName} />}
 
         </>
     );
