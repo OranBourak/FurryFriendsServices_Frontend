@@ -39,17 +39,15 @@ function LoginPage() {
     <Form className="bg-dark text-light p-4" onSubmit={authenticateUser}>
     <Form.Group className="mb-3" controlId="formBasicEmail">
     <Form.Label>Email address</Form.Label>
-    <Form.Control name="email" type="email" placeholder="Enter email" onChange={handleEmail} />
+    <Form.Control name="email" type="email" placeholder="Enter email" onChange={handleEmail} required value={email}/>
     <Form.Text className="text-muted">
               We'll never share your email with anyone else.
     </Form.Text>
     </Form.Group>
 
-    
-
     <Form.Group className="mb-3" controlId="formBasicPassword">
     <Form.Label>Password</Form.Label>
-    <Form.Control name="password" type="password" placeholder="Password" onChange={handlePassword} />
+    <Form.Control name="password" type="password" placeholder="Enter password" onChange={handlePassword} required value={password}/>
     </Form.Group>
     <Form.Group className="mb-3" controlId="formBasicCheckbox">
     <Form.Check type="checkbox" label="Check me out" />
