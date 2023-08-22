@@ -2,8 +2,10 @@ import React, {useState} from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import dogImage from "../images/homepagebackground.jpg";
-
+import dogImage from "../images/loginbackground.jpg";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 /**
  * Login page component.
@@ -85,7 +87,18 @@ function LoginPage({onLogin}) {
     const isFormIncomplete = !email.trim() || !password.trim(); // Check if either field is empty
 
     return (
-        <>
+        <div
+            style={{
+                backgroundImage: `url(${dogImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                position: "filled",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                overflow: "auto"}}
+        >
             <Form className="bg-dark text-light p-4" onSubmit={handleSubmit}>
                 {error && <div className="text-danger mb-3">{error}</div>}
                 <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -100,15 +113,23 @@ function LoginPage({onLogin}) {
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
                 </Form.Group>
-                <Button variant="primary" type="submit" disabled={isFormIncomplete}>
-                Login
-                </Button>
+
+                <Container className="fluid">
+                    <Row>
+                        <Col>
+                            <Button variant="primary" type="submit" disabled={isFormIncomplete}>
+                            Login
+                            </Button>
+                        </Col>
+                        <Col><a href="/forgot-password">Forgot Password?</a></Col>
+                    </Row>
+                </Container>
+
             </Form>
             <div className="text-center mt-2">
-                <a href="/forgot-password">Forgot Password?</a>
                 <img src={dogImage} alt="Furry Friends" className="img-fluid mb-4" />
             </div>
-        </>
+        </div>
     );
 }
 
