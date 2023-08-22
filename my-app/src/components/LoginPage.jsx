@@ -5,7 +5,7 @@ import React, { useState } from "react";
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [loginFlag, setLoginFlag] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -20,9 +20,15 @@ function LoginPage() {
       }),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data.message))
+      .then((data) => {handleLogIn(data.name)})
       .catch((error) => console.log("error: " + error));
   };
+
+  const handleLogIn = (name) =>{
+      if(name){
+        setLoginFlag(true);
+      }
+  }
 
   function handleEmail(event) {
     setEmail(event.target.value);
@@ -32,23 +38,6 @@ function LoginPage() {
     setPassword(event.target.value);
   }
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await fetch('/login', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Email' :
-  //       },
-  //       body: JSON.stringify({{e.target.email.name:e.target.email.value, e.target.password.name:e.target.password.value}}),
-  //     });
-
-  //     // Handle response from the server
-  //   } catch (error) {
-  //     console.error('Error submitting form:', error);
-  //   }
-  // };
   return (
     <Form className="bg-dark text-light p-4" onSubmit={handleSubmit}>
     <Form.Group className="mb-3" controlId="formBasicEmail">
