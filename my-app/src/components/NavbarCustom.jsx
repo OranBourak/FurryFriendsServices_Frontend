@@ -5,7 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 
 
 /**
- * NavBar component
+ * NavBar component for site navigation
  * @return {React.Component}
  */
 function NavbarCustom() {
