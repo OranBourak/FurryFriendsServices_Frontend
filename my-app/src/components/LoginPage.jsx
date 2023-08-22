@@ -3,12 +3,28 @@ import Form from 'react-bootstrap/Form';
 import React, { useState } from 'react';
 
 function LoginPage() {
-  const authenticateUser = (event) => {
-    console.log(email, password);
-    event.preventDefault();
-  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    fetch('http://localhost:5000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    
+    })
+    .then((response) => response.json())
+    .then((data) => console.log(data.message))
+    .catch((error) => console.log("error: " + error));
+  }
+  
 
   function handleEmail(event) {
     setEmail(event.target.value); 
@@ -36,7 +52,7 @@ function LoginPage() {
   //   }
   // };
   return (
-    <Form className="bg-dark text-light p-4" onSubmit={authenticateUser}>
+    <Form className="bg-dark text-light p-4" onSubmit={handleSubmit}>
     <Form.Group className="mb-3" controlId="formBasicEmail">
     <Form.Label>Email address</Form.Label>
     <Form.Control name="email" type="email" placeholder="Enter email" onChange={handleEmail} required value={email}/>
