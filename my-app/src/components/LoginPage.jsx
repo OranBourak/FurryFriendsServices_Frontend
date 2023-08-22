@@ -35,7 +35,7 @@ function LoginPage() {
 
     
 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
+    <Form.Group className="mb-3" controlId="formBasicPassword">
     <Form.Label>Password</Form.Label>
     <Form.Control name="password" type="password" placeholder="Password" />
     </Form.Group>
