@@ -1,5 +1,5 @@
 import React from "react";
-import dogImage from "../images/homepagebackground.jpg"; // Replace with your actual image file
+import dogImage from "../images/homepagebackground.jpg";
 
 const Home = () => {
     return (
