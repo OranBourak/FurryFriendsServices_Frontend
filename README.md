@@ -14,9 +14,9 @@ our intuitive and user-friendly interface has got you covered!
 
 
 # Prerequisites
-*Node.js
-*npm
-*React
+* Node.js
+* npm
+* React
 
 # Setup
 * Clone the frontend repository with git clone
