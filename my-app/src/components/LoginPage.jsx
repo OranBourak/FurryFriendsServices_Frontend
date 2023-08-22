@@ -2,10 +2,9 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import React, { useState } from "react";
 
-function LoginPage() {
+function LoginPage({onLogin}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginFlag, setLoginFlag] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -26,7 +25,8 @@ function LoginPage() {
 
   const handleLogIn = (name) =>{
       if(name){
-        setLoginFlag(true);
+        onLogin(name);
+        console.log(name);
       }
   }
 
