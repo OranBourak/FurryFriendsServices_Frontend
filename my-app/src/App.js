@@ -17,6 +17,7 @@ function App() {
 
     const handleLogin = (user) => {
         setLoggedInUsername(user);
+        console.log("Login");
     };
     let component;
 
