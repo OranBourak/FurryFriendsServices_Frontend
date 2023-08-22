@@ -7,8 +7,7 @@ import dogImage from "../images/loginbackground.jpg";
 
 /**
  * Login page component.
- * @param {Object} props - Component props.
- * @param {function} props.onLogin - Callback function to handle successful login.
+ * @param {function} onLogin - Callback function to handle successful login.
  * @return {React.Component} - The Login page component.
  */
 function LoginPage({onLogin}) {
@@ -93,21 +92,24 @@ function LoginPage({onLogin}) {
                 display: "flex", // Use flexbox
                 justifyContent: "center", // Horizontally center
                 // alignItems: "center", // Vertically center
-                position: "fixed",
+                position: "relative",
                 top: 0,
                 left: 0,
                 width: "100%",
-                height: "100%",
+                height: "100vh",
                 overflow: "auto",
             }}
         >
             <div className="container">
-                <Form className="bg-dark text-light p-4" onSubmit={handleSubmit}>
+                <Form className="text-light p-4" onSubmit={handleSubmit} style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.5)", // Background color with transparency
+                    padding: "20px",
+                    borderRadius: "10px"}}>
                     {error && <div className="text-danger mb-3">{error}</div>}
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control name="email" type="email" placeholder="Enter email" onChange={handleEmail} required value={email} />
-                        <Form.Text className="text-muted">We`ll never share your email with anyone else.</Form.Text>
+                        <Form.Text className="text-danger">We`ll never share your email with anyone else.</Form.Text>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicPassword">
