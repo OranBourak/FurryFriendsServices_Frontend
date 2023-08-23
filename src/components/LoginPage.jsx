@@ -1,7 +1,9 @@
+/* eslint-disable linebreak-style */
 import React, {useState} from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import axios from "axios";
 import dogImage from "../images/loginbackground.jpg";
 
 
@@ -13,45 +15,33 @@ import dogImage from "../images/loginbackground.jpg";
 function LoginPage({onLogin}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(null);
+    const [error, setError] = useState("");
 
     /**
      * Handles form submission.
      * @param {Event} event - The form submit event.
      */
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         if (!email.trim() || !password.trim()) {
             setError("Please fill in all fields.");
             return;
         }
-
-        setError(null); // Clear any previous errors
-
-        fetch("https://furryfriendsbackend.onrender.com/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+        setError(""); // Clear any previous errors
+        // for commit: https://furryfriendsbackend.onrender.com/login
+        // for testing: http://localhost:5000/login
+        try {
+            const response = await axios.post("https://furryfriendsbackend.onrender.com/login", {
                 email: email,
                 password: password,
-            }),
-        })
-            .then((response) => {
-                if (response.status === 401) {
-                    setError("Bad credentials. Please check your email and password.");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (!error) {
-                    handleLogIn(data.name);
-                }
-            })
-            .catch((error) => {
-                console.log("error: " + error);
             });
+            const data = response.data;
+            handleLogIn(data.name);
+            console.log("name: " + data.name);
+        } catch (error) {
+            console.log("error: " + error);
+            setError("Bad credentials. Please check your email and password.");
+        }
     };
 
     /**
@@ -59,6 +49,7 @@ function LoginPage({onLogin}) {
      * @param {string} name - The user's name.
      */
     const handleLogIn = (name) => {
+        console.log("in handle log in");
         if (name) {
             onLogin(name);
             console.log(name);

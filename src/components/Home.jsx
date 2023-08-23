@@ -1,10 +1,11 @@
+/* eslint-disable linebreak-style */
 import React from "react";
 import dogImage from "../images/homepagebackground.jpg";
 
 const Home = () => {
     return (
         <div className="container text-center mt-5">
-            <img src={dogImage} alt="Furry Friends" className="img-fluid mb-4" />
+            <img src={dogImage} alt="Furry Friends" width={1920} height={1281} loading="lazy" className="img-fluid mb-4" />
 
             <h1>Welcome to Furry Friends</h1>
             <p className="lead">
