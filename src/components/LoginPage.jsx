@@ -28,7 +28,7 @@ function LoginPage({onLogin}) {
 
         setError(null); // Clear any previous errors
 
-        fetch("http://localhost:5000/login", {
+        fetch("https://furryfriendsbackend.onrender.com/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
