@@ -11,15 +11,16 @@ import "./PhoneNumberEl.css";
  * @param {function} onInputValueChange - updates the remaining 7 digits of the phone number on change event
  * @param {String} comboBoxPlaceholder - placeholder for the prefix combobox.
  * @param {String} phoneInputPlaceholder - placeholder for the phone input field.
+ * @param {String} variant - the vriant of the combobox(determines the color).
  * @return {React.Component} - The Telephone input component.
  */
-function PhoneNumberEl({onSelectedValueChange, onInputValueChange, comboBoxPlaceholder, phoneInputPlaceholder}) {
+function PhoneNumberEl({onSelectedValueChange, onInputValueChange, comboBoxPlaceholder, phoneInputPlaceholder, cbVariant}) {
     const [phoneNumberError, setPhoneNumberError] = useState("");
     const [phone, setPhone] = useState(phoneInputPlaceholder);
     const prefixArr = ["052", "054", "050", "053", "055"];
 
     const handleInputValueChange = (event) => {
-        newPhoneNum = event.target.value;
+        const newPhoneNum = event.target.value;
         onInputValueChange(event);
         setPhone(newPhoneNum);
         if (!/^\d{7}$/.test(newPhoneNum)) {
@@ -32,7 +33,7 @@ function PhoneNumberEl({onSelectedValueChange, onInputValueChange, comboBoxPlace
     return (
         <>
             <div className="row-flex">
-                <ComboBoxDropdown onSelectedValueChange={onSelectedValueChange} options={prefixArr} placeholder={comboBoxPlaceholder} /> {/* Your combobox component */}
+                <ComboBoxDropdown onSelectedValueChange={onSelectedValueChange} options={prefixArr} placeholder={comboBoxPlaceholder} variant={cbVariant} id="phone-cmb" /> {/* Your combobox component */}
                 <div className="column-flex">
                     <Form.Control
                         className="telephone-input"
@@ -56,6 +57,7 @@ PhoneNumberEl.propTypes = {
     onInputValueChange: PropTypes.func.isRequired,
     comboBoxPlaceholder: PropTypes.string.isRequired,
     phoneInputPlaceholder: PropTypes.string.isRequired,
+    cbVariant: PropTypes.string.isRequired,
 };
 
 export default PhoneNumberEl;
