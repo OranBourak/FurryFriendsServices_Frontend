@@ -7,11 +7,13 @@ import "./PhoneNumberEl.css";
 
 /**
  * Telephone input component.
- * @param {any} onSelectedValueChange - updates the phone number prefix on change event
- * @param {any} onInputValueChange - updates the remaining 7 digits of the phone number on change event
+ * @param {function} onSelectedValueChange - updates the phone number prefix on change event
+ * @param {function} onInputValueChange - updates the remaining 7 digits of the phone number on change event
+ * @param {String} comboBoxPlaceholder - placeholder for the prefix combobox.
+ * @param {String} phoneInputPlaceholder - placeholder for the phone input field.
  * @return {React.Component} - The Telephone input component.
  */
-function PhoneNumberEl({onSelectedValueChange, onInputValueChange}) {
+function PhoneNumberEl({onSelectedValueChange, onInputValueChange, comboBoxPlaceholder, phoneInputPlaceholder}) {
     const [phoneNumberError, setPhoneNumberError] = useState("");
     const prefixArr = ["052", "054", "050", "053", "055"];
 
@@ -27,13 +29,13 @@ function PhoneNumberEl({onSelectedValueChange, onInputValueChange}) {
     return (
         <>
             <div className="row-flex">
-                <ComboBoxDropdown onSelectedValueChange={onSelectedValueChange} options={prefixArr} placeholder="Choose Phone Prefix" /> {/* Your combobox component */}
+                <ComboBoxDropdown onSelectedValueChange={onSelectedValueChange} options={prefixArr} placeholder={comboBoxPlaceholder} /> {/* Your combobox component */}
                 <div className="column-flex">
                     <Form.Control
                         className="telephone-input"
                         name="PhoneInputField"
                         type="number"
-                        placeholder="Phone Number"
+                        placeholder={phoneInputPlaceholder}
                         pattern="^\d{7}$"
                         title="Should contain exactly 7 digits"
                         onChange={handleInputValueChange}
@@ -48,6 +50,8 @@ function PhoneNumberEl({onSelectedValueChange, onInputValueChange}) {
 PhoneNumberEl.propTypes = {
     onSelectedValueChange: PropTypes.func.isRequired,
     onInputValueChange: PropTypes.func.isRequired,
+    comboBoxPlaceholder: PropTypes.string.isRequired,
+    phoneInputPlaceholder: PropTypes.string.isRequired,
 };
 
 export default PhoneNumberEl;
