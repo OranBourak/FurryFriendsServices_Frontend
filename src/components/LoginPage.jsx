@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import dogImage from "../images/loginbackground.jpg";
+import "./LoginPage.css";
 
 
 /**
@@ -31,7 +31,7 @@ function LoginPage({onLogin}) {
         // for commit: https://furryfriendsbackend.onrender.com/login
         // for testing: http://localhost:5000/login
         try {
-            const response = await axios.post("https://furryfriendsbackend.onrender.com/login", {
+            const response = await axios.post("http://localhost:5000/login", {
                 email: email,
                 password: password,
             });
@@ -75,48 +75,30 @@ function LoginPage({onLogin}) {
     const isFormIncomplete = !email.trim() || !password.trim(); // Check if either field is empty
 
     return (
-        <div
-            style={{
-                backgroundImage: `url(${dogImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                display: "flex", // Use flexbox
-                justifyContent: "center", // Horizontally center
-                // alignItems: "center", // Vertically center
-                position: "relative",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100vh",
-                overflow: "auto",
-            }}
-        >
+        <div className="login-page-container">
             <div className="container">
                 <Form className="text-light p-4" onSubmit={handleSubmit} style={{
                     backgroundColor: "rgba(0, 0, 0, 0.5)", // Background color with transparency
                     padding: "20px",
                     borderRadius: "10px"}}>
                     {error && <div className="text-danger mb-3">{error}</div>}
+                    {/* email input */}
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control name="email" type="email" placeholder="Enter email" onChange={handleEmail} required value={email} />
                         <Form.Text className="text-danger">We`ll never share your email with anyone else.</Form.Text>
                     </Form.Group>
-
+                    {/* password input */}
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
                         <Form.Control name="password" type="password" placeholder="Password" onChange={handlePassword} required value={password} />
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    </Form.Group>
-
+                    {/* login button */}
                     <Button variant="primary" type="submit" disabled={isFormIncomplete}>
-                                Login
+                        Login
                     </Button>
                     {" "}
                     <Button variant="secondary">Forgot Password?</Button>
-
-
                 </Form>
             </div>
         </div>
