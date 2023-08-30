@@ -1,0 +1,14 @@
+.row-flex {
+    display: flex;
+    flex-direction: row;
+}
+
+.column-flex {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+}
+
+.telephone-input{
+    margin: 15px 0;
+}
