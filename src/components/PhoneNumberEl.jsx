@@ -15,11 +15,14 @@ import "./PhoneNumberEl.css";
  */
 function PhoneNumberEl({onSelectedValueChange, onInputValueChange, comboBoxPlaceholder, phoneInputPlaceholder}) {
     const [phoneNumberError, setPhoneNumberError] = useState("");
+    const [phone, setPhone] = useState(phoneInputPlaceholder);
     const prefixArr = ["052", "054", "050", "053", "055"];
 
     const handleInputValueChange = (event) => {
+        newPhoneNum = event.target.value;
         onInputValueChange(event);
-        if (!/^\d{7}$/.test(event.target.value)) {
+        setPhone(newPhoneNum);
+        if (!/^\d{7}$/.test(newPhoneNum)) {
             setPhoneNumberError("Phone number should contain exactly 7 digits.");
         } else {
             setPhoneNumberError("");
@@ -39,6 +42,7 @@ function PhoneNumberEl({onSelectedValueChange, onInputValueChange, comboBoxPlace
                         pattern="^\d{7}$"
                         title="Should contain exactly 7 digits"
                         onChange={handleInputValueChange}
+                        value={phone}
                     />
                     <div className="text-danger">{phoneNumberError}</div>
                 </div>
