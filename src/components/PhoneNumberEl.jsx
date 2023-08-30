@@ -34,7 +34,7 @@ function PhoneNumberEl({onSelectedValueChange, onInputValueChange, comboBoxPlace
         <>
             <div className="row-flex">
                 <ComboBoxDropdown onSelectedValueChange={onSelectedValueChange} options={prefixArr} placeholder={comboBoxPlaceholder} variant={cbVariant} id="phone-cmb" /> {/* Your combobox component */}
-                <div className="column-flex">
+                <div className="column-flex ml">
                     <Form.Control
                         className="telephone-input"
                         name="PhoneInputField"
