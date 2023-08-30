@@ -12,7 +12,7 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
  * @param {function} onRegister - Callback function to handle successful registration.
  * @return {React.Component} - The Register page component.
  */
-function ComboBoxDropdown({onSelectedValueChange, options, placeholder}) {
+function ComboBoxDropdown({onSelectedValueChange, options, placeholder, variant, id}) {
     const [selectedValue, setSelectedValue] = useState(placeholder);
 
     const handleSelect = (eventKey, event) => {
@@ -25,7 +25,7 @@ function ComboBoxDropdown({onSelectedValueChange, options, placeholder}) {
     return (
         <Dropdown className="m-3" onSelect={handleSelect}>
             <InputGroup>
-                <Dropdown.Toggle variant="danger" id="dropdown-basic">
+                <Dropdown.Toggle variant={variant} id={id}>
                     {selectedValue}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
@@ -47,6 +47,8 @@ ComboBoxDropdown.propTypes = {
     onSelectedValueChange: PropTypes.func.isRequired,
     options: PropTypes.array.isRequired,
     placeholder: PropTypes.string.isRequired,
+    variant: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
 };
 
 export default ComboBoxDropdown;
