@@ -9,6 +9,7 @@ import {useState} from "react";
 import LoginAlert from "./components/LoginAlert.jsx";
 import Home from "./components/Home.jsx";
 import {Routes, Route, Navigate} from "react-router-dom";
+import SPProfilePage from "./components/SPProfilePage.jsx";
 
 /**
  * Pet Service application
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/login" element={<LoginPage onLogin={handleLogin}/>} />
                 <Route path="/login-alert" element={<LoginAlert name={loggedInUserName}/>} />
                 <Route path="/signup" element={<RegisterPage/>} />
+                <Route path="/profile" element={<SPProfilePage/>} />
             </Routes>
         </>
     );
