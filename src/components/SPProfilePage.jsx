@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import React, {useState} from "react";
 import {Container, Row, Col, Image, Form, Alert} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
