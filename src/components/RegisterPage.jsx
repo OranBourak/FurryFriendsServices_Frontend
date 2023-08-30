@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import "./LoginPage.css";
+import "./RegisterPage.css";
 import ComboBoxDropdown from "./ComboBox";
 import PhoneNumberEl from "./PhoneNumberEl";
 
@@ -163,45 +164,47 @@ function RegisterPage() {
                     borderRadius: "10px"}}>
                     {error && <div className="text-danger mb-3">{error}</div>}
                     {/* name input */}
-                    <Form.Group className="mb-3" controlId="registrationFormName">
+                    <Form.Group className="mb-3 m-3" controlId="registrationFormName">
                         <Form.Label>Name</Form.Label>
                         <Form.Control name="name" type="text" placeholder="Enter Your Name" pattern="[A-Za-z ]+" title="Only letters and spaces are allowed" onChange={handleName} required value={name} />
                     </Form.Group>
                     {/* email input */}
-                    <Form.Group className="mb-3" controlId="registrationFormEmail">
+                    <Form.Group className="mb-3 m-3" controlId="registrationFormEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control name="email" type="email" placeholder="Enter Email" pattern="[A-Za-z]+[0-9A-Za-z]*[@][a-z]+[.][a-z]+" title="Email format should be as follows: example@mail.com" onChange={handleEmail} required value={email} />
                         <Form.Text className="text-danger">We`ll never share your email with anyone else.</Form.Text>
                     </Form.Group>
                     {/* password input */}
-                    <Form.Group className="mb-3" controlId="registrationFormPassword">
+                    <Form.Group className="mb-3 m-3" controlId="registrationFormPassword">
                         <Form.Label>Password</Form.Label>
                         <Form.Control name="password" type="password" placeholder="Enter Password" pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,30}$" title="Should contain at least: 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special case character, min size:12, max size:30" onChange={handlePassword} required value={password} />
                     </Form.Group>
                     {/* phone number input*/}
-                    <Form.Group className="mb-3" controlId="registrationFormPhone">
+                    <Form.Group className="mb-3 m-3" controlId="registrationFormPhone">
                         <Form.Label>Phone Number</Form.Label>
                         <PhoneNumberEl onSelectedValueChange={handlePhonePrefixChange} onInputValueChange={handlePhoneNumber} comboBoxPlaceholder="Phone Prefix" phoneInputPlaceholder="Enter Phone Number" cbVariant={successVarinat} />
                     </Form.Group>
                     {/* gender input */}
-                    <Form.Group className="mb-3" controlId="registrationFormGender">
+                    <Form.Group className="mb-3 m-3" controlId="registrationFormGender">
                         <Form.Label>Gender</Form.Label>
                         <ComboBoxDropdown onSelectedValueChange={handleGenderChange} options={genders} placeholder="Choose Gender" variant={successVarinat} id="gender-cmb" />
                     </Form.Group>
                     {/* service type input */}
-                    <Form.Group className="mb-3" controlId="registrationFormServiceType">
+                    <Form.Group className="mb-3 m-3" controlId="registrationFormServiceType">
                         <Form.Label>Service Type</Form.Label>
                         <ComboBoxDropdown onSelectedValueChange={handleServiceTypeChange} options={serviceTypes} placeholder="Choose The Service You Provide" variant={successVarinat} id="service-type-cmb" />
                     </Form.Group>
+                    <div className="border-bottom border-light"></div>
                     {/* information for passwrod recovery */}
-                    <div className="square border border-secondary rounded-5 ">
-                        {/* security question combobox */}
-                        <ComboBoxDropdown onSelectedValueChange={handleQuestionChange} options={questions} placeholder="Choose Security Question" variant="danger" id="service-type-cmb" required/>
-                        {/* answer to the security question */}
+                    <div className="square border border-secondary rounded-5 m-3">
                         <Form.Group className="mb-3 m-3" controlId="registrationFormAnswer">
-                            <Form.Label>Aswer</Form.Label>
+                            {/* security question combobox */}
+                            <Form.Label>Security Question</Form.Label>
+                            <ComboBoxDropdown onSelectedValueChange={handleQuestionChange} options={questions} placeholder="Choose Security Question" variant="danger" id="service-type-cmb" required/>
+                            {/* answer to the security question */}
+                            <Form.Label>Answer</Form.Label>
                             <Form.Control name="answer" type="text" placeholder="Enter Answer" onChange={handleAnswer} required value={answer} />
-                            <Form.Text className="text-danger">The answer will be used for password restoration.</Form.Text>
+                            <Form.Text className="text-light bold">The answer will be used for password restoration.</Form.Text>
                         </Form.Group>
                     </div>
                     {/* register button */}
