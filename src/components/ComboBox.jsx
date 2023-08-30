@@ -23,7 +23,7 @@ function ComboBoxDropdown({onSelectedValueChange, options, placeholder, variant,
     };
 
     return (
-        <Dropdown className="m-3" onSelect={handleSelect}>
+        <Dropdown onSelect={handleSelect}>
             <InputGroup>
                 <Dropdown.Toggle variant={variant} id={id}>
                     {selectedValue}
