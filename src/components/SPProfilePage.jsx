@@ -14,14 +14,22 @@ const ProfilePage = () => {
     const [image, setImage] = useState(
         "https://cdn.pixabay.com/photo/2018/12/26/09/16/vet-3895477_960_720.jpg",
     );
+    const [isEditingPicture, setIsEditingPicture] = useState(false);
     const [phonePrefix, setPhonePrefix] = useState("050");
     const [bio, setBio] = useState(
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
     );
     const [validationError, setValidationError] = useState(false);
+    const [formSubmitted, setFormSubmitted] = useState(false);
 
     const handleEdit = () => {
         setIsEditing(true);
+        setFormSubmitted(false); // Reset the formSubmitted state
+    };
+
+    const handleEditPicture = () => {
+        setIsEditingPicture(true);
+        setFormSubmitted(false); // Reset the formSubmitted state
     };
 
     const handleSave = () => {
@@ -40,8 +48,20 @@ const ProfilePage = () => {
 
         setValidationError(false);
         setIsEditing(false);
+        setIsEditingPicture(false);
+        setFormSubmitted(true);
     };
 
+    const handleNameChange=(event)=> {
+        const newName = event.target.value;
+        setName(newName);
+        console.log("New Name:", newName); // Add this line to log the new name value
+        if (!/^[A-Za-z ]+$/.test(newName)) {
+            setValidationError(true);
+        } else {
+            setValidationError(false);
+        }
+    };
 
     /**
      * Handles change in phone number input.
@@ -62,18 +82,43 @@ const ProfilePage = () => {
         setPhonePrefix(newPrefix);
     };
 
+
+    const handleImageUpload = (e) => {
+        const selectedImage = e.target.files[0];
+
+        // Check if a file was selected
+        if (selectedImage) {
+            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+            if (selectedImage.size <= maxSize) {
+                const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+                if (validImageTypes.includes(selectedImage.type)) {
+                    const imageUrl = URL.createObjectURL(selectedImage);
+                    setImage(imageUrl);
+                } else {
+                    alert("Please select a valid image file (JPEG, PNG, GIF).");
+                }
+            } else {
+                alert("Image size must be below 5MB.");
+            }
+        }
+    };
+
+
     return (
         <Container className="profile-container">
             <Row className="profile-header">
                 <Col className="profile-image" xs={6} md={4}>
-                    <Image className="profile-picture" src={image} rounded fluid />
-                    {isEditing && (
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter Image URL"
-                            value={image}
-                            onChange={(e) => setImage(e.target.value)}
-                        />
+                    <Image className="profile-picture" src={image} rounded fluid style={{maxHeight: "300px", maxWidth: "300px"}}/>
+                    {isEditingPicture && (
+                        <Form>
+                            <Form.Control
+                                type="file"
+                                id="custom-file"
+                                label="Choose an image file"
+                                custom
+                                onChange={handleImageUpload}
+                            />
+                        </Form>
                     )}
                 </Col>
                 <Col className="profile-name" xs={6} md={4}>
@@ -90,8 +135,9 @@ const ProfilePage = () => {
                                 <Form.Control
                                     type="text"
                                     value={name}
-                                    onChange={(e) => setName(e.target.value)}
+                                    onChange={handleNameChange}
                                     isInvalid={validationError}
+                                    isValid={!validationError}
                                 />
                                 <Form.Control.Feedback type="invalid">
                         Name must contain only letters and spaces.
@@ -113,6 +159,7 @@ const ProfilePage = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     isInvalid={validationError}
+                                    isValid={!validationError}
                                 />
                                 <Form.Control.Feedback type="invalid">
                 Please provide a valid email.
@@ -123,6 +170,7 @@ const ProfilePage = () => {
                                     onInputValueChange={handlePhoneNumber}
                                     phoneInputPlaceholder = {phone}
                                     comboBoxPlaceholder = {phonePrefix}
+                                    cbVariant="danger"
                                 />
                                 <Form.Label>Country</Form.Label>
                                 <Form.Control
@@ -171,20 +219,30 @@ const ProfilePage = () => {
                     <p>{bio}</p>
                 )}
             </Row>
-            {validationError && (
-                <Alert variant="danger">
+            <Row>
+                {validationError && (
+                    <Alert variant="danger">
           Please fix the validation errors before saving.
-                </Alert>
-            )}
-            {!isEditing ? (
-                <Button variant="primary" onClick={handleEdit}>
-          Edit
-                </Button>
-            ) : (
-                <Button variant="primary" onClick={handleSave} disabled={isFormIncomplete}>
+                    </Alert>
+                )}
+                {!isEditing && !isEditingPicture ? (
+                    <><Button variant="primary" onClick={handleEdit}>
+                        Edit Profile
+                    </Button><Button variant="secondary" onClick={handleEditPicture}>
+                            Edit Profile Picture
+                    </Button></>
+                ) : (
+                    <Button variant="primary" onClick={handleSave} disabled={isFormIncomplete}>
           Save
-                </Button>
-            )}
+                    </Button>
+                )}
+            </Row>
+
+            {formSubmitted && (<Row>
+                <Alert variant="success" onClose={() => setFormSubmitted(false)} dismissible>
+                    Form submitted successfully!
+                </Alert>
+            </Row>)}
             <Row className="profile-section">
                 <p>Rating: No rating</p>
                 <h2>Reviews</h2>
