@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 // import {expect} from "chai";
 
 // describe("Arrays", () => {
