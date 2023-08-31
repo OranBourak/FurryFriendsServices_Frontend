@@ -252,14 +252,22 @@ function RegisterPage() {
                                     <Card.Header className="h3">Unleash Your Pet Service Potential!🐾</Card.Header>
                                     <Card.Body>
                                         <Card.Text>
-                                            <ul>
-                                                <li>Grow your pet service business.</li>
-                                                <li>Connect with pet owners seeking expertise.</li>
-                                                <li>Build trust through reviews and ratings.</li>
-                                                <li>Expand your reach to new markets.</li>
-                                                <li>Create up to 10 unique appointment types tailored by you.</li>
-                                                <li>Effortlessly manage appointments and stay organized.</li>
-                                            </ul>
+                                            &#8226; Grow your pet service business.
+                                        </Card.Text>
+                                        <Card.Text>
+                                            &#8226; Connect with pet owners seeking expertise.
+                                        </Card.Text>
+                                        <Card.Text>
+                                            &#8226; Build trust through reviews and ratings.
+                                        </Card.Text>
+                                        <Card.Text>
+                                            &#8226; Expand your reach to new markets.
+                                        </Card.Text>
+                                        <Card.Text>
+                                            &#8226; Create up to 10 unique appointment types tailored by you.
+                                        </Card.Text>
+                                        <Card.Text>
+                                            &#8226; Effortlessly manage appointments and stay organized.
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
@@ -277,22 +285,3 @@ function RegisterPage() {
 // };
 
 export default RegisterPage;
-
-
-{/* <Card
-                                bg="info"
-                                key="Info"
-                                variant="Info"
-                                text="white"
-                                style={{width: "18rem"}}
-                                className="mb-2"
-                            >
-                                <Card.Header>Header</Card.Header>
-                                <Card.Body>
-                                    <Card.Title>{variant} Card Title </Card.Title>
-                                    <Card.Text>
-                                    Some quick example text to build on the card title and make up the
-                                    bulk of the cards content.
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card> */}
