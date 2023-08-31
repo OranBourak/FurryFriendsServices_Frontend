@@ -4,10 +4,10 @@ import React, {useState} from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import "./LoginPage.css";
 import "./RegisterPage.css";
 import ComboBoxDropdown from "./ComboBox";
 import PhoneNumberEl from "./PhoneNumberEl";
+import Card from "react-bootstrap/Card";
 
 /**
  * Register page component.
@@ -110,7 +110,7 @@ function RegisterPage() {
     function handleEmail(event) {
         const newEmail = event.target.value;
         setEmail(newEmail);
-        setEmailFlag(!/[A-Za-z]+[0-9A-Za-z]*[@][a-z]+[.][a-z]+/.test(newEmail));
+        setEmailFlag(!/^[A-Za-z]+[0-9A-Za-z]*[@][a-z]+[.][a-z]+$/.test(newEmail));
     }
 
     /**
@@ -176,72 +176,96 @@ function RegisterPage() {
     // Check if form is valid, Controls the state of the register button
     const isFormInvalid = emailFlag || passwordFlag || nameFlag || phoneNumberFlag || !question.trim() || !answer.trim() || !gender.trim() || !serviceType.trim() || !phonePrefix.trim() || !email.trim() || !password.trim() || !name.trim() || !phoneNumber.trim();
     return (
-        <div className="login-page-container">
+        <div className="register-page-container">
             <div className="container">
-                <Form className="text-light p-4" onSubmit={handleSubmit} style={{
-                    backgroundColor: "rgba(0, 0, 0, 0.5)", // Background color with transparency
-                    padding: "20px",
-                    borderRadius: "10px"}}>
-                    {error && <div className="text-danger mb-3">{error}</div>}
-                    {/* name input */}
-                    <Form.Group className="mb-3 m-3" controlId="registrationFormName">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control name="name" type="text" placeholder="Enter Your Name" onChange={handleName} required value={name} isInvalid={nameFlag}isValid={!nameFlag} />
-                        <Form.Control.Feedback type="invalid">
-                            Name must contain only letters and spaces
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    {/* email input */}
-                    <Form.Group className="mb-3 m-3" controlId="registrationFormEmail">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control name="email" type="email" placeholder="Enter Email" isInvalid={emailFlag}isValid={!emailFlag} onChange={handleEmail} required value={email} />
-                        <Form.Control.Feedback type="invalid">
-                            Email format should be as follows: example@mail.domain
-                        </Form.Control.Feedback>
-                        <Form.Text className="text-danger">We`ll never share your email with anyone else.</Form.Text>
-                    </Form.Group>
-                    {/* password input */}
-                    <Form.Group className="mb-3 m-3" controlId="registrationFormPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control name="password" type="password" placeholder="Enter Password" isInvalid={passwordFlag}isValid={!passwordFlag} onChange={handlePassword} required value={password} />
-                        <Form.Control.Feedback type="invalid">
-                            Should contain at least: 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special case character, min size:12, max size:30
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    {/* phone number input*/}
-                    <Form.Group className="mb-3 m-3" controlId="registrationFormPhone">
-                        <Form.Label>Phone Number</Form.Label>
-                        <PhoneNumberEl onSelectedValueChange={handlePhonePrefixChange} onInputValueChange={handlePhoneNumber} comboBoxPlaceholder="Phone Prefix" phoneInputPlaceholder="Enter Phone Number" cbVariant={successVarinat} />
-                    </Form.Group>
-                    {/* gender input */}
-                    <Form.Group className="mb-3 m-3" controlId="registrationFormGender">
-                        <Form.Label>Gender</Form.Label>
-                        <ComboBoxDropdown onSelectedValueChange={handleGenderChange} options={genders} placeholder="Choose Gender" variant={successVarinat} id="gender-cmb" />
-                    </Form.Group>
-                    {/* service type input */}
-                    <Form.Group className="mb-3 m-3" controlId="registrationFormServiceType">
-                        <Form.Label>Service Type</Form.Label>
-                        <ComboBoxDropdown onSelectedValueChange={handleServiceTypeChange} options={serviceTypes} placeholder="Choose The Service You Provide" variant={successVarinat} id="service-type-cmb" />
-                    </Form.Group>
-                    <div className="border-bottom border-light"></div>
-                    {/* information for passwrod recovery */}
-                    <div className="square border border-secondary rounded-5 m-3">
-                        <Form.Group className="mb-3 m-3" controlId="registrationFormAnswer">
-                            {/* security question combobox */}
-                            <Form.Label>Security Question</Form.Label>
-                            <ComboBoxDropdown onSelectedValueChange={handleQuestionChange} options={questions} placeholder="Choose Security Question" variant="danger" id="service-type-cmb" required/>
-                            {/* answer to the security question */}
-                            <Form.Label>Answer</Form.Label>
-                            <Form.Control name="answer" type="text" placeholder="Enter Answer" onChange={handleAnswer} required value={answer} />
-                            <Form.Text className="text-light bold">The answer will be used for password restoration.</Form.Text>
-                        </Form.Group>
+                <Form className="text-light main-theme p-4" onSubmit={handleSubmit} >
+                    <div className="row-flex">
+                        {error && <div className="text-danger mb-3">{error}</div>}
+                        <div className="w-50" data-name="form">
+                            {/* name input */}
+                            <Form.Group className="mb-3 m-3" controlId="registrationFormName">
+                                <Form.Label>Name</Form.Label>
+                                <Form.Control className name="name" type="text" placeholder="Enter Your Name" onChange={handleName} required value={name} isInvalid={nameFlag}isValid={!nameFlag} />
+                                <Form.Control.Feedback type="invalid">
+                                    Name must contain only letters and spaces
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            {/* email input */}
+                            <Form.Group className="mb-3 m-3" controlId="registrationFormEmail">
+                                <Form.Label>Email address</Form.Label>
+                                <Form.Control name="email" type="email" placeholder="Enter Email" isInvalid={emailFlag} isValid={!emailFlag} onChange={handleEmail} required value={email} />
+                                <Form.Control.Feedback type="invalid">
+                                    Email format should be as follows: example@mail.domain
+                                </Form.Control.Feedback>
+                                <Form.Text className="text-danger">We`ll never share your email with anyone else.</Form.Text>
+                            </Form.Group>
+                            {/* password input */}
+                            <Form.Group className="mb-3 m-3" controlId="registrationFormPassword">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control name="password" type="password" placeholder="Enter Password" isInvalid={passwordFlag}isValid={!passwordFlag} onChange={handlePassword} required value={password} />
+                                <Form.Control.Feedback type="invalid">
+                                    Should contain at least: 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special case character, min size:12, max size:30
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            {/* phone number input*/}
+                            <Form.Group className="mb-3 m-3" controlId="registrationFormPhone">
+                                <Form.Label>Phone Number</Form.Label>
+                                <PhoneNumberEl onSelectedValueChange={handlePhonePrefixChange} onInputValueChange={handlePhoneNumber} comboBoxPlaceholder="Phone Prefix" phoneInputPlaceholder="Enter Phone Number" cbVariant={successVarinat} />
+                            </Form.Group>
+                            {/* gender input */}
+                            <Form.Group className="mb-3 m-3" controlId="registrationFormGender">
+                                <Form.Label>Gender</Form.Label>
+                                <ComboBoxDropdown onSelectedValueChange={handleGenderChange} options={genders} placeholder="Choose Gender" variant={successVarinat} id="gender-cmb" />
+                            </Form.Group>
+                            {/* service type input */}
+                            <Form.Group className="mb-3 m-3" controlId="registrationFormServiceType">
+                                <Form.Label>Service Type</Form.Label>
+                                <ComboBoxDropdown onSelectedValueChange={handleServiceTypeChange} options={serviceTypes} placeholder="Choose The Service You Provide" variant={successVarinat} id="service-type-cmb" />
+                            </Form.Group>
+                            <div className="border-bottom border-light"></div>
+                            {/* information for passwrod recovery */}
+                            <div className="square border border-secondary rounded-5 m-3">
+                                <Form.Group className="mb-3 m-3" controlId="registrationFormAnswer">
+                                    {/* security question combobox */}
+                                    <Form.Label>Security Question</Form.Label>
+                                    <ComboBoxDropdown onSelectedValueChange={handleQuestionChange} options={questions} placeholder="Choose Security Question" variant="danger" id="service-type-cmb" required/>
+                                    {/* answer to the security question */}
+                                    <Form.Label>Answer</Form.Label>
+                                    <Form.Control name="answer" type="text" placeholder="Enter Answer" onChange={handleAnswer} required value={answer} />
+                                    <Form.Text className="text-light bold">The answer will be used for password restoration.</Form.Text>
+                                </Form.Group>
+                            </div>
+                            {/* register button */}
+                            <Button className="mt-3 m-3" variant="primary" type="submit" disabled={isFormInvalid}>
+                                Register
+                            </Button>
+                        </div>
+                        <div data-name="register-advantages" className="border-left-light w-50" >
+                            <div className="column-flex-center margin-top">
+                                <Card
+                                    bg="info"
+                                    key="Info"
+                                    text="white"
+                                    style={{width: "90%"}}
+                                    className="mb-2 center"
+                                >
+                                    <Card.Header className="h3">Unleash Your Pet Service Potential!🐾</Card.Header>
+                                    <Card.Body>
+                                        <Card.Text>
+                                            <ul>
+                                                <li>Grow your pet service business.</li>
+                                                <li>Connect with pet owners seeking expertise.</li>
+                                                <li>Build trust through reviews and ratings.</li>
+                                                <li>Expand your reach to new markets.</li>
+                                                <li>Create up to 10 unique appointment types tailored by you.</li>
+                                                <li>Effortlessly manage appointments and stay organized.</li>
+                                            </ul>
+                                        </Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            </div>
+                        </div>
                     </div>
-                    {/* register button */}
-                    <Button className="mt-3" variant="primary" type="submit" disabled={isFormInvalid}>
-                        Register
-                    </Button>
-                    {" "}
-                    <Button className="mt-3" variant="secondary">Forgot Password?</Button>
                 </Form>
             </div>
         </div>
@@ -253,3 +277,22 @@ function RegisterPage() {
 // };
 
 export default RegisterPage;
+
+
+{/* <Card
+                                bg="info"
+                                key="Info"
+                                variant="Info"
+                                text="white"
+                                style={{width: "18rem"}}
+                                className="mb-2"
+                            >
+                                <Card.Header>Header</Card.Header>
+                                <Card.Body>
+                                    <Card.Title>{variant} Card Title </Card.Title>
+                                    <Card.Text>
+                                    Some quick example text to build on the card title and make up the
+                                    bulk of the cards content.
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card> */}
