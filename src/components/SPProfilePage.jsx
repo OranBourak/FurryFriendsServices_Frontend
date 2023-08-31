@@ -20,7 +20,9 @@ const ProfilePage = () => {
     const [bio, setBio] = useState(
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
     );
-    const [validationError, setValidationError] = useState(false);
+    const [validationErrorName, setValidationErrorName] = useState(false);
+    const [validationErrorEmail, setValidationErrorEmail] = useState(false);
+
     const [formSubmitted, setFormSubmitted] = useState(false);
 
     const handleEdit = () => {
@@ -34,8 +36,8 @@ const ProfilePage = () => {
     };
 
     const handleSave = () => {
-        if (email === "" || !email.includes("@") || !email.includes(".")) {
-            setValidationError(true);
+        if (!/[A-Za-z]+[0-9A-Za-z]*[@][a-z]+[.][a-z]+/.test(email)) {
+            setValidationErrorEmail(true);
             return;
         }
         // if the phone number doesn't consists of 7 digits
@@ -43,11 +45,17 @@ const ProfilePage = () => {
             return;
         }
         if (!/[A-Za-z ]+/.test(name)) {
-            setValidationError(true);
+            setValidationErrorName(true);
             return;
         }
 
-        setValidationError(false);
+        isFormIncomplete = !email.trim() || !name.trim() || !phonePrefix.trim() || !phone.trim() || !gender.trim();
+        if (isFormIncomplete) {
+            return;
+        }
+
+        setValidationErrorEmail(false);
+        setValidationErrorName(false);
         setIsEditing(false);
         setIsEditingPicture(false);
         setFormSubmitted(true);
@@ -57,11 +65,14 @@ const ProfilePage = () => {
         const newName = event.target.value;
         setName(newName);
         console.log("New Name:", newName); // Add this line to log the new name value
-        if (!/^[A-Za-z ]+$/.test(newName)) {
-            setValidationError(true);
-        } else {
-            setValidationError(false);
-        }
+        setValidationErrorName(!/^[A-Za-z ]+$/.test(newName));
+    };
+
+    const handleEmailChange=(event)=> {
+        const newEmail = event.target.value;
+        setEmail(newEmail);
+        console.log("New Email:", newEmail); // Add this line to log the new Email value
+        setValidationErrorEmail(!/^[A-Za-z]+[0-9A-Za-z]*[@][a-z]+[.][a-z]+$/.test(newEmail));
     };
 
     /**
@@ -73,7 +84,7 @@ const ProfilePage = () => {
         setPhone(event.target.value);
     }
 
-    const isFormIncomplete = !email.trim() || !name.trim() || !phonePrefix.trim() || !phone.trim() || !gender.trim();
+    let isFormIncomplete = !email.trim() || !name.trim() || !phonePrefix.trim() || !phone.trim() || !gender.trim() || !country.trim();
 
     /**
      * Handles change in phone prefix combobox.
@@ -118,6 +129,7 @@ const ProfilePage = () => {
                                 label="Choose an image file"
                                 custom
                                 onChange={handleImageUpload}
+                                required
                             />
                         </Form>
                     )}
@@ -137,8 +149,9 @@ const ProfilePage = () => {
                                     type="text"
                                     value={name}
                                     onChange={handleNameChange}
-                                    isInvalid={validationError}
-                                    isValid={!validationError}
+                                    isInvalid={validationErrorName}
+                                    isValid={!validationErrorName}
+                                    required
                                 />
                                 <Form.Control.Feedback type="invalid">
                         Name must contain only letters and spaces.
@@ -158,9 +171,10 @@ const ProfilePage = () => {
                                 <Form.Control
                                     type="email"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    isInvalid={validationError}
-                                    isValid={!validationError}
+                                    onChange={handleEmailChange}
+                                    isInvalid={validationErrorEmail}
+                                    isValid={!validationErrorEmail}
+                                    required
                                 />
                                 <Form.Control.Feedback type="invalid">
                 Please provide a valid email.
@@ -178,6 +192,8 @@ const ProfilePage = () => {
                                     type="text"
                                     value={country}
                                     onChange={(e) => setCountry(e.target.value)}
+                                    isInvalid={isFormIncomplete}
+                                    required
                                 />
                             </Form.Group>
                         </Form>
@@ -221,7 +237,7 @@ const ProfilePage = () => {
                 )}
             </Row>
             <Row>
-                {validationError && (
+                {(validationErrorName || validationErrorEmail) && (
                     <Alert variant="danger">
           Please fix the validation errors before saving.
                     </Alert>

@@ -20,6 +20,7 @@ function NavbarCustom() {
                         <Nav.Link href="/login">Login</Nav.Link>
                         <Nav.Link href="/signup">Register</Nav.Link>
                         <Nav.Link href="/profile">Profile</Nav.Link>
+                        <Nav.Link href="/dashboard">Dashboard</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
