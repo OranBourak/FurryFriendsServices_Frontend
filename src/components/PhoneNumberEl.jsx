@@ -15,19 +15,15 @@ import "./PhoneNumberEl.css";
  * @return {React.Component} - The Telephone input component.
  */
 function PhoneNumberEl({onSelectedValueChange, onInputValueChange, comboBoxPlaceholder, phoneInputPlaceholder, cbVariant}) {
-    const [phoneNumberError, setPhoneNumberError] = useState("");
+    const [phoneNumberError, setPhoneNumberError] = useState(false);
     const [phone, setPhone] = useState(phoneInputPlaceholder);
     const prefixArr = ["052", "054", "050", "053", "055"];
 
     const handleInputValueChange = (event) => {
         const newPhoneNum = event.target.value;
-        onInputValueChange(event);
         setPhone(newPhoneNum);
-        if (!/^\d{7}$/.test(newPhoneNum)) {
-            setPhoneNumberError("Phone number should contain exactly 7 digits.");
-        } else {
-            setPhoneNumberError("");
-        }
+        setPhoneNumberError(!/^\d{7}$/.test(newPhoneNum));
+        onInputValueChange(event);
     };
 
     return (
@@ -38,14 +34,16 @@ function PhoneNumberEl({onSelectedValueChange, onInputValueChange, comboBoxPlace
                     <Form.Control
                         className="telephone-input"
                         name="PhoneInputField"
-                        type="number"
+                        type="text"
                         placeholder={phoneInputPlaceholder}
-                        pattern="^\d{7}$"
-                        title="Should contain exactly 7 digits"
+                        isInvalid={phoneNumberError}
+                        isValid={!phoneNumberError}
                         onChange={handleInputValueChange}
                         value={phone}
                     />
-                    <div className="text-danger">{phoneNumberError}</div>
+                    <Form.Control.Feedback type="invalid">
+                        Phone number should contain exactly 7 digits
+                    </Form.Control.Feedback>
                 </div>
             </div>
         </>
