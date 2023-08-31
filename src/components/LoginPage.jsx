@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import "./LoginPage.css";
+import {useNavigate} from "react-router-dom";
 
 
 /**
@@ -16,6 +17,8 @@ function LoginPage({onLogin}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+
+    const navigate = useNavigate();
 
     /**
      * Handles form submission.
@@ -72,6 +75,11 @@ function LoginPage({onLogin}) {
         setPassword(event.target.value);
     }
 
+    const loadPassRecoveryPage = () => {
+        console.log("clicked");
+        navigate("/pass-recovery");
+    };
+
     const isFormIncomplete = !email.trim() || !password.trim(); // Check if either field is empty
 
     return (
@@ -98,7 +106,7 @@ function LoginPage({onLogin}) {
                         Login
                     </Button>
                     {" "}
-                    <Button variant="secondary">Forgot Password?</Button>
+                    <Button variant="secondary" onClick={loadPassRecoveryPage}>Forgot Password?</Button>
                 </Form>
             </div>
         </div>
