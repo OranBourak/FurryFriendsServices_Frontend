@@ -19,7 +19,6 @@ function ComboBoxDropdown({onSelectedValueChange, options, placeholder, variant,
         const newValue = event.target.textContent;
         setSelectedValue(newValue); // Set the selected text
         onSelectedValueChange(newValue);
-        console.log(eventKey, event);
     };
 
     return (
