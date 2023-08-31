@@ -11,6 +11,7 @@ import Home from "./components/Home.jsx";
 import {Routes, Route, Navigate} from "react-router-dom";
 import SPProfilePage from "./components/SPProfilePage.jsx";
 import Dashboard from "./components/Dashboard.jsx";
+import PassRecoveryPage from "./components/PassRecoveryPage.jsx";
 
 /**
  * Pet Service application
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/signup" element={<RegisterPage/>} />
                 <Route path="/profile" element={<SPProfilePage/>} />
                 <Route path="/dashboard" element={<Dashboard/>} />
+                <Route path="/pass-recovery" element={<PassRecoveryPage/>} />
             </Routes>
         </>
     );
