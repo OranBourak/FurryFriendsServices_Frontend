@@ -14,16 +14,28 @@ import PhoneNumberEl from "./PhoneNumberEl";
  * @return {React.Component} - The Register page component.
  */
 function RegisterPage() {
-    // Use states
+    // Name
     const [name, setName] = useState("");
+    const [nameFlag, setNameFlag] = useState(false);
+    // Email
     const [email, setEmail] = useState("");
+    const [emailFlag, setEmailFlag] = useState(false);
+    // Phone
     const [phonePrefix, setPhonePrefix] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [phoneNumberFlag, setPhoneNumberFlag] = useState(false);
+    // Password
     const [password, setPassword] = useState("");
+    const [passwordFlag, setPasswordFlag] = useState(false);
+    // Question
     const [question, setSelectedQuestion] = useState("");
+    // Answer
     const [answer, setAnswer] = useState("");
+    // Gender
     const [gender, setGender] = useState("");
+    // Service Type
     const [serviceType, setServiceType] = useState("");
+    // Error
     const [error, setError] = useState("");
 
     // params
@@ -40,10 +52,6 @@ function RegisterPage() {
         event.preventDefault();
         if (isFormIncomplete) {
             setError("Please fill in all fields.");
-            return;
-        }
-        // if the phone number doesn't consists of 7 digits
-        if (!/^\d{7}$/.test(phoneNumber)) {
             return;
         }
         setError(""); // Clear any previous errors
@@ -84,8 +92,15 @@ function RegisterPage() {
      * @param {Event} event - The input change event.
      */
     function handleName(event) {
-        setName(event.target.value);
-        printFields();
+        const newName = event.target.value;
+        setName(newName);
+        setNameFlag(!/^[A-Za-z ]+$/.test(newName));
+        console.log(isFormInvalid);
+        console.log("Email:" + emailFlag);
+        console.log("name:" + nameFlag);
+        console.log("Password:" + passwordFlag);
+        console.log("Phone flag:" + phoneNumberFlag);
+        console.log("phone number: " + phoneNumber);
     }
 
     /**
@@ -93,7 +108,9 @@ function RegisterPage() {
      * @param {Event} event - The input change event.
      */
     function handleEmail(event) {
-        setEmail(event.target.value);
+        const newEmail = event.target.value;
+        setEmail(newEmail);
+        setEmailFlag(!/[A-Za-z]+[0-9A-Za-z]*[@][a-z]+[.][a-z]+/.test(newEmail));
     }
 
     /**
@@ -109,8 +126,9 @@ function RegisterPage() {
      * @param {Event} event - The input change event.
      */
     function handlePhoneNumber(event) {
-        console.log("handle phone numner");
-        setPhoneNumber(event.target.value);
+        const newPhone = event.target.value;
+        setPhoneNumber(newPhone);
+        setPhoneNumberFlag(!/^\d{7}$/.test(newPhone));
     }
 
     /**
@@ -118,7 +136,9 @@ function RegisterPage() {
      * @param {Event} event - The input change event.
      */
     function handlePassword(event) {
-        setPassword(event.target.value);
+        const newPassword = event.target.value;
+        setPassword(newPassword);
+        setPasswordFlag(!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,30}$/.test(newPassword));
     }
 
     /**
@@ -153,8 +173,8 @@ function RegisterPage() {
         setServiceType(newServiceType);
     };
 
-    // Controls the state of the register button
-    const isFormIncomplete = !email.trim() || !password.trim() || !question.trim() || !answer.trim() || !name.trim() || !phonePrefix.trim() || !phoneNumber.trim() || !gender.trim() || !serviceType.trim(); // Check if either field is empty
+    // Check if form is valid, Controls the state of the register button
+    const isFormInvalid = emailFlag || passwordFlag || nameFlag || phoneNumberFlag || !question.trim() || !answer.trim() || !gender.trim() || !serviceType.trim() || !phonePrefix.trim() || !email.trim() || !password.trim() || !name.trim() || !phoneNumber.trim();
     return (
         <div className="login-page-container">
             <div className="container">
@@ -166,18 +186,27 @@ function RegisterPage() {
                     {/* name input */}
                     <Form.Group className="mb-3 m-3" controlId="registrationFormName">
                         <Form.Label>Name</Form.Label>
-                        <Form.Control name="name" type="text" placeholder="Enter Your Name" pattern="[A-Za-z ]+" title="Only letters and spaces are allowed" onChange={handleName} required value={name} />
+                        <Form.Control name="name" type="text" placeholder="Enter Your Name" onChange={handleName} required value={name} isInvalid={nameFlag}isValid={!nameFlag} />
+                        <Form.Control.Feedback type="invalid">
+                            Name must contain only letters and spaces
+                        </Form.Control.Feedback>
                     </Form.Group>
                     {/* email input */}
                     <Form.Group className="mb-3 m-3" controlId="registrationFormEmail">
                         <Form.Label>Email address</Form.Label>
-                        <Form.Control name="email" type="email" placeholder="Enter Email" pattern="[A-Za-z]+[0-9A-Za-z]*[@][a-z]+[.][a-z]+" title="Email format should be as follows: example@mail.com" onChange={handleEmail} required value={email} />
+                        <Form.Control name="email" type="email" placeholder="Enter Email" isInvalid={emailFlag}isValid={!emailFlag} onChange={handleEmail} required value={email} />
+                        <Form.Control.Feedback type="invalid">
+                            Email format should be as follows: example@mail.domain
+                        </Form.Control.Feedback>
                         <Form.Text className="text-danger">We`ll never share your email with anyone else.</Form.Text>
                     </Form.Group>
                     {/* password input */}
                     <Form.Group className="mb-3 m-3" controlId="registrationFormPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control name="password" type="password" placeholder="Enter Password" pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,30}$" title="Should contain at least: 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special case character, min size:12, max size:30" onChange={handlePassword} required value={password} />
+                        <Form.Control name="password" type="password" placeholder="Enter Password" isInvalid={passwordFlag}isValid={!passwordFlag} onChange={handlePassword} required value={password} />
+                        <Form.Control.Feedback type="invalid">
+                            Should contain at least: 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special case character, min size:12, max size:30
+                        </Form.Control.Feedback>
                     </Form.Group>
                     {/* phone number input*/}
                     <Form.Group className="mb-3 m-3" controlId="registrationFormPhone">
@@ -208,7 +237,7 @@ function RegisterPage() {
                         </Form.Group>
                     </div>
                     {/* register button */}
-                    <Button className="mt-3" variant="primary" type="submit" disabled={isFormIncomplete}>
+                    <Button className="mt-3" variant="primary" type="submit" disabled={isFormInvalid}>
                         Register
                     </Button>
                     {" "}
