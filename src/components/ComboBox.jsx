@@ -24,14 +24,15 @@ function ComboBoxDropdown({onSelectedValueChange, options, placeholder, variant,
     return (
         <Dropdown onSelect={handleSelect}>
             <InputGroup>
-                <Dropdown.Toggle variant={variant} id={id}>
+                <Dropdown.Toggle variant={variant} id={id} style={{maxWidth: "350px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                     {selectedValue}
                 </Dropdown.Toggle>
-                <Dropdown.Menu>
+                <Dropdown.Menu className="dropdown-menu-right" style={{width: "auto", maxWidth: "150px"}}>
                     {options.map((option, index) => (
                         <Dropdown.Item
                             key={index}
                             eventKey={option}
+                            style={{width: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}
                         >
                             {option}
                         </Dropdown.Item>
