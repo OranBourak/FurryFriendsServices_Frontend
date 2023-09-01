@@ -23,6 +23,13 @@ function PassRecoveryPage() {
     const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
     const [hasTriedToAnswer, setHasTriedToAnswer] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
+    // Passwrod
+    const [password, setPassword] = useState("");
+    const [passwordErrorFlag, setPasswordErrorFlag] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [confirmPasswordErrorFlag, setConfirmPasswordErrorFlag] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [hasPasswordReset, setHasPasswordReset] = useState(false);
 
     /**
      * Handles email form submission.
@@ -77,6 +84,12 @@ function PassRecoveryPage() {
      */
     const handlePasswordSubmit = async (event) => {
         event.preventDefault();
+
+        // TODO: add logic for saving the password and the confirmPassword in the db
+
+        // Assuming successful password reset in db
+        setHasPasswordReset(true);
+        alert("Passwrod was reset successfuly.");
     };
 
     /**
@@ -91,89 +104,128 @@ function PassRecoveryPage() {
 
     const handleAnswer = (event) => {
         setAnswer(event.target.value);
-        console.log(answer);
+    };
+
+    const handlePassword = (event) => {
+        const newPassword = event.target.value;
+        setPassword(newPassword);
+        setPasswordErrorFlag(!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,30}$/.test(newPassword));
+        setConfirmPasswordErrorFlag( !(newPassword === confirmPassword) );
+    };
+
+    const handleConfirmPassword = (event) => {
+        const newConfirmPassword = event.target.value;
+        setConfirmPassword(newConfirmPassword);
+        setConfirmPasswordErrorFlag( !(password === newConfirmPassword) );
     };
 
     const toggleAnswerVisibility = () => {
         setShowAnswer(!showAnswer);
     };
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
     const isEmailFromInvalid = !email.trim() || emailErrorFlag;
     const isSecurityFormInvalid = !answer.trim();
+    const isPasswordFormInvalid = !password.trim() || !confirmPassword.trim() || passwordErrorFlag || confirmPasswordErrorFlag || !(password === confirmPassword);
     return (
-        <div>
-            <Form onSubmit={handleEmailSubmit} id="emailForm">
-                <Form.Group className="mb-3" controlId="emailFormGroup">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="name@example.com"
-                        onChange={handleEmail}
-                        isInvalid = {emailErrorFlag}
-                        value={email}
-                        required
-                        disabled={emailExist}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        Email format should be as follows: example@mail.domain
-                    </Form.Control.Feedback>
-                </Form.Group>
-                <Button id="submitEmailBtn" variant="primary" type="submit" disabled={isEmailFromInvalid} hidden={emailExist}>
-                    Verify Email
-                </Button>
-            </Form>
-            {emailExist &&
-            <Form onSubmit={handleSecuritySubmit} id="securityForm">
-                <Form.Group className="mb-3" controlId="securityFormGroup">
-                    <Form.Label>{question}</Form.Label>
-                    <InputGroup>
+        <div className="page-background">
+            <h1 className="blue mb-3">Passwrod Recovery</h1>
+            <div className="password-recovery-form">
+                <Form onSubmit={handleEmailSubmit} id="emailForm">
+                    <Form.Group className="mb-3" controlId="emailFormGroup">
+                        <Form.Label>Email address</Form.Label>
                         <Form.Control
-                            type={showAnswer ? "text" : "password"}
-                            placeholder="Enter the Answer"
-                            onChange={handleAnswer}
-                            value={answer}
+                            type="text"
+                            placeholder="name@example.com"
+                            onChange={handleEmail}
+                            isInvalid = {emailErrorFlag}
+                            value={email}
                             required
-                            isInvalid={!isAnswerCorrect && hasTriedToAnswer}
-                            disabled={isAnswerCorrect}
+                            disabled={emailExist}
                         />
-                        <Button variant="outline-secondary" onClick={toggleAnswerVisibility} disabled={isAnswerCorrect} style={{width: "60px"}} >
-                            {showAnswer ? "Hide" : "Show"}
-                        </Button>
                         <Form.Control.Feedback type="invalid">
-                        The answer does not match
+                            Email format should be as follows: example@mail.domain
                         </Form.Control.Feedback>
-                    </InputGroup>
-                </Form.Group>
-                <Button id="submitSecurityBtn" variant="primary" type="submit" disabled={isSecurityFormInvalid} hidden={isAnswerCorrect}>
-                    Verify Answer
-                </Button>
-            </Form>
-            }
-            {isAnswerCorrect &&
-            <Form onSubmit={handlePasswordSubmit} id="passwordForm">
-                <Form.Group className="mb-3" controlId="passwordFormGroup">
-                    <Form.Label>Password</Form.Label>
-                    <InputGroup>
+                    </Form.Group>
+                    <Button id="submitEmailBtn" variant="primary" type="submit" disabled={isEmailFromInvalid} hidden={emailExist}>
+                        Verify Email
+                    </Button>
+                </Form>
+                {emailExist &&
+                <Form onSubmit={handleSecuritySubmit} id="securityForm">
+                    <Form.Group className="mb-3" controlId="securityFormGroup">
+                        <Form.Label>{question}</Form.Label>
+                        <InputGroup>
+                            <Form.Control
+                                type={showAnswer ? "text" : "password"}
+                                placeholder="Enter the Answer"
+                                onChange={handleAnswer}
+                                value={answer}
+                                required
+                                isInvalid={!isAnswerCorrect && hasTriedToAnswer}
+                                disabled={isAnswerCorrect}
+                            />
+                            <Button variant="outline-secondary" onClick={toggleAnswerVisibility} disabled={isAnswerCorrect} style={{width: "60px"}} >
+                                {showAnswer ? "Hide" : "Show"}
+                            </Button>
+                            <Form.Control.Feedback type="invalid">
+                            The answer does not match
+                            </Form.Control.Feedback>
+                        </InputGroup>
+                    </Form.Group>
+                    <Button id="submitSecurityBtn" variant="primary" type="submit" disabled={isSecurityFormInvalid} hidden={isAnswerCorrect}>
+                        Verify Answer
+                    </Button>
+                </Form>
+                }
+                {isAnswerCorrect &&
+                <Form onSubmit={handlePasswordSubmit} id="passwordForm">
+                    {/* password input */}
+                    <Form.Group className="mb-3" controlId="passwordFormGroup">
+                        <Form.Label>Password</Form.Label>
+                        <InputGroup>
+                            <Form.Control
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Enter New Password"
+                                onChange={handlePassword}
+                                value={password}
+                                required
+                                isInvalid={passwordErrorFlag}
+                                disabled={hasPasswordReset}
+                            />
+                            <Button variant="outline-secondary" onClick={togglePasswordVisibility} disabled={hasPasswordReset} style={{width: "60px"}} >
+                                {showPassword ? "Hide" : "Show"}
+                            </Button>
+                            <Form.Control.Feedback type="invalid">
+                                Should contain at least: 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special case character, min size:12, max size:30
+                            </Form.Control.Feedback>
+                        </InputGroup>
+                    </Form.Group>
+                    {/* confirm password input */}
+                    <Form.Group className="mb-3" controlId="passwordFormGroup">
+                        <Form.Label>Confirm Password</Form.Label>
                         <Form.Control
-                            type={showAnswer ? "text" : "password"}
-                            placeholder="Enter the Answer"
-                            onChange={handleAnswer}
-                            value={answer}
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter Password Again"
+                            onChange={handleConfirmPassword}
+                            value={confirmPassword}
                             required
+                            isInvalid={confirmPasswordErrorFlag}
+                            disabled={hasPasswordReset}
                         />
-                        <Button variant="outline-secondary" onClick={toggleAnswerVisibility} style={{width: "60px"}} >
-                            {showAnswer ? "Hide" : "Show"}
-                        </Button>
                         <Form.Control.Feedback type="invalid">
-                        The answer does not match
+                            The passwords do not match
                         </Form.Control.Feedback>
-                    </InputGroup>
-                </Form.Group>
-                <Button id="submitSecurityBtn" variant="primary" type="submit" disabled={isSecurityFormInvalid} hidden={isAnswerCorrect}>
-                    Verify Answer
-                </Button>
-            </Form>
-            }
+                    </Form.Group>
+                    <Button id="submitPasswordBtn" variant="primary" type="submit" disabled={isPasswordFormInvalid} hidden={hasPasswordReset}>
+                        Reset Password
+                    </Button>
+                </Form>
+                }
+            </div>
         </div>
     );
 }
