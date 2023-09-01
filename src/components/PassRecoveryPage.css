@@ -1,3 +1,26 @@
-.cl {
-    margin: 10px;
+
+.password-recovery-form {
+    max-width: 500px; /* Adjust the maximum width as needed */
+    min-width: 400px;
+    min-height: 50vh;
+    padding: 20px; /* Add some padding for spacing */
+    background-color: #f5f5f5; /* Background color */
+    border: 1px solid #ddd; /* Border */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle elevation effect */
 }
+
+.page-background {
+    background-color: #f0f0f0; /* Set your desired background color */
+    min-height: 100vh; /* Ensure the background covers the entire viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+}
+
+.blue{
+    color: #0e1012;
+}
+
+
