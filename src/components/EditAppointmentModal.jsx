@@ -12,8 +12,8 @@ const EditAppointmentModal=({show, onHide, onSave, name, price, duration})=> {
 
     useEffect(() => {
         setNameError(!/^[A-Za-z ]+$/.test(editedName));
-        setPriceError(!/^[0-9]+$/.test(price));
-        if (editedName && editedPrice >= 0) {
+        setPriceError(!/^[0-9]+$/.test(editedPrice));
+        if (/^[A-Za-z ]+$/.test(editedName) && /^[0-9]+$/.test(editedPrice)) {
             setCompleteForm(true);
         } else {
             setCompleteForm(false);

@@ -17,7 +17,7 @@ const AddAppointmentTypeModal=({show, onHide, onAddType}) => {
     useEffect(() => {
         setNameError(!/^[A-Za-z ]+$/.test(name));
         setPriceError(!/^[0-9]+$/.test(price));
-        if (name && price >= 0) {
+        if (/^[A-Za-z ]+$/.test(name) && /^[0-9]+$/.test(price)) {
             setCompleteForm(true);
         } else {
             setCompleteForm(false);
@@ -27,7 +27,7 @@ const AddAppointmentTypeModal=({show, onHide, onAddType}) => {
 
     const handleAddType = () => {
         const goodName = /^[A-Za-z ]+$/.test(name);
-        const goodPrice = /^[0-9]+$/;
+        const goodPrice = /^[0-9]+$/.test(price);
         if (goodName && goodPrice) {
             onAddType(name, price, duration);
             onHide();

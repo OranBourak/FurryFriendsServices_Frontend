@@ -29,7 +29,9 @@ const TypeManagementPage = () => {
 
     const handleEdit = (id) => {
         const appointmentToEdit = appointments.find((app) => app.id === id);
+        console.log(appointmentToEdit);
         setEditedAppointment(appointmentToEdit);
+        console.log(editedAppointment);
         setEditModalOpen(true);
     };
 
