@@ -1,0 +1,25 @@
+/* Add custom table styles to make borders rounder */
+.custom-table {
+  background-color: #f0f0f0; /* Set a background color */
+  border-collapse: separate; /* Use separate border-collapse */
+  border-spacing: 0; /* Remove default spacing between cells */
+}
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid black; /* Add border to cells */
+  border-radius: 10px; /* Make borders round */
+}
+
+.custom-table th {
+  background-color: #007bff; /* Set header background color */
+  color: white; /* Set header text color */
+}
+
+.custom-table tbody tr:nth-child(even) {
+  background-color: #e0e0e0; /* Set even row background color */
+}
+
+.custom-table tbody tr:hover {
+  background-color: #d0d0d0; /* Set hover row background color */
+}

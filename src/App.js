@@ -13,6 +13,7 @@ import SPProfilePage from "./components/SPProfilePage.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import PassRecoveryPage from "./components/PassRecoveryPage.jsx";
 import TypeManagmentPage from "./components/TypeManagmentPage.jsx";
+import UpcomingAppointmentsPage from "./components/UpcomingAppointmentsPage.jsx";
 
 /**
  * Pet Service application
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard/>} />
                 <Route path="/pass-recovery" element={<PassRecoveryPage/>} />
                 <Route path="/type-managment" element={<TypeManagmentPage/>} />
+                <Route path="/upcoming-appointments" element={<UpcomingAppointmentsPage/>} />
             </Routes>
         </>
     );

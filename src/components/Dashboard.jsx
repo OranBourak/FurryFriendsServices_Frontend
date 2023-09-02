@@ -22,7 +22,7 @@ const Dashboard = () => {
                     </Button>
                 </Col>
                 <Col>
-                    <Button variant="primary" size="lg" className="m-3 square-button">
+                    <Button variant="primary" size="lg" className="m-3 square-button" onClick={()=>navigate("/upcoming-appointments")}>
                         <RiCalendarLine className="button-icon" /> Upcoming Appointments
                     </Button>
                 </Col>
