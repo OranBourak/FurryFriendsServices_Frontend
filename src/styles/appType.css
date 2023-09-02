@@ -1,0 +1,59 @@
+.appointment-type {
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .appointment-type:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .card-text {
+    font-size: 1.2rem;
+    color: #555;
+  }
+  
+  .button-group {
+    margin-top: 10px;
+  }
+  
+  .button-group button {
+    margin-right: 10px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .button-group button:hover {
+    background-color: #007bff;
+    color: #fff;
+    
+  }
+
+  
+.add-button {
+    margin-top: 20px; /* Add some spacing between the cards and the button */
+  }
+  
+  .add-button button {
+    background-color: #007bff; /* Change the button background color */
+    color: #fff; /* Set text color to white */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .add-button button:hover {
+    background-color: #0056b3; /* Change the button background color on hover */
+  }
+  

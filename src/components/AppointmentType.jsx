@@ -22,15 +22,21 @@ function AppointmentType({name, price, duration, onEdit, onDelete}) {
     return (
         <Card className="appointment-type">
             <Card.Body>
-                <Card.Title>{name}</Card.Title>
-                <Card.Text>Price: ${price}</Card.Text>
-                <Card.Text>Duration: {duration} Hours</Card.Text>
-                <Button variant="primary" onClick={onEdit}>
-          Edit
-                </Button>
-                <Button variant="danger" onClick={onDelete}>
-          Delete
-                </Button>
+                <h4 className="card-title">{name}</h4>
+                <p className="card-text">
+                    <span className="text-muted">Price:</span> ${price}
+                </p>
+                <p className="card-text">
+                    <span className="text-muted">Duration:</span> {duration} Hours
+                </p>
+                <div className="button-group">
+                    <Button variant="primary" size="sm" onClick={onEdit}>
+              Edit
+                    </Button>
+                    <Button variant="danger" size="sm" onClick={onDelete}>
+              Delete
+                    </Button>
+                </div>
             </Card.Body>
         </Card>
     );

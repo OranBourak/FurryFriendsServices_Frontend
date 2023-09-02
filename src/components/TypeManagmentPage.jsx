@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import AppointmentType from "./AppointmentType";
 import EditAppointmentModal from "./EditAppointmentModal";
-import {Button} from "react-bootstrap";
+import {Button, Container, Row} from "react-bootstrap";
 import AddAppointmentTypeModal from "./AddAppointmentModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal"; // Import the new component
+import "../styles/appType.css";
 
 const TypeManagementPage = () => {
     const [appointments, setAppointments] = useState([
@@ -82,22 +83,29 @@ const TypeManagementPage = () => {
     };
 
     return (
-        <div className="TypeManagementPage">
-            <h1>Appointment Type Management</h1>
-            {appointments.map((appointment) => (
-                <div key={appointment.id}>
-                    <AppointmentType
-                        name={appointment.name}
-                        price={appointment.price}
-                        duration={appointment.duration}
-                        onEdit={() => handleEdit(appointment.id)}
-                        onDelete={() => handleDelete(appointment.id)}
-                    />
-                </div>
-            ))}
-            <Button variant="primary" onClick={() => setAddModalOpen(true)}>
-        Add New Type
-            </Button>
+        <Container>
+            <h1 className="text-center">Appointment Type Management</h1>
+            <Row className="justify-content-center">
+                {appointments.map((appointment) => (
+                    <div key={appointment.id} className="text-center small-card">
+                        <AppointmentType
+                            name={appointment.name}
+                            price={appointment.price}
+                            duration={appointment.duration}
+                            onEdit={() => handleEdit(appointment.id)}
+                            onDelete={() => handleDelete(appointment.id)}
+                        />
+                    </div>
+                ))}
+            </Row>
+            <Row className="justify-content-center add-button">
+                <Button
+                    variant="info"
+                    onClick={() => setAddModalOpen(true)}
+                >
+              Add New Type
+                </Button>
+            </Row>
             <EditAppointmentModal
                 show={isEditModalOpen}
                 onHide={handleCloseEditModal}
@@ -111,14 +119,12 @@ const TypeManagementPage = () => {
                 onHide={() => setAddModalOpen(false)}
                 onAddType={handleAddType}
             />
-
-            {/* Use the DeleteConfirmationModal component */}
             <DeleteConfirmationModal
                 show={isDeleteConfirmationOpen}
                 onHide={() => setDeleteConfirmationOpen(false)}
                 onConfirm={confirmDelete}
             />
-        </div>
+        </Container>
     );
 };
 
