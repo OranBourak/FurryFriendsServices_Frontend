@@ -44,7 +44,7 @@ const Dashboard = () => {
                     </Button>
                 </Col>
                 <Col>
-                    <Button variant="primary" size="lg" className="m-3 long-button">
+                    <Button variant="primary" size="lg" className="m-3 long-button" onClick={()=>navigate("/availability-managment")}>
                         <RiCalendarCheckLine className="button-icon" /> Availability Management
                     </Button>
                 </Col>
