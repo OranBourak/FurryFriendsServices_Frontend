@@ -55,7 +55,7 @@ const initialAppointments = [
     // Add more appointments here...
 ];
 
-const AppointmentList = () => {
+const UpcomingAppointments = () => {
     const [appointments, setAppointments] = useState(initialAppointments);
 
     useEffect(() => {
@@ -79,38 +79,40 @@ const AppointmentList = () => {
 
     return (
         <>
-            <Alert dismissible>
-        Below is a list of upcoming appointments, sorted in ascending order
-        based on the date and time. This means that the closest appointment to
-        the current date and time appears first in the list.
-            </Alert>
-            {/* Table displaying appointments in ascending order */}
-            <Table striped bordered hover responsive className="custom-table text-center">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Client Name</th>
-                        <th>Phone Number</th>
-                        <th>Appointment Type</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {appointments.map((appointment, index) => (
-                        <tr key={appointment.id}>
-                            <td>{index + 1}</td>
-                            <td>{appointment.clientName}</td>
-                            <td>{appointment.phoneNumber}</td>
-                            <td>{appointment.appointmentType}</td>
-                            <td>{appointment.date}</td>
-                            <td>{appointment.time}</td>
+            {appointments.length > 0 ? (
+                <><Alert dismissible>
+                    Below is a list of upcoming appointments, sorted in ascending order
+                    based on the date and time. This means that the closest appointment to
+                    the current date and time appears first in the list.
+                </Alert><Table striped bordered hover responsive className="custom-table text-center">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Client Name</th>
+                            <th>Phone Number</th>
+                            <th>Appointment Type</th>
+                            <th>Date</th>
+                            <th>Time</th>
                         </tr>
-                    ))}
-                </tbody>
-            </Table>
+                    </thead>
+                    <tbody>
+                        {appointments.map((appointment, index) => (
+                            <tr key={appointment.id}>
+                                <td>{index + 1}</td>
+                                <td>{appointment.clientName}</td>
+                                <td>{appointment.phoneNumber}</td>
+                                <td>{appointment.appointmentType}</td>
+                                <td>{appointment.date}</td>
+                                <td>{appointment.time}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table></>
+            ) : (
+                <h1>No appointments scheduled yet!</h1>
+            )}
         </>
     );
 };
 
-export default AppointmentList;
+export default UpcomingAppointments;

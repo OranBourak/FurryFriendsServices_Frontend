@@ -17,7 +17,7 @@ const Dashboard = () => {
                     </Button>
                 </Col>
                 <Col>
-                    <Button variant="primary" size="lg" className="m-3 square-button">
+                    <Button variant="primary" size="lg" className="m-3 square-button" onClick={()=>navigate("/archive")}>
                         <RiArchiveDrawerLine className="button-icon" /> Archive Page
                     </Button>
                 </Col>
