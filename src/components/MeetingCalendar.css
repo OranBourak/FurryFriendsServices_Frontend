@@ -1,0 +1,81 @@
+/* CSS for the Calendar Page */
+.calendar-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f0f0f0; /* Page background color */
+    font-family: Arial, sans-serif;
+}
+
+/* CSS for the Calendar Container */
+.calendar-container {
+    background-color: #ffffff; /* Calendar container background color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 800px; /* Adjust the maximum width as needed */
+    width: auto;
+    margin: 20px;
+}
+
+/* CSS for the Calendar Header */
+.calendar-header {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333; /* Header text color */
+}
+
+/* CSS for Appointment Time Buttons */
+.appointment-time {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* CSS for the Time Display */
+.time-display {
+    font-size: 18px;
+    text-align: center;
+    margin-top: 20px;
+    color: #555; /* Time text color */
+}
+
+/* CSS for the Time Buttons */
+.time-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Adjust the number of columns as needed */
+    gap: 5px; /* Adjust the gap between buttons as needed */
+    max-height: 400px; /* Adjust as needed to control the maximum number of buttons per column */
+    margin: 0 auto;
+    overflow-y: auto; /* Add vertical scrollbar if needed */
+}
+
+.time-button {
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* .time-button:hover {
+    background-color: #0056b3;
+} */
+
+.time-selected {
+    background-color: red;
+}
+
+.time-diselected {
+    background-color: #007bff;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
