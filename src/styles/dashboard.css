@@ -5,6 +5,10 @@ body{
     min-height: 100vh;
 }
 
+.db-container {
+  width: 100%;
+
+}
 
 
 .long-button{
@@ -53,7 +57,7 @@ body{
     font-size: 32px;
   }
   
-  .m-3 {
+  .db-m-3 {
     margin: 0.75rem !important;
   }
   

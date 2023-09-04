@@ -150,7 +150,7 @@ const Archive = () => {
         const navigationButtons = ["All", "Completed", "Canceled"];
 
         return (
-            <ButtonGroup aria-label="Navigation" className="mb-3">
+            <ButtonGroup aria-label="Navigation" className="table-mb-3 mb-3">
                 {navigationButtons.map((status) => (
                     <Button
                         key={status}
@@ -165,10 +165,10 @@ const Archive = () => {
     };
 
     return (
-        <div className="container">
+        <div className="table-container container">
             <Row>
                 <Col>
-                    <h1 className="mt-3 mb-4">Appointment Archive</h1>
+                    <h1 className="table-mt-3 table-mb-4 mt-3 mb-4">Appointment Archive</h1>
                 </Col>
             </Row>
             <Row>
@@ -184,7 +184,7 @@ const Archive = () => {
                     {renderAppointmentsTable()}
                 </>
             ) : (
-                <h3 className="mt-3">No appointments yet!</h3>
+                <h3 className="table-mt-3 mt-3">No appointments yet!</h3>
             )}
         </div>
     );

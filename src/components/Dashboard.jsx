@@ -9,42 +9,42 @@ const Dashboard = () => {
     const navigate = useNavigate();
 
     return (
-        <Container id="bg-gradient" className="mt-4 p-5 border rounded ">
+        <Container id="bg-gradient" className="db-container mt-4 p-5 border rounded ">
             <Row className="justify-content-center">
                 <Col>
-                    <Button variant="primary" size="lg" className="m-3 square-button" onClick={()=>navigate("/profile")}>
+                    <Button variant="primary" size="lg" className="db-m-3 square-button" onClick={()=>navigate("/profile")}>
                         <RiUserSettingsLine className="button-icon" /> Profile Management
                     </Button>
                 </Col>
                 <Col>
-                    <Button variant="primary" size="lg" className="m-3 square-button" onClick={()=>navigate("/archive")}>
+                    <Button variant="primary" size="lg" className="db-m-3 square-button" onClick={()=>navigate("/archive")}>
                         <RiArchiveDrawerLine className="button-icon" /> Archive Page
                     </Button>
                 </Col>
                 <Col>
-                    <Button variant="primary" size="lg" className="m-3 square-button" onClick={()=>navigate("/upcoming-appointments")}>
+                    <Button variant="primary" size="lg" className="db-m-3 square-button" onClick={()=>navigate("/upcoming-appointments")}>
                         <RiCalendarLine className="button-icon" /> Upcoming Appointments
                     </Button>
                 </Col>
                 <Col>
-                    <Button variant="primary" size="lg" className="m-3 square-button">
+                    <Button variant="primary" size="lg" className="db-m-3 square-button" onClick={()=>navigate("/appointment-managment")}>
                         <RiCalendarEventLine className="button-icon" /> Appointment Management
                     </Button>
                 </Col>
                 <Col>
-                    <Button variant="primary" size="lg" className="m-3 square-button" onClick={()=>navigate("/type-managment")}>
+                    <Button variant="primary" size="lg" className="db-m-3 square-button" onClick={()=>navigate("/type-managment")}>
                         <RiFileListLine className="button-icon" /> Appointment Type Management
                     </Button>
                 </Col>
             </Row>
             <Row className="justify-content-center">
                 <Col>
-                    <Button variant="primary" size="lg" className="m-3 long-button">
+                    <Button variant="primary" size="lg" className="db-m-3 long-button">
                         <RiBarChartHorizontalLine className="button-icon" /> Statistics
                     </Button>
                 </Col>
                 <Col>
-                    <Button variant="primary" size="lg" className="m-3 long-button" onClick={()=>navigate("/availability-managment")}>
+                    <Button variant="primary" size="lg" className="db-m-3 long-button" onClick={()=>navigate("/availability-managment")}>
                         <RiCalendarCheckLine className="button-icon" /> Availability Management
                     </Button>
                 </Col>
