@@ -13,14 +13,21 @@ import "./MeetingCalendar.css";
  * @return {React.Component} - The component displaying the time or null if 'showTime' is false.
  */
 function Time(props) {
-    return <div className="appointment-time">{props.showTime ? <Times date={props.date} setHourOutside={props.setHour} /> : null}</div>;
-};
-
+    return (
+        <div className="appointment-time">
+            {props.showTime ? (
+                <Times date={props.date} isDayBlocked={props.isDayBlocked} blockedHours={props.blockedHours} scheduledAppointments={props.scheduledAppointments} />
+            ) : null}
+        </div>
+    );
+}
 
 Time.propTypes = {
     date: PropTypes.instanceOf(Date),
     showTime: PropTypes.bool,
-    setHour: PropTypes.func.isRequired,
+    isDayBlocked: PropTypes.bool,
+    blockedHours: PropTypes.arrayOf(PropTypes.string),
+    scheduledAppointments: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default Time;
