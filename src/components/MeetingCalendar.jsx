@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 /* eslint-disable no-unused-vars */
 import {useState, React} from "react";
 import {format, isSameDay} from "date-fns";
@@ -63,6 +64,17 @@ const MeetingCalendar = () => {
         });
     };
 
+    function getBlockedTimeSlotsOfDate(dateStr, blockedTimesSlotsArr) {
+        // Run on all the blocked time slots of the user
+        for (const timeSlotObj of blockedTimesSlotsArr) {
+            // If the user has a blocked time slots on the chosen date
+            if (timeSlotObj.date === dateStr) {
+                return timeSlotObj.blockedHours;
+            }
+        }
+        return [];
+    }
+
     /**  changes the date eselected in the calendar and shows the available hours
      * @param {Event} e
      */
@@ -74,7 +86,7 @@ const MeetingCalendar = () => {
         const formatString = "MMM d yyyy";
         const newDateToString = format(newDate, formatString);
         const blockedDates = serviceProvider.blockedDates;
-        const blockedTimeSlots = serviceProvider.blockedTimeSlots;
+        const blockedTimeSlots = getBlockedTimeSlotsOfDate(newDateToString, serviceProvider.blockedTimeSlots);
         const chosenDateAppointments = filterAppointemtnsByDay(newDate, serviceProvider.appointments);
         // If the chosen date is a blocked date
         if (blockedDates.includes(newDateToString)) {
@@ -83,21 +95,13 @@ const MeetingCalendar = () => {
             // If it's not a blocked date
             setIsDayBlocked(false);
             // Check if the chosen date has blocked hours
-            blockedTimeSlots.forEach((timeslot) => {
-                // If the chosen date appears in the blockedTimeSlots
-                if (timeslot.date === newDateToString) {
-                    // set the date's blocked timeslots to the blocked hours list.
-                    setBlockedHours(timeslot.blockedHours);
-                } else {
-                    setBlockedHours([]);
-                }
-                // Check if the chosen date has booked appointmens
-                if (chosenDateAppointments.length > 0) {
-                    setCurrDateAppointments(chosenDateAppointments);
-                } else {
-                    setCurrDateAppointments([]);
-                }
-            });
+            setBlockedHours(blockedTimeSlots);
+            // Check if the chosen date has booked appointmens
+            if (chosenDateAppointments.length > 0) {
+                setCurrDateAppointments(chosenDateAppointments);
+            } else {
+                setCurrDateAppointments([]);
+            }
         }
     }
     // /** Handles date change in the calendar
