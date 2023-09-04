@@ -1,0 +1,31 @@
+.react-calendar .has-appointments {
+    background-color: #ffc107; /* Change this color to your preferred color */
+    color: #333; /* Change the text color as needed */
+    border-radius: 50%; /* Add border-radius for rounded tiles */
+    font-weight: bold; /* Make the text bold or adjust as needed */
+    cursor: pointer; /* Add a pointer cursor to indicate interactivity */
+  }
+  
+  .calendar-container {
+    background: linear-gradient(135deg, #3498db, #e74c3c); /* Adjust colors as desired */
+    min-height: 100vh; /* Ensure the gradient covers the entire viewport height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin: auto;
+  }
+
+  .calendar-container h1, .calendar-container h2 {
+    color: whitesmoke;
+    text-decoration: underline;
+  }
+
+  .calendar-border {
+    border: 2px solid #333; /* Border style, adjust color and thickness as desired */
+    border-radius: 10px; /* Border radius for rounded corners */
+    padding: 10px; /* Add some padding for spacing */
+    background-color: #333;
+  }
+  

@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import ComboBoxDropdown from "./ComboBox";
 import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types";
-import "./PhoneNumberEl.css";
+import "../../styles/ServiceProviderStyles/PhoneNumberEl.css";
 
 /**
  * Telephone input component.

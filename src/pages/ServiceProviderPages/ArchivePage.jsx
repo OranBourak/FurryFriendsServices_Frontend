@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Table, Alert, Button, ButtonGroup, Row, Col} from "react-bootstrap";
-import "../styles/archive.css";
+import "../../styles/ServiceProviderStyles/archive.css";
 import moment from "moment"; // Import moment.js
 
 const initialAppointments = [

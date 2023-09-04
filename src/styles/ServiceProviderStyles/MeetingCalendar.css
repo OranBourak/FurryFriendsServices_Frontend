@@ -93,3 +93,9 @@
 	margin: 0 auto;
 }
 
+.react-calendar .unavailable {
+    background-color: lightgray; /* Change this color to your preferred color */
+    color: #333; /* Change the text color as needed */
+    font-weight: bold; /* Make the text bold or adjust as needed */
+    cursor: pointer; /* Add a pointer cursor to indicate interactivity */
+  }

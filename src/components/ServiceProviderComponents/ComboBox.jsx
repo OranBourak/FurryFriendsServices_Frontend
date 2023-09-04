@@ -1,12 +1,9 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-unused-vars */
+
 import React, {useState} from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import InputGroup from "react-bootstrap/InputGroup";
 import PropTypes from "prop-types";
-import FormControl from "react-bootstrap/FormControl";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
+
 /**
  * Login page component.
  * @param {function} onRegister - Callback function to handle successful registration.

@@ -4,8 +4,8 @@ import {useState, React} from "react";
 import {format, isSameDay} from "date-fns";
 import "react-calendar/dist/Calendar.css";
 import {Calendar as MyCalendar} from "react-calendar";
-import Time from "./Time";
-import "./MeetingCalendar.css";
+import Time from "../../components/ServiceProviderComponents/Time.jsx";
+import "../../styles/ServiceProviderStyles/MeetingCalendar.css";
 import Button from "react-bootstrap/Button";
 
 const serviceProvider = {
@@ -104,6 +104,14 @@ const MeetingCalendar = () => {
             }
         }
     }
+
+
+    const getTitleClassName = ({view, date}) => {
+        if (view === "month" && serviceProvider.blockedDates.includes(format(date, "MMM d yyyy"))) {
+            return "unavailable";
+        }
+        return "";
+    };
     // /** Handles date change in the calendar
     //  * @param {Event} e
     //  */
@@ -112,14 +120,10 @@ const MeetingCalendar = () => {
     // }
 
     return (
-        <div className="calendar-page">
+        <div className="calendar-container">
             <h1>React Calendar</h1>
-            <div className="calendar-container">
-                <MyCalendar value={date} defaultView="month" onClickDay={onClickDate} />
-            </div>
-            <Button variant="secondary">Block Day</Button>
-            {" "}
-            <Button variant="dark">Block Hours</Button>
+            <MyCalendar value={date} defaultView="month" onClickDay={onClickDate} tileClassName={getTitleClassName}/>
+            <Button variant="dark mt-3 mb-3">Block Day</Button>
             <Time showTime={showTime} date={date} isDayBlocked={isDayBlocked} blockedHours={blockedHours} scheduledAppointments={currDateAppointments} />
         </div>
     );

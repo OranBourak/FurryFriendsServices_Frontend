@@ -1,10 +1,10 @@
 import React, {useState} from "react";
-import AppointmentType from "./AppointmentType";
-import EditAppointmentModal from "./EditAppointmentModal";
+import AppointmentType from "../../components/ServiceProviderComponents/AppointmentType";
+import EditAppointmentModal from "../../components/ServiceProviderComponents/EditAppointmentModal";
 import {Button, Container, Row} from "react-bootstrap";
-import AddAppointmentTypeModal from "./AddAppointmentModal";
-import DeleteConfirmationModal from "./DeleteConfirmationModal"; // Import the new component
-import "../styles/appType.css";
+import AddAppointmentTypeModal from "../../components/ServiceProviderComponents/AddAppointmentModal.jsx";
+import DeleteConfirmationModal from "../../components/ServiceProviderComponents/DeleteConfirmationModal.jsx"; // Import the new component
+import "../../styles/ServiceProviderStyles/appType.css";
 
 const TypeManagementPage = () => {
     const [appointments, setAppointments] = useState([

@@ -1,6 +1,6 @@
 
 .login-page-container {
-    background-image: url("../images/loginbackground.jpg");
+    background-image: url("../../images/loginbackground.jpg");
     background-size: cover;
     background-position: center;
     display: flex;

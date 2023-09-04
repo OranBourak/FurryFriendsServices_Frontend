@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {Button} from "react-bootstrap";
 import PropTypes from "prop-types";
 // import {useBlockedDateContext} from "./useBlockedDateContext.jsx";
 
@@ -80,6 +81,11 @@ const Times = (props) => {
         e.preventDefault();
     };
 
+    const handleBlockHours = () => {
+        if (selectedTimes.length === 0) {
+        }
+    };
+
     return (
         <div className="flex-col">
             <form onSubmit={onSubmitHandle}>
@@ -105,6 +111,9 @@ const Times = (props) => {
                             </button>
                         );
                     })}
+                </div>
+                <div className="container d-flex justify-content-center mt-3">
+                    <Button variant="dark" disabled={props.isDayBlocked || selectedTimes.length===0} onClick={handleBlockHours}>Block Hours</Button>
                 </div>
                 <div className="time-display">
                     {!props.isDayBlocked ? (

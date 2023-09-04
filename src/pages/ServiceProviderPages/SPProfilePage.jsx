@@ -2,8 +2,8 @@
 import React, {useState} from "react";
 import {Container, Row, Col, Image, Form, Alert} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import "../styles/ProfilePage.css";
-import PhoneNumberEl from "./PhoneNumberEl";
+import "../../styles/ServiceProviderStyles/ProfilePage.css";
+import PhoneNumberEl from "../../components/ServiceProviderComponents/PhoneNumberEl.jsx";
 
 const ProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);

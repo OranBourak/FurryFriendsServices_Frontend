@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Container, Row, Col} from "react-bootstrap";
 import {RiUserSettingsLine, RiArchiveDrawerLine, RiCalendarLine, RiCalendarEventLine, RiFileListLine, RiBarChartHorizontalLine, RiCalendarCheckLine} from "react-icons/ri";
-import "../styles/dashboard.css";
+import "../../styles/ServiceProviderStyles/dashboard.css";
 import {useNavigate} from "react-router-dom";
 
 

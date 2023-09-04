@@ -1,7 +1,7 @@
 import React from "react";
 import Times from "./Times";
 import PropTypes from "prop-types";
-import "./MeetingCalendar.css";
+import "../../styles/ServiceProviderStyles/MeetingCalendar.css";
 
 /**
  * A component to display the time list based on the given date if 'showTime' is true.

@@ -2,21 +2,21 @@
 import React from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import NavbarCustom from "./components/NavbarCustom.jsx";
-import RegisterPage from "./components/RegisterPage.jsx";
-import LoginPage from "./components/LoginPage.jsx";
+import NavbarCustom from "./components/ServiceProviderComponents/NavbarCustom.jsx";
+import RegisterPage from "./pages/ServiceProviderPages/RegisterPage.jsx";
+import LoginPage from "./pages/ServiceProviderPages/LoginPage.jsx";
 import {useState} from "react";
-import LoginAlert from "./components/LoginAlert.jsx";
-import Home from "./components/Home.jsx";
+import LoginAlert from "./components/ServiceProviderComponents/LoginAlert.jsx";
+import Home from "./pages/ServiceProviderPages/HomePage.jsx";
 import {Routes, Route, Navigate} from "react-router-dom";
-import SPProfilePage from "./components/SPProfilePage.jsx";
-import Dashboard from "./components/Dashboard.jsx";
-import PassRecoveryPage from "./components/PassRecoveryPage.jsx";
-import TypeManagmentPage from "./components/TypeManagmentPage.jsx";
-import UpcomingAppointmentsPage from "./components/UpcomingAppointmentsPage.jsx";
-import AvailabilityManagmentPage from "./components/AvailabilityManagmentPage.jsx";
-import ArchivePage from "./components/ArchivePage.jsx";
-import AppointmentManagmentPage from "./components/AppointmentManagmentPage.jsx";
+import SPProfilePage from "./pages/ServiceProviderPages/SPProfilePage.jsx";
+import Dashboard from "./pages/ServiceProviderPages/DashboardPage.jsx";
+import PassRecoveryPage from "./pages/ServiceProviderPages/PassRecoveryPage.jsx";
+import TypeManagmentPage from "./pages/ServiceProviderPages/TypeManagmentPage.jsx";
+import UpcomingAppointmentsPage from "./pages/ServiceProviderPages/UpcomingAppointmentsPage.jsx";
+import AvailabilityManagmentPage from "./pages/ServiceProviderPages/AvailabilityManagmentPage.jsx";
+import ArchivePage from "./pages/ServiceProviderPages/ArchivePage.jsx";
+import AppointmentManagmentPage from "./pages/ServiceProviderPages/AppointmentManagmentPage.jsx";
 
 /**
  * Pet Service application

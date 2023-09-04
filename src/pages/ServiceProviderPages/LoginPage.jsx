@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import "./LoginPage.css";
+import "../../styles/ServiceProviderStyles/LoginPage.css";
 import {useNavigate} from "react-router-dom";
 
 
