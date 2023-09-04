@@ -70,12 +70,26 @@
     background-color: red;
 }
 
-.time-diselected {
+.time-deselected {
     background-color: #007bff;
+}
+
+.time-blocked {
+	background-color: lightgrey;
+}
+
+.time-booked {
+	background-color: green;
 }
 
 .flex-col {
     display: flex;
     flex-direction: column;
+}
+
+.time-display > p {
+	text-align: center;
+	max-width: 80%;
+	margin: 0 auto;
 }
 
