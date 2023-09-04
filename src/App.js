@@ -17,6 +17,7 @@ import UpcomingAppointmentsPage from "./pages/ServiceProviderPages/UpcomingAppoi
 import AvailabilityManagmentPage from "./pages/ServiceProviderPages/AvailabilityManagmentPage.jsx";
 import ArchivePage from "./pages/ServiceProviderPages/ArchivePage.jsx";
 import AppointmentManagmentPage from "./pages/ServiceProviderPages/AppointmentManagmentPage.jsx";
+import ClientRegistrationForm from "./components/client_components/ClientRegistrationForm.jsx";
 
 /**
  * Pet Service application
@@ -46,6 +47,7 @@ function App() {
                 <Route path="/availability-managment" element={<AvailabilityManagmentPage/>} />
                 <Route path="/archive" element={<ArchivePage/>} />
                 <Route path="/appointment-managment" element={<AppointmentManagmentPage/>} />
+                <Route path="/clientSignup" element={<ClientRegistrationForm/>} />
             </Routes>
         </>
     );
