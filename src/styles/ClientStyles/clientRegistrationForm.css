@@ -1,0 +1,82 @@
+/* Container */
+.registration-form-container {
+    width: 100%;
+    max-width: 470;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+/* Form */
+.registration-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Input fields */
+.registration-form input[type="text"],
+.registration-form input[type="password"],
+.registration-form input[type="email"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.registration-form input[type="text"]:focus,
+.registration-form input[type="password"]:focus,
+.registration-form input[type="email"]:focus {
+    border-color: #007BFF;
+}
+
+/* Submit button */
+.registration-form button[type="submit"] {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.registration-form button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Labels */
+.registration-form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Helper text */
+.helper-text {
+    font-size: 12px;
+    color: #888888;
+    margin-bottom: 10px;
+}
+
+/* Error message */
+.error-message {
+    color: #FF0000;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.phone-container {
+    display: flex;
+    align-items: center;
+}
+
+.phone-container .form-control, .phone-container .dropdown {
+    flex: 1;
+    margin-right: 10px; /* Spacing between the dropdown and the input field */
+}
+

@@ -1,0 +1,72 @@
+/* Container for the entire form */
+.Form {
+    margin: 2rem auto;
+    max-width: 1000px;
+    padding: 1.5rem;
+    border: 2px solid #4CAF50; /* Changed border color */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9; /* Added background color */
+  }
+  
+  /* Style for form groups */
+  .Form .form-group {
+    margin-bottom: 2rem; /* Increased bottom margin */
+  }
+  
+  /* Style for form labels */
+  .Form .form-label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333; /* Changed label color */
+  }
+  
+  /* Style for input fields and dropdowns */
+  .Form .form-control {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Style for valid input fields */
+  .Form .form-control.is-valid {
+    border-color: #28a745;
+  }
+  
+  /* Style for invalid input fields */
+  .Form .form-control.is-invalid {
+    border-color: #dc3545;
+  }
+  
+  /* Style for feedback messages */
+  .Form .invalid-feedback {
+    color: #dc3545;
+  }
+  
+  /* Style for the submit button */
+  .Form .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem; /* Added top margin */
+  }
+  
+  /* Hover effect for the submit button */
+  .Form .btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Style for the Ant Design Rate component */
+  .Form .ant-rate {
+    font-size: 1.2rem;
+  }
+  
+  /* Style for the Ant Design Rate text */
+  .Form .ant-rate-text {
+    margin-left: 0.5rem;
+    font-size: 1rem;
+    color: #333;
+  }

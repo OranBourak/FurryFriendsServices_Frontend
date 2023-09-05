@@ -18,6 +18,7 @@ import AvailabilityManagmentPage from "./pages/ServiceProviderPages/Availability
 import ArchivePage from "./pages/ServiceProviderPages/ArchivePage.jsx";
 import AppointmentManagmentPage from "./pages/ServiceProviderPages/AppointmentManagmentPage.jsx";
 import ClientRegistrationForm from "./components/client_components/ClientRegistrationForm.jsx";
+import ClientDashboardPage from "./pages/ClientPages/ClientDashboardPage.jsx";
 
 /**
  * Pet Service application
@@ -48,6 +49,7 @@ function App() {
                 <Route path="/archive" element={<ArchivePage/>} />
                 <Route path="/appointment-managment" element={<AppointmentManagmentPage/>} />
                 <Route path="/clientSignup" element={<ClientRegistrationForm/>} />
+                <Route path="/client-dash-board" element={<ClientDashboardPage/>} />
             </Routes>
         </>
     );

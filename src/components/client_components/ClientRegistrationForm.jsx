@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import "../../styles/clientRegistrationForm.css";
+import "../../styles/ClientStyles/clientRegistrationForm.css";
 // name, email, password, secret question - combo box and text input, phone number - combo box and number input
 
 // validation

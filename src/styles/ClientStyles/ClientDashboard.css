@@ -1,0 +1,54 @@
+/* DashboardStyles.css */
+
+.layout-centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:rgb(111, 180, 180);
+  height: 100vh; /* This will take the full height of the viewport */
+}
+
+/* header tag */
+.header-content {
+  background-color: transparent;
+  font-size:40px;
+  padding:50px 100px;
+  color:rgba(rgb(74, 164, 206), green, blue, alpha);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.custom-button {
+  font-size: 30px; /* Larger font size */
+  width:460px;
+  white-space: nowrap;
+  text-overflow: ellipsis; 
+  padding: 120px 20px; /* More padding for a bigger button */
+  border-radius: 25px; /* Rounded corners */
+  margin-right: 25px; /* Spacing between buttons */
+  justify-content: center; /*cetner the content inside the button */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.custom-button:hover {
+  transform: translateY(-15px); /* Slight upward movement on hover */
+}
+
+/* Gradient backgrounds for each button */
+.search-button {
+  background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+  border: none;
+}
+
+.edit-button {
+  background: linear-gradient(45deg, #4ECDC4, #26A69A);
+  border: none;
+}
+
+.services-button {
+  background: linear-gradient(45deg, #1A535C, #4E937A);
+  border: none;
+}
