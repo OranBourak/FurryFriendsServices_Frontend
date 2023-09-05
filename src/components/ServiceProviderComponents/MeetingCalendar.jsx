@@ -138,7 +138,6 @@ const MeetingCalendar = () => {
         <div className="calendar-container">
             <h1>React Calendar</h1>
             <MyCalendar value={date} defaultView="month" onClickDay={onClickDate} tileClassName={getTitleClassName}/>
-            <Button variant="dark mt-3 mb-3">Block Day</Button>
             <Time showTime={showTime} date={date} isDayBlocked={isDayBlocked} blockedHours={blockedHours} scheduledAppointments={currDateAppointments} />
         </div>
     );
