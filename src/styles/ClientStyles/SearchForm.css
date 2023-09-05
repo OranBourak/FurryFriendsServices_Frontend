@@ -3,10 +3,10 @@
     margin: 2rem auto;
     max-width: 1000px;
     padding: 1.5rem;
-    border: 2px solid #4CAF50; /* Changed border color */
+    border: 2px solid black; /* Changed border color */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f9; /* Added background color */
+    background-color: #F1F0E8; /* Added background color */
   }
   
   /* Style for form groups */
