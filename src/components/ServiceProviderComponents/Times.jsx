@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, {useEffect, useState} from "react";
 import {Button} from "react-bootstrap";
 import PropTypes from "prop-types";
@@ -24,14 +25,15 @@ const times = [
 /**
  * Component to display available appointment times.
  *
- * @param {Object} props - The component's props.
- * @param {Date} props.date - The date for which to display available times.
+ * @param {TimesPropTypes} props - The component's props.
  * @return {React.Component} - The component displaying available times and selected time info.
  */
 const Times = (props) => {
     const [selectedTimes, setSelectedTimes] = useState([]);
+    // const [bookedHoursArr, setBookedHoursArr] = useEffect(getBookedHoursArr());
 
     useEffect(() => setSelectedTimes([]), [props.date]);
+    // useEffect(() => setBookedHoursArr(getBookedHoursArr()), [props.date]);
 
     const toggleTime = (time, isSelected) => {
         let chosenHours;
@@ -50,31 +52,48 @@ const Times = (props) => {
         setSelectedTimes(chosenHours);
     };
 
-    /**
-     * Checks if a specific hour is scheduled for an appointment.
-     *
-     * @param {string} timeStr - The time in HH:mm format to check.
-     * @return {boolean} - `true` if the hour is scheduled, `false` otherwise.
-     */
-    function isHourScheduledForAppointment(timeStr) {
-        // If there are no scheduled appointments for the chosen date
-        if (props.scheduledAppointments.length === 0) {
-            return false;
-        }
-        // Run on all the appintments scheduled for the selected date
+    const getBookedHoursArr = () => {
+        const res = [];
+        // Run on all the appointemnts scheduled to the selected date
         for (const appointment of props.scheduledAppointments) {
-            // If the time of the appointment is the same as the time argument
-            const appointmentHourStr = appointment.date.toLocaleTimeString([], {
+            // Take the start hour of the appointemnt as a string
+            const startHour = appointment.date.toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: false,
             });
-            if (appointmentHourStr === timeStr) {
-                return true;
-            }
+            // calculate the following hours based on the appointment's duration
+            const appointmentHours = generateHoursArray(startHour, appointment.duration);
+            res.push(...appointmentHours);
         }
-        // No appointment matches the provided time
-        return false;
+        return res;
+    };
+
+    /**
+     * Generates an array of hours starting from a specified hour and lasting for a given duration.
+     *
+     * @param {string} startHour - The starting hour in HH:mm format (e.g., '14:00').
+     * @param {number} duration - The number of hours to generate.
+     * @return {string[]} An array of formatted hours in HH:mm format.
+     */
+    function generateHoursArray(startHour, duration) {
+        const hoursArray = [];
+        const [startHourStr, startMinuteStr] = startHour.split(":");
+        const startHourInt = parseInt(startHourStr, 10);
+        const startMinuteInt = parseInt(startMinuteStr, 10);
+
+        for (let i = 0; i <= duration; i++) {
+            const currentHour = startHourInt + i;
+            const currentMinute = startMinuteInt;
+
+            // Ensure hours and minutes are formatted as two-digit strings
+            const formattedHour = currentHour.toString().padStart(2, "0");
+            const formattedMinute = currentMinute.toString().padStart(2, "0");
+
+            hoursArray.push(`${formattedHour}:${formattedMinute}`);
+        }
+
+        return hoursArray;
     }
 
     const onSubmitHandle = (e) => {
@@ -86,6 +105,8 @@ const Times = (props) => {
         }
     };
 
+    const bookedHoursArr = getBookedHoursArr().sort();
+
     return (
         <div className="flex-col">
             <form onSubmit={onSubmitHandle}>
@@ -94,7 +115,8 @@ const Times = (props) => {
                     {times.map((time) => {
                         const isSelected = selectedTimes.includes(time);
                         const isBlockedHour = props.blockedHours.includes(time);
-                        const isAppointmentHour = isHourScheduledForAppointment(time);
+                        const isAppointmentHour = bookedHoursArr.includes(time);
+                        console.log("bookedHoursArr: " + bookedHoursArr);
                         return (
                             <button
                                 key={time}
@@ -131,6 +153,17 @@ const Times = (props) => {
     );
 };
 
+/**
+ * PropTypes for the Times component.
+ *
+ * @typedef {Object} TimesPropTypes
+ * @property {Date} date - The date for which to display available times.
+ * @property {boolean} isDayBlocked - A flag indicating whether the selected date is blocked.
+ * @property {string[]} blockedHours - An array of strings representing blocked hours for the selected date.
+ * @property {Object[]} scheduledAppointments - An array of appointment objects scheduled for the specific date.
+ * @property {Date} scheduledAppointments[].date - The date and time of a scheduled appointment.
+ * @property {Number} scheduledAppointments[].duration - The duration of the appointment(one of: 1, 2, 3, 4, 5)
+ */
 Times.propTypes = {
     date: PropTypes.instanceOf(Date),
     isDayBlocked: PropTypes.bool,
