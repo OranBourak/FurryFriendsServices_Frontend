@@ -35,6 +35,7 @@ const serviceProvider = {
             phoneNumber: "987-654-3210",
             appointmentType: "Follow-up",
             date: new Date(2023, 8, 15, 14, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
+            duration: 5,
         },
         {
             id: 3,
@@ -58,12 +59,26 @@ const MeetingCalendar = () => {
     const [blockedHours, setBlockedHours] = useState([]);
     const [currDateAppointments, setCurrDateAppointments] = useState([]);
 
+    /**
+     * Filter appointments by a specific date.
+     *
+     * @param {Date} date - The date to filter appointments for.
+     * @param {Array} appointmentsArr - An array of appointment objects, each containing a `date` property.
+     * @return {Array} - An array of appointments that match the specified date.
+     */
     const filterAppointemtnsByDay = (date, appointmentsArr) => {
         return appointmentsArr.filter((appointemt)=>{
             return isSameDay(appointemt.date, date);
         });
     };
 
+    /**
+     * Get the blocked time slots for a given date.
+     *
+     * @param {string} dateStr - The date in string format ("MMM-d-yyyy") to check for blocked time slots.
+     * @param {Array} blockedTimesSlotsArr - An array containing objects representing blocked time slots, each with a `date` and `blockedHours` property.
+     * @return {Array} - An array of blocked hours for the specified date, or an empty array if there are none.
+     */
     function getBlockedTimeSlotsOfDate(dateStr, blockedTimesSlotsArr) {
         // Run on all the blocked time slots of the user
         for (const timeSlotObj of blockedTimesSlotsArr) {
