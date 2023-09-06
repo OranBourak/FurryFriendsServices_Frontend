@@ -82,6 +82,13 @@
 	background-color: green;
 }
 
+.time-between-selected {
+    background: rgba(255, 255, 0, 0.5); 
+    border: 1px solid rgba(255, 255, 0, 0.7); /* Slightly darker border with 70% transparency */
+    color: #000; /* Text color (you can change this to your desired text color) */
+    padding: 10px 20px; /* Adjust padding as needed */
+}
+
 .flex-col {
     display: flex;
     flex-direction: column;
