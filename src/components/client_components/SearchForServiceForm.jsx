@@ -7,28 +7,32 @@ import Row from "react-bootstrap/Row";
 import ClientDropDown from "./ClientDropDown.jsx";
 import {Rate} from "antd"; // Import Rate component from Ant Design
 import "../../styles/ClientStyles/SearchForm.css";
+import PropTypes from "prop-types";
 
 // Labels for the rating field
 const desc = ["terrible", "bad", "normal", "good", "wonderful"];
 
 /**
  * Search form component for searching for services
+ * @param {handleSearch} - using while the search button is clicked for update the search results
  * @return {React.Component} - form component
  */
-function SearchForm() {
+function SearchForm({handleSearch}) {
     // Define options for location and service type dropdowns
-    const locationsOptions = ["South", "North", "East", "West", "Central"];
-    const serviceOptions = ["Grooming", "Dog Sitter", "Training", "Dog Walker"];
+    const locationsOptions = ["Afula", "Akko",
+        "Arad", "Ashdod", "Ashqelon", "Bat Yam", "Beersheba", "Bet Sheʾan", "Bet Sheʿarim", "Bnei Brak", "Caesarea", "Dimona", "Dor", "Elat", "En Gedi", "Givʿatayim", "H̱adera", "Haifa", "Herzliyya", "H̱olon", "Jerusalem", "Karmiʾel", "Kefar Sava", "Lod", "Meron", "Nahariyya", "Nazareth", "Netanya", "Petaẖ Tiqwa", "Qiryat Shemona", "Ramat Gan", "Ramla", "Reẖovot", "Rishon LeẔiyyon", "Sedom", "Tel Aviv–Yafo", "Tiberias", "Zefat"];
+
+    const serviceOptions = ["Dog Groomer", "Veterinarian", "Dog Walker"];
 
     // Initialize state variables
     const [maxFlag, setMaxFlag] = useState(true);
     const [isFormValid, setIsFormValid] = useState(true);
     const [fields, setFields] = useState({
-        service_type: "",
-        service_location: "",
+        typeOfService: "",
+        city: "",
         min_price: "",
         max_price: "",
-        rating: "",
+        averageRating: "",
     });
 
     // Handle changes to form fields
@@ -37,10 +41,10 @@ function SearchForm() {
         switch (name) {
         // Update state based on the form field that changed
         case "service_type":
-            setFields({...fields, service_type: value});
+            setFields({...fields, typeOfService: value});
             break;
         case "service_location":
-            setFields({...fields, service_location: value});
+            setFields({...fields, city: value});
             break;
         case "min_price":
             setFields({...fields, min_price: value});
@@ -66,13 +70,13 @@ function SearchForm() {
 
     // Handle changes to the rating field
     const handleRating = (value) => {
-        setFields({...fields, rating: value});
+        setFields({...fields, averageRating: value});
     };
 
     // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("submitted" + e);
+        handleSearch(fields);
     };
 
     // Render the form
@@ -137,7 +141,7 @@ function SearchForm() {
                 {/* Rating Component */}
                 <Form.Group as={Col} md="4" controlId="serviceRate">
                     <Form.Label>Minimum Average Rating</Form.Label>
-                    <Rate name="rating" tooltips={desc} onChange={handleRating} value={parseInt(fields.rating)} />
+                    <Rate name="rating" tooltips={desc} onChange={handleRating} value={parseInt(fields.averageRating)} />
                 </Form.Group>
             </Row>
             {/* Search Button */}
@@ -147,6 +151,11 @@ function SearchForm() {
         </Form>
     );
 }
+
+
+SearchForm.propTypes = {
+    handleSearch: PropTypes.func.isRequired,
+};
 
 // Export the component
 export default SearchForm;
