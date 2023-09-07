@@ -2,12 +2,14 @@
 
 /* Container for the entire search page */
 .search-page-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color:#96B6C5;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #96B6C5;
+  height: 100vh; 
+}
+
   
   /* Container for the search form */
   .search-form-container {
