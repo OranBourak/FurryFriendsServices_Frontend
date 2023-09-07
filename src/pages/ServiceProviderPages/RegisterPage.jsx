@@ -37,7 +37,19 @@ function RegisterPage() {
     const [error, setError] = useState("");
 
     // params
-    const questions = ["Option 1", "Option 2", "Option 3"];
+    const questions = [
+        "What is the name of your first pet?",
+        "In which city were you born?",
+        "What is the name of your favorite childhood teacher?",
+        "What was the make and model of your first car?",
+        "What is the name of the street you grew up on?",
+        "What is your favorite book?",
+        "What is the name of your favorite historical figure?",
+        "What was your childhood nickname?",
+        "What is the name of your favorite childhood friend?",
+        "What is your favorite vacation spot?",
+        "What is you childhood friend name?",
+        "What is your middle name?"];
     const genders = ["Male", "Female", "Other"];
     const serviceTypes = ["Dog Walker", "Veterinarian", "Dog Groomer"];
     const successVarinat= "success";
