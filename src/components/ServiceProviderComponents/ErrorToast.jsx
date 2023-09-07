@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 function ErrorToast(props) {
     return (
         <>
-            <Toast onClose={() => props.setShow(false)} show={props.show} bg="danger" delay={3000} autohide>
+            <Toast onClose={() => props.setShow(false)} show={props.show} bg="danger" delay={5000} autohide>
                 <Toast.Header>
                     <strong className="me-auto">Error</strong>
                 </Toast.Header>

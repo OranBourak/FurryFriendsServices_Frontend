@@ -16,7 +16,7 @@ import "../../styles/ServiceProviderStyles/PhoneNumberEl.css";
  */
 function PhoneNumberEl({onSelectedValueChange, onInputValueChange, comboBoxPlaceholder, phoneInputPlaceholder, cbVariant}) {
     const [phoneNumberError, setPhoneNumberError] = useState(false);
-    const [phone, setPhone] = useState(phoneInputPlaceholder);
+    const [phone, setPhone] = useState(/^[0-9]+$/.test(phoneInputPlaceholder)? phoneInputPlaceholder : "");
     const prefixArr = ["052", "054", "050", "053", "055"];
 
     const handleInputValueChange = (event) => {

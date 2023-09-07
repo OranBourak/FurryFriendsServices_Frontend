@@ -21,10 +21,10 @@ function ComboBoxDropdown({onSelectedValueChange, options, placeholder, variant,
     return (
         <Dropdown onSelect={handleSelect}>
             <InputGroup>
-                <Dropdown.Toggle variant={variant} id={id} style={{maxWidth: "350px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+                <Dropdown.Toggle variant={variant} id={id} style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                     {selectedValue}
                 </Dropdown.Toggle>
-                <Dropdown.Menu className="dropdown-menu-right" style={{width: "auto", maxWidth: "150px"}}>
+                <Dropdown.Menu className="dropdown-menu-right" style={{width: "auto", maxHeight: "200px", overflowY: "auto"}}>
                     {options.map((option, index) => (
                         <Dropdown.Item
                             key={index}
