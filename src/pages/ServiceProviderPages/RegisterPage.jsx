@@ -1,11 +1,13 @@
 import React, {useState} from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-// import axios from "axios";
+import axios from "axios";
 import "../../styles/ServiceProviderStyles/RegisterPage.css";
 import ComboBoxDropdown from "../../components/ServiceProviderComponents/ComboBox.jsx";
 import PhoneNumberEl from "../../components/ServiceProviderComponents/PhoneNumberEl.jsx";
 import Card from "react-bootstrap/Card";
+import ErrorToast from "../../components/ServiceProviderComponents/ErrorToast";
+import {Navigate} from "react-router-dom";
 
 /**
  * Register page component.
@@ -33,11 +35,73 @@ function RegisterPage() {
     const [gender, setGender] = useState("");
     // Service Type
     const [serviceType, setServiceType] = useState("");
+    // City
+    const [city, setCity] = useState("");
     // Error
     const [error, setError] = useState("");
 
+    const [show, setShow] = useState(false);
+
+    // redirect
+    const [redirectToProfile, setRedirectToProfile] = useState(false);
+
     // params
-    const questions = ["Option 1", "Option 2", "Option 3"];
+    const questions = [
+        "What is the name of your first pet?",
+        "In which city were you born?",
+        "What is the name of your favorite childhood teacher?",
+        "What was the make and model of your first car?",
+        "What is the name of the street you grew up on?",
+        "What is your favorite book?",
+        "What is the name of your favorite historical figure?",
+        "What was your childhood nickname?",
+        "What is the name of your favorite childhood friend?",
+        "What is your favorite vacation spot?",
+        "What is you childhood friend name?",
+        "What is your middle name?",
+    ];
+    const israelCities = [
+        "Afula",
+        "Akko",
+        "Arad",
+        "Ashdod",
+        "Ashqelon",
+        "Bat Yam",
+        "Beersheba",
+        "Bet Sheʾan",
+        "Bet Sheʿarim",
+        "Bnei Brak",
+        "Caesarea",
+        "Dimona",
+        "Dor",
+        "Elat",
+        "En Gedi",
+        "Givʿatayim",
+        "H̱adera",
+        "Haifa",
+        "Herzliyya",
+        "H̱olon",
+        "Jerusalem",
+        "Karmiʾel",
+        "Kefar Sava",
+        "Lod",
+        "Meron",
+        "Nahariyya",
+        "Nazareth",
+        "Netanya",
+        "Petaẖ Tiqwa",
+        "Qiryat Shemona",
+        "Ramat Gan",
+        "Ramla",
+        "Reẖovot",
+        "Rishon LeẔiyyon",
+        "Sedom",
+        "Tel Aviv–Yafo",
+        "Tiberias",
+        "Zefat",
+    ];
+
+
     const genders = ["Male", "Female", "Other"];
     const serviceTypes = ["Dog Walker", "Veterinarian", "Dog Groomer"];
     const successVarinat= "success";
@@ -48,7 +112,7 @@ function RegisterPage() {
      */
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (isFormIncomplete) {
+        if (isFormInvalid) {
             setError("Please fill in all fields.");
             return;
         }
@@ -56,19 +120,33 @@ function RegisterPage() {
         printFields();
         // for commit: https://furryfriendsbackend.onrender.com/login
         // for testing: http://localhost:5000/login
-        // try {
-        //     const response = await axios.post("http://localhost:5000/signup", {
-        //         email: email,
-        //         password: password,
-        //         question: question,
-        //         answer: answer,
-        //     });
-        //     const data = response.data;
-        //     console.log("data: " + data);
-        // } catch (error) {
-        //     console.log("error: " + error);
-        //     setError("Error, registration failed.");
-        // }
+        try {
+            const response = await axios.post("/serviceProvider/create/", {
+                name: name,
+                email: email,
+                password: password,
+                phone: (phonePrefix + phoneNumber),
+                question: question,
+                answer: answer,
+                city: city,
+                gender: gender,
+                typeOfService: serviceType,
+            });
+            const {token} = response.data;
+            setName(response.data.name);
+            const userType = "Service Provider";
+            const userData = {
+                name,
+                token,
+                userType,
+            };
+            localStorage.setItem("user", JSON.stringify(userData));
+            setRedirectToProfile(true);
+        } catch (error) {
+            console.log("error: " + error);
+            setError(error.response.data.message || "Registration failed.");
+            setShow(true);
+        }
     };
 
     const printFields = () =>{
@@ -77,7 +155,7 @@ function RegisterPage() {
         console.log(password);
         console.log(question);
         console.log(answer);
-        console.log("is form incomplete: " + isFormIncomplete);
+        console.log("is form incomplete: " + isFormInvalid);
         console.log(phonePrefix);
         console.log(phoneNumber);
         console.log(gender);
@@ -171,14 +249,21 @@ function RegisterPage() {
         setServiceType(newServiceType);
     };
 
+    const handleCityChange = (newCity) => {
+        setCity(newCity);
+    };
+
     // Check if form is valid, Controls the state of the register button
-    const isFormInvalid = emailFlag || passwordFlag || nameFlag || phoneNumberFlag || !question.trim() || !answer.trim() || !gender.trim() || !serviceType.trim() || !phonePrefix.trim() || !email.trim() || !password.trim() || !name.trim() || !phoneNumber.trim();
+    const isFormInvalid = emailFlag || passwordFlag || nameFlag || phoneNumberFlag ||
+     !question.trim() || !answer.trim() || !gender.trim()||
+     !serviceType.trim() || !phonePrefix.trim() || !email.trim() ||
+     !password.trim() || !name.trim() || !phoneNumber.trim() || !city.trim();
     return (
         <div className="register-page-container">
+            {redirectToProfile && <Navigate to="/profile" />}
             <div className="container">
                 <Form className="text-light main-theme p-4" onSubmit={handleSubmit} >
                     <div className="row-flex">
-                        {error && <div className="text-danger mb-3">{error}</div>}
                         <div className="w-50" data-name="form">
                             {/* name input */}
                             <Form.Group className="mb-3 m-3" controlId="registrationFormName">
@@ -220,6 +305,10 @@ function RegisterPage() {
                                 <Form.Label>Service Type</Form.Label>
                                 <ComboBoxDropdown onSelectedValueChange={handleServiceTypeChange} options={serviceTypes} placeholder="Choose The Service You Provide" variant={successVarinat} id="service-type-cmb" />
                             </Form.Group>
+                            <Form.Group className="mb-3 m-3" controlId="registrationFormCity">
+                                <Form.Label>Service Type</Form.Label>
+                                <ComboBoxDropdown onSelectedValueChange={handleCityChange} options={israelCities} placeholder="Choose Your city" variant={successVarinat} id="service-type-cmb" />
+                            </Form.Group>
                             <div className="border-bottom border-light"></div>
                             {/* information for passwrod recovery */}
                             <div className="square border border-secondary rounded-5 m-3">
@@ -245,7 +334,7 @@ function RegisterPage() {
                                     key="Info"
                                     text="white"
                                     style={{width: "90%"}}
-                                    className="mb-2 center"
+                                    className="mb-3 center"
                                 >
                                     <Card.Header className="h3">Unleash Your Pet Service Potential!🐾</Card.Header>
                                     <Card.Body>
@@ -269,6 +358,7 @@ function RegisterPage() {
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
+                                <ErrorToast errorText={error} show={show} setShow={setShow} />
                             </div>
                         </div>
                     </div>
