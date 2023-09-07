@@ -22,7 +22,7 @@ function ClientDropDown({handleSelectedValue, dropDownName, placeholder, id, att
                 {selectedValue}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu>
+            <Dropdown.Menu style={{maxHeight: "200px", overflowY: "auto"}}>
                 {attributes.map((attribute, index) => (
                     <Dropdown.Item
                         key={index}
