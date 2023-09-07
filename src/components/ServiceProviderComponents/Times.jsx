@@ -4,6 +4,7 @@ import {Button} from "react-bootstrap";
 import PropTypes from "prop-types";
 import YesNoConfirmationWindow from "./YesNoConfirmationWindow.jsx";
 import ErrorToast from "./ErrorToast.jsx";
+import {isBefore, isToday, format} from "date-fns";
 
 const times = [
     "08:00",
@@ -38,12 +39,18 @@ const Times = (props) => {
     // Error Handeling
     const [errorFlag, setErrorFlag] = useState(false);
     const [errorText, setErrorText] = useState("");
+    // Disable actions handeling
+    const [isInBlockOperation, setIsInBlockOperation] = useState(false);
 
     useEffect(() => setSelectedTimes([]), [props.date]);
     // useEffect(() => setBookedHoursArr(getBookedHoursArr()), [props.date]);
 
     const onDialogClose = () => {
         setShowDialog(false);
+    };
+
+    const getFormatedDate = () => {
+        return format(props.date, "MMM d yyyy");
     };
 
     const toggleTime = (time, isSelected) => {
@@ -117,41 +124,76 @@ const Times = (props) => {
      * @return {void}
      */
     function blockDay() {
+        // Disable Block Buttons
+        setIsInBlockOperation(true);
         // TODO: Add logic for saving the blocked date in the database
+        // TODO: Add logic for removing the blocked hours from the db if the user blocked specific hours on that date
         console.log("In block date, should save in db");
+        // Enable Block Buttons
+        setIsInBlockOperation(false);
     };
 
     const handleBlockDay = () => {
         console.log("in handle block day");
-        // If there are scheduled appointments on the selected date
-        if (props.scheduledAppointments.length > 0 ) {
-            setErrorFlag(true);
-            setErrorText("there are scheduled appointments on the selected date");
-            console.log("there are scheduled appointments on the selected date");
+        const chosenDate = props.date;
+        // If the selected date has already past
+        if (isBefore( chosenDate, new Date() ) && !isToday(chosenDate) ) {
+            handleError("The date you are trying to block has already past");
             return;
         }
+        // If there are scheduled appointments on the selected date
+        if (props.scheduledAppointments.length > 0 ) {
+            handleError("there are scheduled appointments on the selected date");
+            return;
+        }
+
         console.log("type: " + typeof(onDialogConfirm));
         setShowDialog(true);
         setOnDialogConfirm(() => blockDay);
-        setDialogText("Are you sure you want to block the date?");
+        setDialogText(`Are you sure you want to block the date: ${getFormatedDate()}?`);
     };
 
     const handleBlockHours = () => {
-        // add logic for handling the number of hours button chose
+        const chosenDate = props.date;
         const sortedTimes = selectedTimes.sort();
+        const isRangeSelected = sortedTimes.length === 2;
         // If the user chose range of hours
-        if (sortedTimes.length === 2) {
-            // If there is an appointment scheduled between those hours
-            if (scheduledAppointmentBetween(sortedTimes[0], sortedTimes[1])) {
-                setErrorFlag(true);
-                setErrorText(`there are scheduled appointments between ${sortedTimes[0]} and ${sortedTimes[1]}`);
+        if (isRangeSelected) {
+            // If the user blocked the whole day
+            if (sortedTimes[0] === "08:00" && sortedTimes[1] === "22:00") {
+                handleBlockDay();
                 return;
             }
         }
-        console.log("in handle block hours");
+        // If the selected date has already past
+        if (isBefore( chosenDate, new Date() ) && !isToday(chosenDate) ) {
+            handleError("The hours you sre trying to block are on a date that has already past");
+            return;
+        }
+        // If the selected date is the current date and the start hour the user chose has already past
+        if ( isToday(chosenDate) && sortedTimes[0] < currentHour ) {
+            handleError(`The hour you chose: ${sortedTimes[0]} has already past`);
+            return;
+        }
+
+        // If the user chose range of hours
+        if (isRangeSelected) {
+            // If there is an appointment scheduled between those hours
+            if (scheduledAppointmentBetween(sortedTimes[0], sortedTimes[1])) {
+                handleError(`there are scheduled appointments between ${sortedTimes[0]} and ${sortedTimes[1]}`);
+                return;
+            }
+        } else {
+            // If the user chose one hour
+            // If the hour is 22:00
+            if (sortedTimes[0] === "22:00") {
+                handleError("The hour 22:00 can't be blocked, no appointments can be scheduled after 22:00");
+                return;
+            }
+        }
         setShowDialog(true);
         setOnDialogConfirm(() => blockHours);
-        setDialogText("Are you sure you want to block the hours?");
+        setDialogText(`Are you sure you want to block the hours: ${sortedTimes.join(" untill ")}?`);
     };
 
     /**
@@ -160,8 +202,25 @@ const Times = (props) => {
      * @return {void}
      */
     function blockHours() {
+        // Disable Block Buttons
+        setIsInBlockOperation(true);
         // TODO: Add logic for saving the blocked hours in the database
+        generateBlockedHoursList();
         console.log("In block hours, should save in db");
+        // Enable Block Buttons
+        setIsInBlockOperation(false);
+    };
+
+    const generateBlockedHoursList = () => {
+        const sortedTimes = selectedTimes.sort();
+        const startHour = sortedTimes[0];
+        const endHour = sortedTimes[1];
+        const res = times.filter((time) => time >= startHour && time < endHour);
+        console.log("Generated blocked hours list: " + res);
+        // const res = [startHour];
+        // for (const time of times) {
+
+        // }
     };
 
     const scheduledAppointmentBetween = (startTime, endTime) => {
@@ -175,7 +234,42 @@ const Times = (props) => {
         return false;
     };
 
+    const handleError = (errorText) => {
+        setErrorFlag(true);
+        setErrorText(errorText);
+    };
+
+
     const bookedHoursArr = getBookedHoursArr().sort();
+    const currentHour = new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    });
+
+    const getTimeButtonClassName = (isSelected, isBlockedHour, isAppointmentHour, buttonHour) => {
+        // If the date or the hour are bloccked
+        if (props.isDayBlocked || isBlockedHour) {
+            return "time-button time-blocked";
+        }
+        // If the hour is booked
+        if (isAppointmentHour) {
+            return "time-button time-booked";
+        }
+        // If the user selected the date by pressing it
+        if (isSelected) {
+            return "time-button time-selected";
+        }
+        // If the user chose range of hours
+        if (selectedTimes.length === 2) {
+            const sortedTimes = selectedTimes.sort();
+            // If the hour presented in the button is between the hours the user chose
+            if (buttonHour > sortedTimes[0] && buttonHour < sortedTimes[1]) {
+                return "time-button time-between-selected";
+            }
+        }
+        return "time-button time-deselected";
+    };
 
     return (
         <div className="flex-col">
@@ -183,7 +277,7 @@ const Times = (props) => {
                 <ErrorToast show={errorFlag} errorText={errorText} setShow={setErrorFlag}/>
             </div>
             <div className="d-flex align-items-center justify-content-center">
-                <Button variant="dark mt-3 mb-3" disabled={props.isDayBlocked} onClick={handleBlockDay}>Block Day</Button>
+                <Button variant="dark mt-3 mb-3" disabled={props.isDayBlocked || isInBlockOperation} onClick={handleBlockDay}>Block Day</Button>
             </div>
             <div className="time-buttons">
                 {/* The hours list */}
@@ -196,12 +290,7 @@ const Times = (props) => {
                             key={time}
                             disabled={props.isDayBlocked || isBlockedHour || isAppointmentHour}
                             onClick={() => toggleTime(time, isSelected)}
-                            className={
-                                props.isDayBlocked || isBlockedHour ?
-                                    "time-button time-blocked" :
-                                    `time-button ${isSelected ? "time-selected" : ( isAppointmentHour ? "time-booked" : "time-deselected" ) }
-                                    }`
-                            }
+                            className={getTimeButtonClassName(isSelected, isBlockedHour, isAppointmentHour, time)}
                         >
                             {time}
                         </button>
@@ -209,17 +298,10 @@ const Times = (props) => {
                 })}
             </div>
             <div className="container d-flex justify-content-center mt-3">
-                <Button variant="dark" disabled={props.isDayBlocked || selectedTimes.length===0} onClick={handleBlockHours}>Block Hours</Button>
+                <Button variant="dark" disabled={props.isDayBlocked || selectedTimes.length===0 || isInBlockOperation} onClick={handleBlockHours}>Block Hours</Button>
             </div>
             <div className="time-display">
-                {!props.isDayBlocked ? (
-                    <p>
-                        Your appointment is set to {selectedTimes.sort().join(" until ")}{" "}
-                        {props.date.toDateString()}
-                    </p>
-                ) : (
-                    <p>This date is blocked</p>
-                )}
+                {props.isDayBlocked && <p className="text-white">This date is blocked</p>}
             </div>
             <YesNoConfirmationWindow show={showDialog} onConfirm={onDialogConfirm} onClose={onDialogClose} dialogText={dialogText} />
         </div>
@@ -243,5 +325,14 @@ Times.propTypes = {
     blockedHours: PropTypes.arrayOf(PropTypes.string),
     scheduledAppointments: PropTypes.arrayOf(PropTypes.object),
 };
+
+// className={
+//     props.isDayBlocked || isBlockedHour ?
+//         "time-button time-blocked" :
+//         `time-button ${isSelected ?
+//             "time-selected" :
+//             ( isAppointmentHour ? "time-booked" : "time-deselected" ) }
+//         }`
+// }
 
 export default Times;
