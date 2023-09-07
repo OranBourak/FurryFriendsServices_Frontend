@@ -29,12 +29,13 @@ const ServiceProviderResults = ({serviceData}) => {
                         <List.Item className="list-item">
                             <div className="list-item-content">
                                 <List.Item.Meta
-                                    avatar={<Avatar className="avatar" src={require("../../images/50x50.jpg")} />}
+                                    avatar={<Avatar className="avatar"
+                                        src={require("../../images/defaultProfileImage.jpg")} />}
                                     title={<Text strong>{item.providerName}</Text>}
                                     description={
                                         <>
-                                            <Rate className="rate" disabled defaultValue={item.reviewAverage} />
-                                            <Text> ({item.reviewAverage})</Text>
+                                            <Rate className="rate" disabled defaultValue={0} />
+                                            <Text> ({item.averageRating})</Text>
                                         </>
                                     }
                                 />
@@ -42,7 +43,7 @@ const ServiceProviderResults = ({serviceData}) => {
                                     <Text style={{fontSize: "16px"}} className="service-text" strong>
                     Services:{" "}
                                     </Text>
-                                    {item.services.join(", ")}
+                                    {item.typeOfService}
                                     <br />
                                     <Text style={{fontSize: "16px"}} className="price-text" strong>
                     Price Range:{" "}
@@ -53,8 +54,8 @@ const ServiceProviderResults = ({serviceData}) => {
                                     <Button
                                         className="schedule-button"
                                         type="primary"
-                                        key={item.id}
-                                        onClick={() => handleSelectedProvider(item.id)}
+                                        key={item._id}
+                                        onClick={() => handleSelectedProvider(item._id)}
                                     >
                     Schedule Appointment
                                     </Button>
