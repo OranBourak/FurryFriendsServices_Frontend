@@ -7,7 +7,7 @@
   align-items: center;
   padding: 20px;
   background-color: #96B6C5;
-  height: 100vh; 
+  height: 100vh;
 }
 
   
@@ -18,7 +18,7 @@
     margin-bottom: 20px;
   }
 
-  /* Container for the service provider results */
+  /* Container for the service provider results */ 
   .service-provider-results-container {
     width: 100%;
     max-width: 950px;

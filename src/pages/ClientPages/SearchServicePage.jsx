@@ -53,6 +53,7 @@ function SearchServicePage() {
             <div className="service-provider-results-container">
                 {/* ServiceProviderResults component to display the list of service providers */}
                 <ServiceProviderResults serviceData={serviceData} />
+                <text style={{fontSize: "20px"}}>#Results: {serviceData.length}</text>
             </div>
         </div>
     );
