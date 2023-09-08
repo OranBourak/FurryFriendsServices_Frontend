@@ -40,7 +40,7 @@ function App() {
                 <Route exact path="/" element={<Home/>} />
                 <Route path="/login" element={<LoginPage onLogin={handleLogin}/>} />
                 <Route path="/login-alert" element={<LoginAlert name={loggedInUserName}/>} />
-                <Route path="/signup" element={<RegisterPage/>} />
+                <Route path="/provider-signup" element={<RegisterPage/>} />
                 <Route path="/profile" element={<SPProfilePage/>} />
                 <Route path="/dashboard" element={<Dashboard/>} />
                 <Route path="/pass-recovery" element={<PassRecoveryPage/>} />
