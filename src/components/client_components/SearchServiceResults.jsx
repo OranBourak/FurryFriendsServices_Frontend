@@ -58,9 +58,14 @@ const ServiceProviderResults = ({serviceData}) => {
                                 {/* Additional details like services offered and price range */}
                                 <Col>
                                     <Text style={{fontSize: "16px"}} className="service-text" strong>
-                                        Services:{" "}
+                                        Service:{" "}
                                     </Text>
                                     {provider.typeOfService}
+                                    <br />
+                                    <Text style={{fontSize: "16px"}} className="price-text" strong>
+                                        City:{" "}
+                                    </Text>
+                                    {provider.city}
                                     <br />
                                     <Text style={{fontSize: "16px"}} className="price-text" strong>
                                         Price Range:{" "}
