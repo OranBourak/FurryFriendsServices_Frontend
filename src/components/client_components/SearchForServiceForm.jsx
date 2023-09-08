@@ -30,8 +30,8 @@ function SearchForm({handleSearch}) {
     const [fields, setFields] = useState({
         typeOfService: "",
         city: "",
-        min_price: "",
-        max_price: "",
+        minPrice: "",
+        maxPrice: "",
         averageRating: "",
     });
 
@@ -46,16 +46,16 @@ function SearchForm({handleSearch}) {
         case "service_location":
             setFields({...fields, city: value});
             break;
-        case "min_price":
-            setFields({...fields, min_price: value});
+        case "minPrice":
+            setFields({...fields, minPrice: value});
             // Validate max price against min price
-            setMaxFlag(!(fields.max_price !== "" && parseFloat(fields.max_price) <= parseFloat(value)));
+            setMaxFlag(!(fields.maxPrice !== "" && parseFloat(fields.maxPrice) <= parseFloat(value)));
             setIsFormValid(maxFlag);
             break;
-        case "max_price":
-            setFields({...fields, max_price: value});
+        case "maxPrice":
+            setFields({...fields, maxPrice: value});
             // Validate min price against max price
-            setMaxFlag(!(fields.min_price !== "" && (parseFloat(fields.min_price) >= parseFloat(value))));
+            setMaxFlag(!(fields.minPrice !== "" && (parseFloat(fields.minPrice) >= parseFloat(value))));
             break;
         default:
             break;
@@ -64,7 +64,7 @@ function SearchForm({handleSearch}) {
 
     // Update form validity when maxFlag changes
     useEffect(() => {
-        {(fields.max_price !== "") && setIsFormValid(maxFlag);}
+        {(fields.maxPrice !== "") && setIsFormValid(maxFlag);}
     }, [maxFlag]);
 
 
@@ -113,24 +113,24 @@ function SearchForm({handleSearch}) {
                 <Form.Group as={Col} md="4" controlId="PriceRange">
                     <Form.Label>Price Range</Form.Label>
                     <Form.Control
-                        name="min_price"
+                        name="minPrice"
                         type="number"
                         min="0"
                         step="0.01"
                         placeholder="minimum price"
-                        value={fields.min_price}
+                        value={fields.minPrice}
                         onChange={handleChange}
                     />
 
                     <Form.Control
-                        isInvalid={fields.max_price ? !maxFlag: null}
-                        isValid={fields.max_price? maxFlag: null}
-                        name="max_price"
+                        isInvalid={fields.maxPrice ? !maxFlag: null}
+                        isValid={fields.maxPrice? maxFlag: null}
+                        name="maxPrice"
                         type="number"
                         min="0"
                         step="0.01"
                         placeholder="maximum price"
-                        value={fields.max_price}
+                        value={fields.maxPrice}
                         onChange={handleChange}
                     />
                     <Form.Control.Feedback type="invalid">
