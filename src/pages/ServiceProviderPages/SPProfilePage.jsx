@@ -1,9 +1,8 @@
-/* eslint-disable linebreak-style */
 import React, {useState} from "react";
-import {Container, Row, Col, Image, Form, Alert} from "react-bootstrap";
-import Button from "react-bootstrap/Button";
+import {Container, Row, Col, Image, Form, Alert, Button} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/ProfilePage.css";
 import PhoneNumberEl from "../../components/ServiceProviderComponents/PhoneNumberEl.jsx";
+// import axios from "axios";
 
 const ProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);
@@ -24,6 +23,12 @@ const ProfilePage = () => {
     const [validationErrorEmail, setValidationErrorEmail] = useState(false);
 
     const [formSubmitted, setFormSubmitted] = useState(false);
+
+
+    // TODO: add population
+    // useEffect(async () => {
+    //     const response = await axios.get();
+    // }, []);
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -80,7 +85,7 @@ const ProfilePage = () => {
      * @param {Event} event - The input change event.
      */
     function handlePhoneNumber(event) {
-        console.log("handle phone numner");
+        console.log("handle phone number");
         setPhone(event.target.value);
     }
 

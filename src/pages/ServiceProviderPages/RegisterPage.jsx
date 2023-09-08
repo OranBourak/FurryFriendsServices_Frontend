@@ -132,10 +132,11 @@ function RegisterPage() {
                 gender: gender,
                 typeOfService: serviceType,
             });
-            const {token} = response.data;
+            const {token, id} = response.data;
             setName(response.data.name);
             const userType = "Service Provider";
             const userData = {
+                id,
                 name,
                 token,
                 userType,
