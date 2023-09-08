@@ -45,9 +45,10 @@ function LoginPage({onLogin}) {
             });
             // TODO: handle the token
             console.log("In login page, user exists");
-            const data = response.data;
-            handleLogIn(data.name);
-            console.log("name: " + data.name);
+            const {name, token, id} = response.data;
+            setEmail(response.data.email);
+            handleLogIn(name, token, email, id);
+            console.log("name: " + name);
         } catch (error) {
             console.log("error: " + error);
             setError("Bad credentials. Please check your email and password.");
@@ -57,13 +58,21 @@ function LoginPage({onLogin}) {
     /**
      * Handles successful login.
      * @param {string} name - The user's name.
+     * @param {string} token - The user's token
+     * @param {string} email - The user's email
+     * @param {sting} id - The user's ID
      */
-    const handleLogIn = (name) => {
-        console.log("in handle log in");
-        if (name) {
-            onLogin(name);
-            console.log(name);
-        }
+    const handleLogIn = (name, token, email, id) => {
+        const userType = "Service Provider";
+        const userData = {
+            id,
+            name,
+            token,
+            email,
+            userType,
+        };
+        localStorage.setItem("user", JSON.stringify(userData));
+        navigate("/profile");
     };
 
     /**
