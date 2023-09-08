@@ -50,8 +50,8 @@ const ServiceProviderResults = ({serviceData}) => {
                                     title={<Text strong>{provider.name}</Text>}
                                     description={
                                         <>
-                                            <Rate className="rate" disabled defaultValue={provider.averageRating} />
-                                            <Text> ({provider.averageRating})</Text>
+                                            <Rate className="rate" disabled value={Number(provider.averageRating)} />
+                                            <Text> ({Number(provider.averageRating).toFixed(1)})</Text>
                                         </>
                                     }
                                 />
