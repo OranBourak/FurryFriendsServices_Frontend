@@ -139,6 +139,7 @@ function RegisterPage() {
                 name,
                 token,
                 userType,
+                email,
             };
             localStorage.setItem("user", JSON.stringify(userData));
             setRedirectToProfile(true);
