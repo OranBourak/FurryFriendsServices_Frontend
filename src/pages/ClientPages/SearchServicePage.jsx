@@ -29,9 +29,6 @@ function SearchServicePage() {
 
             // Check if the request was successful
             if (response.status === 200) {
-                // TODO: Remove console log in production
-                console.log(response.data);
-
                 // Update the state with the fetched service provider data
                 serviceDataSet(response.data.providers);
             }
