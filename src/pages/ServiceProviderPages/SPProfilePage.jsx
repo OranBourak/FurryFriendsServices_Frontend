@@ -1,10 +1,14 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Container, Row, Col, Image, Form, Alert, Button} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/ProfilePage.css";
 import PhoneNumberEl from "../../components/ServiceProviderComponents/PhoneNumberEl.jsx";
-// import axios from "axios";
+import {useAuth} from "../../context/AuthContext";
+import axios from "axios";
 
 const ProfilePage = () => {
+    const defaultImg = "https://cdn.pixabay.com/photo/2018/12/26/09/16/vet-3895477_960_720.jpg";
+
+    const {loggedIn, userData} = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState("John Doe");
     const [email, setEmail] = useState("johndoe@example.com");
@@ -21,14 +25,32 @@ const ProfilePage = () => {
     );
     const [validationErrorName, setValidationErrorName] = useState(false);
     const [validationErrorEmail, setValidationErrorEmail] = useState(false);
+    const [typeOfService, setTypeOfService] = useState("Vet");
 
     const [formSubmitted, setFormSubmitted] = useState(false);
 
-
-    // TODO: add population
-    // useEffect(async () => {
-    //     const response = await axios.get();
-    // }, []);
+    const getData = async () => {
+        if (loggedIn) {
+            try {
+                const response = await axios.get(`/serviceProvider/get/${userData.id}`);
+                const provider = response.data.serviceProvider;
+                setName(provider.name);
+                setEmail(provider.email);
+                setPhone(provider.phone.substr(3));
+                setPhonePrefix(provider.phone.substr(0, 3));
+                setCountry(provider.country);
+                setGender(provider.gender);
+                setImage(require(provider.image));
+                setBio(provider.bio);
+                setTypeOfService(provider.typeOfService);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
+    useEffect(() => {
+        getData();
+    }, []);
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -110,6 +132,7 @@ const ProfilePage = () => {
                 const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
                 if (validImageTypes.includes(selectedImage.type)) {
                     const imageUrl = URL.createObjectURL(selectedImage);
+                    console.log(imageUrl);
                     setImage(imageUrl);
                 } else {
                     alert("Please select a valid image file (JPEG, PNG, GIF).");
@@ -125,7 +148,7 @@ const ProfilePage = () => {
         <Container className="profile-container">
             <Row className="profile-header">
                 <Col className="profile-image" xs={6} md={4}>
-                    <Image className="profile-picture" src={image} rounded fluid style={{maxHeight: "300px", maxWidth: "300px"}}/>
+                    <Image className="profile-picture" src={image? image : defaultImg} rounded fluid style={{maxHeight: "300px", maxWidth: "300px"}}/>
                     {isEditingPicture && (
                         <Form>
                             <Form.Control
@@ -141,7 +164,7 @@ const ProfilePage = () => {
                 </Col>
                 <Col className="profile-name" xs={6} md={4}>
                     <h1>{name}</h1>
-                    <h3>Veterinarian</h3>
+                    <h3>{typeOfService}</h3>
                 </Col>
             </Row>
             <Row className="profile-section">
@@ -247,6 +270,7 @@ const ProfilePage = () => {
           Please fix the validation errors before saving.
                     </Alert>
                 )}
+                {}
                 {!isEditing && !isEditingPicture ? (
                     <><Button variant="primary" onClick={handleEdit}>
                         Edit Profile
