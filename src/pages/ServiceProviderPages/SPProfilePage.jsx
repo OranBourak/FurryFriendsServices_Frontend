@@ -4,6 +4,7 @@ import "../../styles/ServiceProviderStyles/ProfilePage.css";
 import PhoneNumberEl from "../../components/ServiceProviderComponents/PhoneNumberEl.jsx";
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
+import {Navigate} from "react-router-dom";
 
 const ProfilePage = () => {
     const defaultImg = "https://cdn.pixabay.com/photo/2018/12/26/09/16/vet-3895477_960_720.jpg";
@@ -29,10 +30,15 @@ const ProfilePage = () => {
 
     const [formSubmitted, setFormSubmitted] = useState(false);
 
+
     const getData = async () => {
         if (loggedIn) {
             try {
-                const response = await axios.get(`/serviceProvider/get/${userData.id}`);
+                const response = await axios.get(`/serviceProvider/get/${userData.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${userData.token}`, // Replace 'userToken' with the actual user token
+                    },
+                });
                 const provider = response.data.serviceProvider;
                 setName(provider.name);
                 setEmail(provider.email);
@@ -142,7 +148,12 @@ const ProfilePage = () => {
             }
         }
     };
-
+    if (!loggedIn) {
+        // Redirect to the login page or another protected route
+        return <Navigate to="/login" />;
+    } else if (userData.userType !== "Service Provider") {
+        return <Navigate to="/error"/>;
+    }
 
     return (
         <Container className="profile-container">
