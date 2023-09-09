@@ -8,6 +8,7 @@ import PhoneNumberEl from "../../components/ServiceProviderComponents/PhoneNumbe
 import Card from "react-bootstrap/Card";
 import ErrorToast from "../../components/ServiceProviderComponents/ErrorToast";
 import {Navigate} from "react-router-dom";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 /**
  * Register page component.
@@ -105,7 +106,7 @@ function RegisterPage() {
     const genders = ["Male", "Female", "Other"];
     const serviceTypes = ["Dog Walker", "Veterinarian", "Dog Groomer"];
     const successVarinat= "success";
-
+    const {login} = useAuth();
     /**
      * Handles form submission.
      * @param {Event} event - The form submit event.
@@ -135,14 +136,15 @@ function RegisterPage() {
             const {token, id} = response.data;
             setName(response.data.name);
             const userType = "Service Provider";
-            const userData = {
-                id,
-                name,
-                token,
-                userType,
-                email,
-            };
-            localStorage.setItem("user", JSON.stringify(userData));
+            // const userData = {
+            //     id,
+            //     name,
+            //     token,
+            //     userType,
+            //     email,
+            // };
+            login(name, token, email, id, userType);
+            // localStorage.setItem("user", JSON.stringify(userData));
             setRedirectToProfile(true);
         } catch (error) {
             console.log("error: " + error);

@@ -8,6 +8,7 @@ import axios from "axios";
 import "../../styles/ServiceProviderStyles/LoginPage.css";
 import {useNavigate} from "react-router-dom";
 import {ButtonGroup, ToggleButton} from "react-bootstrap";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 
 /**
@@ -22,7 +23,7 @@ function LoginPage({onLogin}) {
     const [error, setError] = useState("");
 
     const navigate = useNavigate();
-
+    const {login} = useAuth();
     /**
      * Handles form submission.
      * @param {Event} event - The form submit event.
@@ -44,11 +45,9 @@ function LoginPage({onLogin}) {
                 password: password,
             });
             // TODO: handle the token
-            console.log("In login page, user exists");
             const {name, token, id} = response.data;
             setEmail(response.data.email);
             handleLogIn(name, token, email, id);
-            console.log("name: " + name);
         } catch (error) {
             console.log("error: " + error);
             setError("Bad credentials. Please check your email and password.");
@@ -64,14 +63,15 @@ function LoginPage({onLogin}) {
      */
     const handleLogIn = (name, token, email, id) => {
         const userType = "Service Provider";
-        const userData = {
-            id,
-            name,
-            token,
-            email,
-            userType,
-        };
-        localStorage.setItem("user", JSON.stringify(userData));
+        login(name, token, email, id, userType);
+        // const userData = {
+        //     id,
+        //     name,
+        //     token,
+        //     email,
+        //     userType,
+        // };
+        // localStorage.setItem("user", JSON.stringify(userData));
         navigate("/profile");
     };
 
