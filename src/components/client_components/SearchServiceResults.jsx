@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {Link} from "react-router-dom";
 import {Col, Empty} from "antd";
 import {Card, List, Avatar, Typography, Rate, Button} from "antd";
 import "../../styles/ClientStyles/ServiceProviderResults.css";
@@ -14,16 +15,6 @@ const {Title, Text} = Typography;
 * @return {React.Component} - ServiceProviderResults component that displays a list of service providers
  */
 const ServiceProviderResults = ({serviceData}) => {
-    /**
-     * handleSelectedProvider is triggered when a service provider is selected.
-     * Currently, it logs the selected provider's ID.
-     *
-     * @param {string} event - The ID of the selected service provider
-     */
-    const handleSelectedProvider = (event) => {
-        console.log("selected provider " + event);
-    };
-
     return (
         // Card container for the list of service providers
         <Card
@@ -74,14 +65,16 @@ const ServiceProviderResults = ({serviceData}) => {
                                 </Col>
                                 {/* Button to schedule an appointment with the service provider */}
                                 <Col>
-                                    <Button
-                                        className="schedule-button"
-                                        type="primary"
-                                        key={provider._id}
-                                        onClick={() => handleSelectedProvider(provider._id)}
-                                    >
+                                    <Link to={`/provider-profile/${provider._id}`}>
+                                        <Button
+                                            className="schedule-button"
+                                            type="primary"
+                                            key={provider._id}
+                                        >
                                         Schedule Appointment
-                                    </Button>
+                                        </Button>
+                                    </Link>
+
                                 </Col>
                             </div>
                         </List.Item>

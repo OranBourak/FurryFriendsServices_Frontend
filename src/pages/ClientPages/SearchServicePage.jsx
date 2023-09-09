@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import axios from "axios";
+import {Typography} from "antd";
 import SearchForm from "../../components/client_components/SearchForServiceForm.jsx";
 import ServiceProviderResults from "../../components/client_components/SearchServiceResults.jsx";
 import "../../styles/ClientStyles/SearchServicePage.css";
-
+const {Text} = Typography;
 /**
  * SearchServicePage is a React component that serves as the main page for searching service providers.
  * It manages the state for service data and handles the search functionality.
@@ -50,7 +51,7 @@ function SearchServicePage() {
             <div className="service-provider-results-container">
                 {/* ServiceProviderResults component to display the list of service providers */}
                 <ServiceProviderResults serviceData={serviceData} />
-                <text style={{fontSize: "20px"}}>#Results: {serviceData.length}</text>
+                <Text style={{fontSize: "20px"}}>#Results: {serviceData.length}</Text>
             </div>
         </div>
     );

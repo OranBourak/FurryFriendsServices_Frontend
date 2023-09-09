@@ -20,7 +20,11 @@ import AppointmentManagmentPage from "./pages/ServiceProviderPages/AppointmentMa
 import ClientRegistrationForm from "./components/client_components/ClientRegistrationForm.jsx";
 import ClientDashboardPage from "./pages/ClientPages/ClientDashboardPage.jsx";
 import SearchServicePage from "./pages/ClientPages/SearchServicePage.jsx";
+<<<<<<< HEAD
 import ErrorPage from "./pages/ServiceProviderPages/ErrorPage.jsx";
+=======
+import ProviderProfilePage from "./pages/ClientPages/ProviderProfilePage.jsx";
+>>>>>>> 8b3ad96fa981d3138568713788c5b5012f617080
 
 /**
  * Pet Service application
@@ -53,7 +57,11 @@ function App() {
                 <Route path="/clientSignup" element={<ClientRegistrationForm/>} />
                 <Route path="/client-dash-board" element={<ClientDashboardPage/>} />
                 <Route path="/Search-service" element={<SearchServicePage/>} />
+<<<<<<< HEAD
                 <Route path="/error" element={<ErrorPage/>} />
+=======
+                <Route path="/provider-profile/:id" element={<ProviderProfilePage />} />
+>>>>>>> 8b3ad96fa981d3138568713788c5b5012f617080
             </Routes>
         </>
     );
