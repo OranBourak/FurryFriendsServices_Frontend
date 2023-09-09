@@ -5,16 +5,11 @@ import Navbar from "react-bootstrap/Navbar";
 import {NavDropdown} from "react-bootstrap";
 import {useAuth} from "../../context/AuthContext";
 
-/**
- * NavBar component for site navigation
- * @return {React.Component}
- */
-function NavbarCustom() {
-    const {loggedIn, logout, userData} = useAuth(); // Access userData from the context
+const NavbarCustom=()=> {
+    const {loggedIn, logout, userData} = useAuth();
     const [userName, setUserName] = useState(null);
 
     useEffect(() => {
-        // Update userName when userData changes
         if (userData) {
             setUserName(userData.name);
         }
@@ -22,7 +17,7 @@ function NavbarCustom() {
 
     return (
         <>
-            <Navbar className="border-bottom" bg="dark" data-bs-theme="dark">
+            <Navbar className="border-bottom fixed-top" bg="dark" data-bs-theme="dark">
                 <Container>
                     <Navbar.Brand href="/">Furry Friends</Navbar.Brand>
                     <Nav className="me-auto">
@@ -34,12 +29,10 @@ function NavbarCustom() {
                                 <Nav.Link href="/" onClick={logout}>
                   Logout
                                 </Nav.Link>
-
                             </>
                         ) : (
                             <>
                                 <Nav.Link href="/login">Login</Nav.Link>
-                                {/* Create a Dropdown for the "Register" item */}
                                 <NavDropdown title="Register" id="register-nav-dropdown">
                                     <NavDropdown.Item href="/client-register">
                     Client Register
@@ -51,15 +44,18 @@ function NavbarCustom() {
                             </>
                         )}
                     </Nav>
-                    {userName &&(
+                    {userName && (
                         <Navbar.Text className="text-light ml-auto">
-                                        Hello, {userName}
+              Hello, {userName}
                         </Navbar.Text>
                     )}
                 </Container>
             </Navbar>
+            <div style={{paddingTop: "70px"}}>
+                {/* Add this div to create space so that the content does not get hidden under the sticky navbar */}
+            </div>
         </>
     );
-}
+};
 
 export default NavbarCustom;
