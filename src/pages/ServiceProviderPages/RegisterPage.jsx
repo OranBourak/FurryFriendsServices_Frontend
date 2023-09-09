@@ -310,8 +310,8 @@ function RegisterPage() {
                                 <ComboBoxDropdown onSelectedValueChange={handleServiceTypeChange} options={serviceTypes} placeholder="Choose The Service You Provide" variant={successVarinat} id="service-type-cmb" />
                             </Form.Group>
                             <Form.Group className="mb-3 m-3" controlId="registrationFormCity">
-                                <Form.Label>Service Type</Form.Label>
-                                <ComboBoxDropdown onSelectedValueChange={handleCityChange} options={israelCities} placeholder="Choose Your city" variant={successVarinat} id="service-type-cmb" />
+                                <Form.Label>City</Form.Label>
+                                <ComboBoxDropdown onSelectedValueChange={handleCityChange} options={israelCities} placeholder="Choose Your city" variant={successVarinat} id="city-cmb" />
                             </Form.Group>
                             <div className="border-bottom border-light"></div>
                             {/* information for passwrod recovery */}
