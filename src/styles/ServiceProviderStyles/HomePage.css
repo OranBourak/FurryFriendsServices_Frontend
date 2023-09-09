@@ -1,0 +1,45 @@
+/* HomePage.css */
+
+/* Style for the main container */
+.homepage-container {
+    padding: 20px;
+    background-color: #f8f9fa; /* Light gray background */
+    border-radius: 30px;
+    box-shadow: 10px 5px 5px #555;
+  }
+  
+  /* Style for the main title */
+  .homepage-title {
+    color: #007bff; /* Blue color */
+    font-size: 36px;
+    margin-top: 20px;
+    text-decoration: underline;
+  }
+  
+  /* Style for the lead paragraph */
+  .homepage-lead {
+    font-size: 18px;
+  }
+  
+  /* Style for the service list */
+  .service-list {
+    margin-top: 20px;
+  }
+  
+  /* Style for individual service items */
+  .service-item {
+    font-size: 16px;
+  }
+  
+  /* Style for the "Get Started" button */
+  .get-started-button {
+    font-size: 18px;
+    margin-top: 20px;
+  }
+  
+  /* Style for the footer */
+  .footer-text {
+    margin-top: 20px;
+    color: #555; /* Gray color for the footer text */
+  }
+  
