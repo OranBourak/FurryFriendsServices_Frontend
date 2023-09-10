@@ -4,13 +4,18 @@ import {useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
+import {ButtonGroup, ToggleButton} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/PassRecoveryPage.css";
+import axios from "axios";
+
 
 /**
  * Password recovery page component.
  * @return {React.Component} - The Password Recovery page component.
  */
 function PassRecoveryPage() {
+    // User type
+    const [userType, setUserType] = useState("");
     // Email
     const [email, setEmail] = useState("");
     const [emailErrorFlag, setEmailErrorFlag] = useState(false);
@@ -37,13 +42,21 @@ function PassRecoveryPage() {
      */
     const handleEmailSubmit = async (event) => {
         event.preventDefault();
+        console.log("type: " + userType);
         // TODO: Add logic to check if email is in the database, if yes fetch security question and answer if no show error and return
-
-        // Assuming email exists in the system
-        setEmailExist(true);
-        setQuestion("Question");
-        setRealAnswer("Answer");
-
+        try {
+            const response = await axios.get(`/${userType}/pass-recovery`, {
+                email: email,
+            });
+            // TODO: handle the token
+            const {securityQuestion, securityAnswer, id} = response.data;
+            // User found and exists
+            setEmailExist(true);
+            setQuestion(securityQuestion);
+            setRealAnswer(securityAnswer);
+        } catch (error) {
+            console.log("error: " + error);
+        }
 
     // for commit: https://furryfriendsbackend.onrender.com/login
     // for testing: http://localhost:5000/login
@@ -130,11 +143,37 @@ function PassRecoveryPage() {
     const isEmailFromInvalid = !email.trim() || emailErrorFlag;
     const isSecurityFormInvalid = !answer.trim();
     const isPasswordFormInvalid = !password.trim() || !confirmPassword.trim() || passwordErrorFlag || confirmPasswordErrorFlag || !(password === confirmPassword);
+    const radios = [
+        {name: "Client", value: "client"},
+        {name: "Service Provider", value: "serviceProvider"},
+    ];
     return (
         <div className="page-background">
             <h1 className="blue mb-3">Passwrod Recovery</h1>
             <div className="password-recovery-form">
                 <Form onSubmit={handleEmailSubmit} id="emailForm">
+                    {/* user type */}
+                    <Form.Group className="mb-3" controlId="formBasicUserType">
+                        <Form.Label>User Type</Form.Label>
+                        <div>
+                            <ButtonGroup className="mb-2">
+                                {radios.map((radio, idx) => (
+                                    <ToggleButton
+                                        key={idx}
+                                        id={`radio-${idx}`}
+                                        type="radio"
+                                        variant="secondary"
+                                        name="radio"
+                                        value={radio.value}
+                                        checked={userType === radio.value}
+                                        onChange={(e) => setUserType(e.currentTarget.value)}
+                                    >
+                                        {radio.name}
+                                    </ToggleButton>
+                                ))}
+                            </ButtonGroup>
+                        </div>
+                    </Form.Group>
                     <Form.Group className="mb-3" controlId="emailFormGroup">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control
@@ -150,7 +189,7 @@ function PassRecoveryPage() {
                             Email format should be as follows: example@mail.domain
                         </Form.Control.Feedback>
                     </Form.Group>
-                    <Button id="submitEmailBtn" variant="primary" type="submit" disabled={isEmailFromInvalid} hidden={emailExist}>
+                    <Button id="submitEmailBtn" variant="primary" type="submit" disabled={isEmailFromInvalid || !userType.trim()} hidden={emailExist}>
                         Verify Email
                     </Button>
                 </Form>
