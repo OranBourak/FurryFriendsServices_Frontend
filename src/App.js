@@ -22,6 +22,8 @@ import ClientDashboardPage from "./pages/ClientPages/ClientDashboardPage.jsx";
 import SearchServicePage from "./pages/ClientPages/SearchServicePage.jsx";
 import ErrorPage from "./pages/ServiceProviderPages/ErrorPage.jsx";
 import ProviderProfilePage from "./pages/ClientPages/ProviderProfilePage.jsx";
+import ClientProfilePage from "./pages/ClientPages/ClientProfilePage.jsx";
+import {useAuth} from "./context/AuthContext.jsx";
 
 /**
  * Pet Service application
@@ -30,6 +32,7 @@ import ProviderProfilePage from "./pages/ClientPages/ProviderProfilePage.jsx";
  */
 function App() {
     const [loggedInUserName, setLoggedInUsername] = useState("");
+    const {userData} = useAuth();
 
     const handleLogin = (user) => {
         setLoggedInUsername(user);
@@ -43,8 +46,8 @@ function App() {
                 <Route path="/login" element={<LoginPage onLogin={handleLogin}/>} />
                 <Route path="/login-alert" element={<LoginAlert name={loggedInUserName}/>} />
                 <Route path="/provider-signup" element={<RegisterPage/>} />
-                <Route path="/profile" element={<SPProfilePage/>} />
-                <Route path="/dashboard" element={<Dashboard/>} />
+                <Route path="/profile" element={(userData && (userData.userType === "client"))? <ClientProfilePage/>:<SPProfilePage/>} />
+                <Route path="/dashboard" element={(userData && (userData.userType == "client")) ? <ClientDashboardPage/>:<Dashboard/>} />
                 <Route path="/pass-recovery" element={<PassRecoveryPage/>} />
                 <Route path="/type-managment" element={<TypeManagmentPage/>} />
                 <Route path="/upcoming-appointments" element={<UpcomingAppointmentsPage/>} />
