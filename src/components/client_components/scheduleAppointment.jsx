@@ -1,7 +1,8 @@
-import React, {useState} from "react";
-import PropTypes from "prop-types";
 import {Calendar, TimePicker, Button, Select} from "antd";
+import React, {useState, useEffect} from "react";
+import PropTypes from "prop-types";
 import moment from "moment";
+import axios from "axios";
 
 const {Option} = Select;
 
@@ -11,13 +12,28 @@ const ScheduleAppointment = ({providerID}) => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedService, setSelectedService] = useState(null);
+    const [blockedDates, setBlockedDates] = useState([]);
+    const [blockedTimeSlots, setBlockedTimeSlots] = useState([]);
+    const [appointments, setAppointments] = useState([]);
+    const [appointmentTypes, setAppointmentTypes] = useState([]);
 
-    // Sample data for dates and times that are not available
-    const blockedDates = ["Sep 11 2023", "Sep 23 2023"];
-    const blockedTimeSlots = [
-        {date: "Sep 21 2023", blockedHours: ["08:00", "10:00"]},
-        {date: "Sep 22 2023", blockedHours: ["08:00", "16:00"]},
-    ];
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`/client/serviceProviderSchedule/${providerID}`);
+                const {blockedDates, blockedTimeSlots, appointments, appointmentTypes} = response.data;
+
+                setBlockedDates(blockedDates);
+                setBlockedTimeSlots(blockedTimeSlots);
+                setAppointments(appointments);
+                setAppointmentTypes(appointmentTypes);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, [providerID]);
+
 
     // Handler for when a date is selected from the calendar
     const handleDateChange = (date) => {
@@ -30,16 +46,17 @@ const ScheduleAppointment = ({providerID}) => {
     };
 
     // Handler for when a service is selected from the dropdown
-    const handleServiceChange = (service) => {
-        setSelectedService(service);
+    const handleServiceChange = (serviceId) => {
+        const selectedService = appointmentTypes.find((type) => type._id === serviceId);
+        setSelectedService(selectedService);
     };
 
+
     // Handler for creating an appointment with the selected details
+    // TODO: implement this function
     const handleCreateAppointment = () => {
-        console.log("Creating appointment with the following details:");
-        console.log("Date:", selectedDate?.format("YYYY-MM-DD"));
-        console.log("Time:", selectedTime?.format("HH:mm"));
-        console.log("Service:", selectedService);
+    // clientID, serviceProviderID, status, date, duration
+        const appointment = {}
     };
 
     // Function to disable specific dates on the calendar
@@ -53,12 +70,14 @@ const ScheduleAppointment = ({providerID}) => {
 
     // Function to disable specific time slots in the time picker
     const disabledTime = () => {
-        const selectedDateStr = selectedDate?.format("MMM D YYYY");
+        const selectedDateStr = selectedDate?.format("YYYY-MM-DD");
+        const disabledHours = [];
+
+        // Block time slots based on blockedTimeSlots
         const blockedTimeSlot = blockedTimeSlots.find(
-            (slot) => slot.date === selectedDateStr,
+            (slot) => moment(slot.date, "MMM D YYYY").format("YYYY-MM-DD") === selectedDateStr,
         );
 
-        const disabledHours = [];
         if (blockedTimeSlot) {
             blockedTimeSlot.blockedHours.forEach((hour) => {
                 const [startHour] = hour.split(":");
@@ -66,10 +85,23 @@ const ScheduleAppointment = ({providerID}) => {
             });
         }
 
+        // Block time slots based on existing appointments
+        appointments.forEach((appointment) => {
+            const appointmentDate = moment.utc(appointment.date).format("YYYY-MM-DD");
+            const appointmentHour = moment.utc(appointment.date).hour();
+
+            if (appointmentDate === selectedDateStr) {
+                for (let i = 0; i < appointment.duration; i++) {
+                    disabledHours.push(appointmentHour + i);
+                }
+            }
+        });
+
         return {
             disabledHours: () => disabledHours,
         };
     };
+
 
     return (
         <div>
@@ -84,6 +116,17 @@ const ScheduleAppointment = ({providerID}) => {
                 />
             </div>
             <div>
+                <h2>Select Service</h2>
+                {/* Dropdown for service selection */}
+                <Select onChange={handleServiceChange} style={{width: 300}}>
+                    {appointmentTypes.map((type) => (
+                        <Option key={type._id} value={type._id}>
+                            {`${type.name} - $${type.price} - ${type.duration} hour(s)`}
+                        </Option>
+                    ))}
+                </Select>
+            </div>
+            <div>
                 <h2>Select Time</h2>
                 {/* TimePicker component for time selection */}
                 <TimePicker
@@ -91,15 +134,6 @@ const ScheduleAppointment = ({providerID}) => {
                     format="HH"
                     disabledTime={disabledTime}
                 />
-            </div>
-            <div>
-                <h2>Select Service</h2>
-                {/* Dropdown for service selection */}
-                <Select onChange={handleServiceChange} style={{width: 200}}>
-                    <Option value="service1">Service 1</Option>
-                    <Option value="service2">Service 2</Option>
-                    <Option value="service3">Service 3</Option>
-                </Select>
             </div>
             <div>
                 {/* Button to create the appointment */}
