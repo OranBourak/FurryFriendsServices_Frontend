@@ -261,7 +261,7 @@ const ProfilePage = () => {
     }
 
     return (
-        <Container className="profile-container">
+        <Container className="container">
             <Row className="profile-header">
                 <Col className="profile-image" xs={6} md={4}>
                     <Image className="profile-picture" src={image? image : defaultImg} rounded fluid style={{maxHeight: "300px", maxWidth: "300px"}}/>
