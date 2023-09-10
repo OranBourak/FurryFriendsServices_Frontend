@@ -1,4 +1,4 @@
-import {Calendar, TimePicker, Button, Select} from "antd";
+import {Calendar, TimePicker, Button, Select, Modal, notification} from "antd";
 import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -54,9 +54,44 @@ const ScheduleAppointment = ({providerID}) => {
 
     // Handler for creating an appointment with the selected details
     // TODO: implement this function
-    const handleCreateAppointment = () => {
-    // clientID, serviceProviderID, status, date, duration
-        const appointment = {}
+    const handleCreateAppointment = async () => {
+        // Validate that all required fields are selected
+        if (!selectedDate || !selectedTime || !selectedService) {
+            Modal.warning({
+                title: "Missing Information",
+                content: "Please select a date, time, and service type before creating an appointment.",
+            });
+            return;
+        }
+
+        // Prepare the appointment data
+        const appointmentData = {
+            // TODO: Replace with the actual client ID , useContext
+            client_id: "64fbbd0998813acba7948e20", // FIXME: Replace with the actual client ID
+            serviceProvider_id: providerID,
+            status: "Upcoming",
+            appointmentType: selectedService._id,
+            date: moment(selectedDate).set({
+                hour: selectedTime.hour(),
+                minute: selectedTime.minute(),
+            }).toISOString(),
+            duration: selectedService.duration,
+        };
+
+        try {
+            // Make an API call to create the appointment
+            const response = await axios.post("/client/createAppointment", appointmentData);
+
+            if (response.status === 200) {
+                notification.success({message: "Success", description: "Appointment successfully created!"});
+                // TODO: Refresh the appointments (or navigate to another page)
+            } else {
+                Modal.error({title: "Error", content: "Failed to create the appointment."});
+            }
+        } catch (error) {
+            console.error("Error creating appointment:", error);
+            Modal.error({title: "Error", content: "An error occurred while creating the appointment. Please try again later."});
+        }
     };
 
     // Function to disable specific dates on the calendar
