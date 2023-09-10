@@ -63,18 +63,6 @@ const ServiceProviderInfo = ({providerID}) => {
 
 ServiceProviderInfo.propTypes = {
     providerID: PropTypes.string.isRequired,
-    serviceProvider: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        email: PropTypes.string.isRequired,
-        phone: PropTypes.string.isRequired,
-        country: PropTypes.string.isRequired,
-        city: PropTypes.string.isRequired,
-        gender: PropTypes.string.isRequired,
-        typeOfService: PropTypes.string.isRequired,
-        averageRating: PropTypes.number.isRequired,
-        bio: PropTypes.string,
-        image: PropTypes.string,
-    }).isRequired,
 };
 
 export default ServiceProviderInfo;
