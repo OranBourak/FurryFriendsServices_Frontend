@@ -64,14 +64,6 @@ function LoginPage({onLogin}) {
     const handleLogIn = (name, token, email, id) => {
         const userType = "Service Provider";
         login(name, token, email, id, userType);
-        // const userData = {
-        //     id,
-        //     name,
-        //     token,
-        //     email,
-        //     userType,
-        // };
-        // localStorage.setItem("user", JSON.stringify(userData));
         navigate("/profile");
     };
 

@@ -2,37 +2,83 @@ import React, {useState, useEffect} from "react";
 import {Container, Row, Col, Image, Form, Alert, Button} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/ProfilePage.css";
 import PhoneNumberEl from "../../components/ServiceProviderComponents/PhoneNumberEl.jsx";
+import ComboBoxDropdown from "../../components/ServiceProviderComponents/ComboBox.jsx";
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
+import {Navigate} from "react-router-dom";
 
 const ProfilePage = () => {
     const defaultImg = "https://cdn.pixabay.com/photo/2018/12/26/09/16/vet-3895477_960_720.jpg";
 
     const {loggedIn, userData} = useAuth();
     const [isEditing, setIsEditing] = useState(false);
-    const [name, setName] = useState("John Doe");
-    const [email, setEmail] = useState("johndoe@example.com");
-    const [phone, setPhone] = useState("4567890");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [country, setCountry] = useState("Israel");
-    const [gender, setGender] = useState("Male");
+    const [city, setCity] = useState("");
+    const [gender, setGender] = useState("");
     const [image, setImage] = useState(
         "https://cdn.pixabay.com/photo/2018/12/26/09/16/vet-3895477_960_720.jpg",
     );
     const [isEditingPicture, setIsEditingPicture] = useState(false);
-    const [phonePrefix, setPhonePrefix] = useState("050");
-    const [bio, setBio] = useState(
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-    );
+    const [phonePrefix, setPhonePrefix] = useState("");
+    const [bio, setBio] = useState("");
     const [validationErrorName, setValidationErrorName] = useState(false);
     const [validationErrorEmail, setValidationErrorEmail] = useState(false);
-    const [typeOfService, setTypeOfService] = useState("Vet");
+    const [typeOfService, setTypeOfService] = useState("");
 
     const [formSubmitted, setFormSubmitted] = useState(false);
+
+    const israelCities = [
+        "Afula",
+        "Akko",
+        "Arad",
+        "Ashdod",
+        "Ashqelon",
+        "Bat Yam",
+        "Beersheba",
+        "Bet Sheʾan",
+        "Bet Sheʿarim",
+        "Bnei Brak",
+        "Caesarea",
+        "Dimona",
+        "Dor",
+        "Elat",
+        "En Gedi",
+        "Givʿatayim",
+        "H̱adera",
+        "Haifa",
+        "Herzliyya",
+        "H̱olon",
+        "Jerusalem",
+        "Karmiʾel",
+        "Kefar Sava",
+        "Lod",
+        "Meron",
+        "Nahariyya",
+        "Nazareth",
+        "Netanya",
+        "Petaẖ Tiqwa",
+        "Qiryat Shemona",
+        "Ramat Gan",
+        "Ramla",
+        "Reẖovot",
+        "Rishon LeẔiyyon",
+        "Sedom",
+        "Tel Aviv–Yafo",
+        "Tiberias",
+        "Zefat",
+    ];
 
     const getData = async () => {
         if (loggedIn) {
             try {
-                const response = await axios.get(`/serviceProvider/get/${userData.id}`);
+                const response = await axios.get(`/serviceProvider/get/${userData.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${userData.token}`, // Replace 'userToken' with the actual user token
+                    },
+                });
                 const provider = response.data.serviceProvider;
                 setName(provider.name);
                 setEmail(provider.email);
@@ -40,9 +86,11 @@ const ProfilePage = () => {
                 setPhonePrefix(provider.phone.substr(0, 3));
                 setCountry(provider.country);
                 setGender(provider.gender);
-                setImage(require(provider.image));
+                // TODO: FIX IMAGE
+                // setImage(require(provider.image));
                 setBio(provider.bio);
                 setTypeOfService(provider.typeOfService);
+                setCity(provider.city);
             } catch (error) {
                 console.log(error);
             }
@@ -53,8 +101,44 @@ const ProfilePage = () => {
     }, []);
 
     const handleEdit = () => {
+        saveBeforeEdit();
         setIsEditing(true);
         setFormSubmitted(false); // Reset the formSubmitted state
+    };
+
+    const saveBeforeEdit = () => {
+        // save the information of the user before
+        localStorage.setItem("nameBeforeEdit", name);
+        localStorage.setItem("emailBeforeEdit", email);
+        localStorage.setItem("phonePrefixBeforeEdit", phonePrefix);
+        localStorage.setItem("phoneBeforeEdit", phone);
+        localStorage.setItem("countryBeforeEdit", country);
+        localStorage.setItem("genderBeforeEdit", gender);
+        localStorage.setItem("bioBeforeEdit", bio);
+        localStorage.setItem("cityBeforeEdit", city);
+    };
+
+    const removeBeforeEdit = () => {
+        // Remove items from local storage
+        localStorage.removeItem("nameBeforeEdit");
+        localStorage.removeItem("emailBeforeEdit");
+        localStorage.removeItem("phonePrefixBeforeEdit");
+        localStorage.removeItem("phoneBeforeEdit");
+        localStorage.removeItem("countryBeforeEdit");
+        localStorage.removeItem("genderBeforeEdit");
+        localStorage.removeItem("bioBeforeEdit");
+        localStorage.removeItem("cityBeforeEdit");
+    };
+
+    const restoreBeforeEdit = () => {
+        setName(localStorage.getItem("nameBeforeEdit"));
+        setEmail(localStorage.getItem("emailBeforeEdit"));
+        setPhone(localStorage.getItem("phoneBeforeEdit"));
+        setPhonePrefix(localStorage.getItem("phonePrefixBeforeEdit"));
+        setCountry(localStorage.getItem("countryBeforeEdit"));
+        setGender(localStorage.getItem("genderBeforeEdit"));
+        setBio(localStorage.getItem("bioBeforeEdit"));
+        setCity(localStorage.getItem("cityBeforeEdit"));
     };
 
     const handleEditPicture = () => {
@@ -62,7 +146,7 @@ const ProfilePage = () => {
         setFormSubmitted(false); // Reset the formSubmitted state
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!/[A-Za-z]+[0-9A-Za-z]*[@][a-z]+[.][a-z]+/.test(email)) {
             setValidationErrorEmail(true);
             return;
@@ -86,6 +170,29 @@ const ProfilePage = () => {
         setIsEditing(false);
         setIsEditingPicture(false);
         setFormSubmitted(true);
+
+        // post the new data to the backend
+        try {
+            const response = await axios.patch(`/serviceProvider/update/${userData.id}`, {
+                name: name,
+                email: email,
+                phone: phonePrefix + phone,
+                country: country,
+                city: city,
+                gender: gender,
+                bio: bio,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${userData.token}`,
+                },
+            });
+            const {serviceProvider} = response.data;
+            console.log(serviceProvider.name);
+        } catch (error) {
+            restoreBeforeEdit();
+            console.log(error);
+        }
+        removeBeforeEdit();
     };
 
     const handleNameChange=(event)=> {
@@ -111,7 +218,11 @@ const ProfilePage = () => {
         setPhone(event.target.value);
     }
 
-    let isFormIncomplete = !email.trim() || !name.trim() || !phonePrefix.trim() || !phone.trim() || !gender.trim() || !country.trim();
+    const handleCityChange = (newCity) => {
+        setCity(newCity);
+    };
+
+    let isFormIncomplete = !email.trim() || !name.trim() || !phonePrefix.trim() || !phone.trim() || !gender.trim() || !country.trim() || !city.trim();
 
     /**
      * Handles change in phone prefix combobox.
@@ -142,7 +253,12 @@ const ProfilePage = () => {
             }
         }
     };
-
+    if (!loggedIn) {
+        // Redirect to the login page or another protected route
+        return <Navigate to="/login" />;
+    } else if (userData.userType !== "Service Provider") {
+        return <Navigate to="/error"/>;
+    }
 
     return (
         <Container className="profile-container">
@@ -221,8 +337,11 @@ const ProfilePage = () => {
                                     value={country}
                                     onChange={(e) => setCountry(e.target.value)}
                                     isInvalid={isFormIncomplete}
+                                    disabled="true"
                                     required
                                 />
+                                <Form.Label>City</Form.Label>
+                                <ComboBoxDropdown onSelectedValueChange={handleCityChange} options={israelCities} placeholder={city} variant="success" id="city-cmb" />
                             </Form.Group>
                         </Form>
                     ) : (
@@ -232,6 +351,8 @@ const ProfilePage = () => {
               Phone: {`(${phonePrefix})`} {phone}
                             <br />
               Country: {country}
+                            <br />
+              city: {city}
                         </p>
                     )}
                 </Row>
@@ -279,7 +400,7 @@ const ProfilePage = () => {
                     </Button></>
                 ) : (
                     <Button variant="primary" onClick={handleSave} disabled={isFormIncomplete}>
-          Save
+                        Save
                     </Button>
                 )}
             </Row>

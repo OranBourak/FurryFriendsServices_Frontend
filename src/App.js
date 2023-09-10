@@ -20,6 +20,7 @@ import AppointmentManagmentPage from "./pages/ServiceProviderPages/AppointmentMa
 import ClientRegistrationForm from "./components/client_components/ClientRegistrationForm.jsx";
 import ClientDashboardPage from "./pages/ClientPages/ClientDashboardPage.jsx";
 import SearchServicePage from "./pages/ClientPages/SearchServicePage.jsx";
+import ErrorPage from "./pages/ServiceProviderPages/ErrorPage.jsx";
 import ProviderProfilePage from "./pages/ClientPages/ProviderProfilePage.jsx";
 
 /**
@@ -53,6 +54,7 @@ function App() {
                 <Route path="/clientSignup" element={<ClientRegistrationForm/>} />
                 <Route path="/client-dash-board" element={<ClientDashboardPage/>} />
                 <Route path="/Search-service" element={<SearchServicePage/>} />
+                <Route path="/error" element={<ErrorPage/>} />
                 <Route path="/provider-profile/:id" element={<ProviderProfilePage />} />
             </Routes>
         </>
