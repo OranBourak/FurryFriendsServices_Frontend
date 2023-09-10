@@ -84,7 +84,6 @@ function LoginPage({onLogin}) {
     }
 
     const loadPassRecoveryPage = () => {
-        console.log("clicked");
         navigate("/pass-recovery");
     };
 
