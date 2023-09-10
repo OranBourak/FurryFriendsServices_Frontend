@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Table, Alert} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/upcomingAps.css";
 import moment from "moment"; // Import moment.js
-import {useAuth} from "../../context/AuthContext.js";
+import {useAuth} from "../../context/AuthContext.jsx";
 import axios from "axios";
 import {Navigate} from "react-router-dom";
 
