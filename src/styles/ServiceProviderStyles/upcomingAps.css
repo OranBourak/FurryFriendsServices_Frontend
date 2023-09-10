@@ -23,3 +23,21 @@
 .custom-table tbody tr:hover {
   background-color: #d0d0d0; /* Set hover row background color */
 }
+
+.upcoming {
+  color: white !important;
+  background-color: green !important;
+}
+.status-cell {
+  font-weight: bold;
+  text-transform: capitalize;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: 100px;
+}
+
+.canceled {
+  color: white !important;
+  background-color: red !important;
+}
