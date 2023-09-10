@@ -1,96 +1,133 @@
+/* eslint-disable no-unused-vars */
 import React, {useEffect, useState} from "react";
 import {Table, Alert, Button, ButtonGroup, Row, Col} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/archive.css";
 import moment from "moment"; // Import moment.js
+import axios from "axios";
+import {useAuth} from "../../context/AuthContext";
 
-const initialAppointments = [
-    {
-        id: 1,
-        clientName: "John Doe",
-        phoneNumber: "123-456-7890",
-        appointmentType: "Consultation",
-        date: "2020-09-10",
-        time: "09:00 AM",
-        status: "completed",
-    },
-    {
-        id: 2,
-        clientName: "Jane Smith",
-        phoneNumber: "987-654-3210",
-        appointmentType: "Follow-up",
-        date: "2020-09-15",
-        time: "02:00 PM",
-        status: "completed",
-    },
-    {
-        id: 3,
-        clientName: "Alice Johnson",
-        phoneNumber: "555-123-4567",
-        appointmentType: "Check-up",
-        date: "2020-09-20",
-        time: "10:00 AM",
-        status: "canceled",
-    },
-    {
-        id: 4,
-        clientName: "Bob Brown",
-        phoneNumber: "555-987-6543",
-        appointmentType: "Consultation",
-        date: "2020-09-25",
-        time: "03:00 PM",
-        status: "canceled",
-    },
-    {
-        id: 5,
-        clientName: "John Doe",
-        phoneNumber: "123-456-7890",
-        appointmentType: "Consultation",
-        date: "2021-09-10",
-        time: "10:00 AM",
-        status: "completed",
-    },
-    {
-        id: 6,
-        clientName: "John Doe",
-        phoneNumber: "123-456-7890",
-        appointmentType: "Consultation",
-        date: "2021-08-10",
-        time: "10:00 AM",
-        status: "completed",
-    },
-    // Add more appointments here...
-];
+// const initialAppointments = [
+//     {
+//         id: 1,
+//         clientName: "John Doe",
+//         phoneNumber: "123-456-7890",
+//         appointmentType: "Consultation",
+//         date: "2020-09-10",
+//         time: "09:00 AM",
+//         status: "completed",
+//     },
+//     {
+//         id: 2,
+//         clientName: "Jane Smith",
+//         phoneNumber: "987-654-3210",
+//         appointmentType: "Follow-up",
+//         date: "2020-09-15",
+//         time: "02:00 PM",
+//         status: "completed",
+//     },
+//     {
+//         id: 3,
+//         clientName: "Alice Johnson",
+//         phoneNumber: "555-123-4567",
+//         appointmentType: "Check-up",
+//         date: "2020-09-20",
+//         time: "10:00 AM",
+//         status: "canceled",
+//     },
+//     {
+//         id: 4,
+//         clientName: "Bob Brown",
+//         phoneNumber: "555-987-6543",
+//         appointmentType: "Consultation",
+//         date: "2020-09-25",
+//         time: "03:00 PM",
+//         status: "canceled",
+//     },
+//     {
+//         id: 5,
+//         clientName: "John Doe",
+//         phoneNumber: "123-456-7890",
+//         appointmentType: "Consultation",
+//         date: "2021-09-10",
+//         time: "10:00 AM",
+//         status: "completed",
+//     },
+//     {
+//         id: 6,
+//         clientName: "John Doe",
+//         phoneNumber: "123-456-7890",
+//         appointmentType: "Consultation",
+//         date: "2021-08-10",
+//         time: "10:00 AM",
+//         status: "completed",
+//     },
+//     // Add more appointments here...
+// ];
+
 const Archive = () => {
-    const [appointments, setAppointments] = useState(initialAppointments);
+    const {loggedIn, userData} = useAuth();
+    const [appointments, setAppointments] = useState([]);
     const [activeButton, setActiveButton] = useState("All");
-    const [filteredAppointments, setFilteredAppointments] = useState(
-        initialAppointments,
-    );
+    const [filteredAppointments, setFilteredAppointments] = useState([]);
 
-    useEffect(() => {
-        const today = moment();
-        const filteredAppointments = appointments.filter((appointment) => {
-            const appointmentDate = moment(
-                `${appointment.date} ${appointment.time}`,
-                "YYYY-MM-DD hh:mm A",
-            );
-            return appointmentDate.isBefore(today, "day");
-        });
+    const getData = async () => {
+        if (loggedIn) {
+            try {
+                const response = await axios.get(`/serviceProvider/getAppointments/${userData.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${userData.token}`, // Replace 'userToken' with the actual user token
+                    },
+                });
+                const apps = response.data.appointments;
+                setAppointments(apps);
+                // Filter data
+                console.log("len filtered: "+ apps.length);
+                const today = moment();
+                const filteredAppointments = apps.filter((appointment) => {
+                    console.log("date: " + appointment.date);
+                    const time = new Date(appointment.date).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                    });
+                    console.log("time: " + time);
+                    // dfsd
+                    const appointmentDate = moment(
+                        `${appointment.date} ${time}`,
+                        "YYYY-MM-DD hh:mm A",
+                    );
+                    return appointmentDate.isBefore(today);
+                });
+                // After filtering the apps
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
 
-        const sortedAppointments = filteredAppointments.sort((a, b) => {
-            const timestampA = moment(
-                `${a.date} ${a.time}`,
-                "YYYY-MM-DD hh:mm A",
-            ).valueOf();
-            const timestampB = moment(
-                `${b.date} ${b.time}`,
-                "YYYY-MM-DD hh:mm A",
-            ).valueOf();
-            return timestampA - timestampB;
-        }).reverse();
+    // const filterData = async () => {
+    //     const sortedAppointments = filteredAppointments.sort((a, b) => {
+    //         const timestampA = moment(
+    //             `${a.date} ${a.time}`,
+    //             "YYYY-MM-DD hh:mm A",
+    //         ).valueOf();
+    //         const timestampB = moment(
+    //             `${b.date} ${b.time}`,
+    //             "YYYY-MM-DD hh:mm A",
+    //         ).valueOf();
+    //         return timestampA - timestampB;
+    //     }).reverse();
 
-        setAppointments(sortedAppointments);
+    //     setAppointments(sortedAppointments);
+    // };
+
+    useEffect( () => {
+        getData();
     }, []);
+
+    // useEffect( () => {
+    //     filterData();
+    // }, [appointments]);
 
     const filterAppointments = (status) => {
         if (status === "All") {
