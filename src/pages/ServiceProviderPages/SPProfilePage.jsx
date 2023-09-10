@@ -256,7 +256,7 @@ const ProfilePage = () => {
     if (!loggedIn) {
         // Redirect to the login page or another protected route
         return <Navigate to="/login" />;
-    } else if (userData.userType !== "Service Provider") {
+    } else if (userData.userType !== "serviceProvider") {
         return <Navigate to="/error"/>;
     }
 
