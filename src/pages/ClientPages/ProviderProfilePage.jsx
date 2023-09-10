@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import {useParams} from "react-router-dom";
 import ServiceProviderInfo from "../../components/client_components/ServiceProviderInfo.jsx";
 import ReviewCarousel from "../../components/client_components/ServiceProviderReviews.jsx";
@@ -35,6 +34,3 @@ const ProviderProfilePage = () => {
 export default ProviderProfilePage;
 
 
-ProviderProfilePage.propTypes = {
-    providerId: PropTypes.string.isRequired,
-};
