@@ -7,6 +7,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import {ButtonGroup, ToggleButton} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/PassRecoveryPage.css";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 
 /**
@@ -14,6 +15,7 @@ import axios from "axios";
  * @return {React.Component} - The Password Recovery page component.
  */
 function PassRecoveryPage() {
+    const navigate = useNavigate();
     // User type
     const [userType, setUserType] = useState("");
     // Email
@@ -35,6 +37,7 @@ function PassRecoveryPage() {
     const [confirmPasswordErrorFlag, setConfirmPasswordErrorFlag] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [hasPasswordReset, setHasPasswordReset] = useState(false);
+    const [id, setId] = useState("");
 
     /**
      * Handles email form submission.
@@ -46,11 +49,14 @@ function PassRecoveryPage() {
         // TODO: Add logic to check if email is in the database, if yes fetch security question and answer if no show error and return
         try {
             const response = await axios.get(`/${userType}/pass-recovery`, {
-                email: email,
+                params: {
+                    email: email,
+                },
             });
             // TODO: handle the token
             const {securityQuestion, securityAnswer, id} = response.data;
             // User found and exists
+            setId(id);
             setEmailExist(true);
             setQuestion(securityQuestion);
             setRealAnswer(securityAnswer);
@@ -97,12 +103,27 @@ function PassRecoveryPage() {
      */
     const handlePasswordSubmit = async (event) => {
         event.preventDefault();
-
+        let successfulChange = false;
         // TODO: add logic for saving the password and the confirmPassword in the db
+        try {
+            const response = await axios.patch(`/${userType}/password-change`, {
+                password,
+                id,
+            });
+            console.log(response);
+            successfulChange = true;
+        } catch (error) {
+            console.log("failed to change password");
+            console.log(error);
+            successfulChange = false;
+        };
 
-        // Assuming successful password reset in db
-        setHasPasswordReset(true);
-        alert("Passwrod was reset successfuly.");
+        if (successfulChange) {
+            window.alert("Password reset successfully");
+            navigate("/login");
+        } else {
+            window.alert("Password reset failed");
+        }
     };
 
     /**
