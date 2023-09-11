@@ -24,12 +24,18 @@ export const AuthProvider=({children}) => {
             userType,
             email,
         };
+
         localStorage.setItem("user", JSON.stringify(user)); // Example: Set a user in localStorage
         setUserData(user);
         console.log(userData);
         setLoggedIn(true);
     };
 
+    // changes the name of the user and saves it in the localstorage.
+    const changeName = (newName) => {
+        setUserData({...userData, name: newName});
+        localStorage.setItem("user", JSON.stringify(userData));
+    };
     const logout = () => {
     // Perform logout logic here
         localStorage.removeItem("user"); // Example: Remove user from localStorage
@@ -38,7 +44,7 @@ export const AuthProvider=({children}) => {
     };
 
     return (
-        <AuthContext.Provider value={{loggedIn, login, logout, userData}}>
+        <AuthContext.Provider value={{loggedIn, login, logout, userData, changeName}}>
             {children}
         </AuthContext.Provider>
     );

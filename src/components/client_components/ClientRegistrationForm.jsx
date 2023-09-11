@@ -11,6 +11,9 @@ import axios from "axios";
 // validation
 import validator from "validator";
 
+// navigator
+import {useNavigate} from "react-router";
+
 // components
 import ClientDropDown from "./ClientDropDown.jsx";
 
@@ -20,22 +23,36 @@ import ClientDropDown from "./ClientDropDown.jsx";
  */
 const ClientRegistrationForm = () => {
     // form fields include all attributes in the fields state
+    const navigate = useNavigate();
     const [fields, setFields] = useState({
         name: "",
         email: "",
         password: "",
-        secret_question: "",
+        secretQuestion: "",
         answer: "",
-        phone_prefix: "",
-        phone_suffix: "",
+        phonePrefix: "",
+        phoneSuffix: "",
     });
-    const questions = ["Option 1", "Option 2", "Option 3"];
+    const questions = [
+        "What is the name of your first pet?",
+        "In which city were you born?",
+        "What is the name of your favorite childhood teacher?",
+        "What was the make and model of your first car?",
+        "What is the name of the street you grew up on?",
+        "What is your favorite book?",
+        "What is the name of your favorite historical figure?",
+        "What was your childhood nickname?",
+        "What is the name of your favorite childhood friend?",
+        "What is your favorite vacation spot?",
+        "What is you childhood friend name?",
+        "What is your middle name?",
+    ];
     const phonePrefix = ["050", "052", "053", "054", "055"];
     // if a flag is set to true, field is validated, else not validated.
-    const [nameFlag, setNameFlag] = useState(false);
-    const [emailFlag, setEmailFlag] = useState(false);
-    const [passwordFlag, setPasswordFlag] = useState(false);
-    const [phoneFlag, setPhoneFlag] = useState(false);
+    const [nameFlag, setNameFlag] = useState(null);
+    const [emailFlag, setEmailFlag] = useState(null);
+    const [passwordFlag, setPasswordFlag] = useState(null);
+    const [phoneFlag, setPhoneFlag] = useState(null);
 
 
     /**
@@ -48,7 +65,7 @@ const ClientRegistrationForm = () => {
         switch (name) {
         case "name":
             setFields({...fields, name: value});
-            setNameFlag(/^[A-Za-z]+([ ][A-Za-z])*$/.test(value));
+            setNameFlag(/^[A-Za-z]+([ ][A-Za-z]+)*$/.test(value));
             break;
         case "email":
             setFields({...fields, email: value});
@@ -58,17 +75,17 @@ const ClientRegistrationForm = () => {
             setFields({...fields, password: value});
             setPasswordFlag(validator.isStrongPassword(value));
             break;
-        case "secret_question":
-            setFields({...fields, secret_question: value});
+        case "secretQuestion":
+            setFields({...fields, secretQuestion: value});
             break;
         case "answer":
             setFields({...fields, answer: value});
             break;
-        case "phone_prefix":
-            setFields({...fields, phone_prefix: value});
+        case "phonePrefix":
+            setFields({...fields, phonePrefix: value});
             break;
-        case "phone_suffix":
-            setFields({...fields, phone_suffix: value});
+        case "phoneSuffix":
+            setFields({...fields, phoneSuffix: value});
             setPhoneFlag(value.length === 7 && parseFloat(value)>0);
             break;
         default:
@@ -84,19 +101,20 @@ const ClientRegistrationForm = () => {
                 name: fields.name,
                 email: fields.email,
                 password: fields.password,
-                secret_question: fields.secret_question,
+                secretQuestion: fields.secretQuestion,
                 answer: fields.answer,
-                phone: fields.phone_prefix.concat(fields.phone_suffix),
+                phone: fields.phonePrefix.concat(fields.phoneSuffix),
             } );
             const {id, token} = response.data;
             console.log(id, token);
             const clientData = {id, name: fields.name, token, userType: "Client", email: fields.email};
-            localStorage.setItem("Client", JSON.stringify(clientData));
+            localStorage.setItem("user", JSON.stringify(clientData));
+            navigate("/profile");
         } catch (e) {
             console.log(e);
         }
     };
-    const isFormInvalid = !nameFlag || !passwordFlag || !emailFlag || !phoneFlag || !fields.answer || !fields.secret_question || !fields.phone_prefix;
+    const isFormInvalid = !nameFlag || !passwordFlag || !emailFlag || !phoneFlag || !fields.answer || !fields.secretQuestion || !fields.phonePrefix;
     return (
         <div className="registration-form-container">
             <Form noValidate onSubmit={handleSubmit}>
@@ -105,7 +123,7 @@ const ClientRegistrationForm = () => {
                         <Form.Label>Name</Form.Label>
                         <Form.Control
                             isValid={nameFlag}
-                            isInvalid={!nameFlag}
+                            isInvalid={!nameFlag && nameFlag !== null}
                             required
                             name = "name"
                             type="text"
@@ -124,7 +142,7 @@ const ClientRegistrationForm = () => {
                         <Form.Control
                             required
                             isValid={emailFlag}
-                            isInvalid={!emailFlag}
+                            isInvalid={!emailFlag && emailFlag !== null}
                             name = "email"
                             type="email"
                             placeholder="Email address"
@@ -139,7 +157,7 @@ const ClientRegistrationForm = () => {
                         <Form.Label>Password</Form.Label>
                         <Form.Control
                             required
-                            isInvalid={!passwordFlag}
+                            isInvalid={!passwordFlag && passwordFlag !== null}
                             isValid={passwordFlag}
                             name = "password"
                             type="password"
@@ -158,7 +176,7 @@ const ClientRegistrationForm = () => {
                     <Form.Group as={Col} md="6" controlId="secretQuestionRegistration">
                         <Form.Label>Secret question</Form.Label>
                         <ClientDropDown
-                            dropDownName= "secret_question"
+                            dropDownName= "secretQuestion"
                             handleSelectedValue = {handleChange}
                             attributes={questions}
                             id="secret-question-dropbox"
@@ -178,7 +196,7 @@ const ClientRegistrationForm = () => {
                     <Form.Group as={Col} md="6" controlId="phoneGroup">
                         <Form.Label>Phone number</Form.Label>
                         <ClientDropDown
-                            dropDownName= "phone_prefix"
+                            dropDownName= "phonePrefix"
                             handleSelectedValue = {handleChange}
                             attributes={phonePrefix}
                             id="phone-prefix-dropbox"
@@ -186,13 +204,13 @@ const ClientRegistrationForm = () => {
                             required
                             variant="primary"/>
                         <Form.Control
-                            name="phone_suffix"
+                            name="phoneSuffix"
                             type="text"
                             placeholder="Phone"
                             required
                             onChange={handleChange}
-                            value={fields.phone_suffix}
-                            isInvalid={!phoneFlag}
+                            value={fields.phoneSuffix}
+                            isInvalid={!phoneFlag && phoneFlag !== null}
                             isValid={phoneFlag} />
                         <Form.Control.Feedback type="invalid">
                     Phone number must contain only digits.

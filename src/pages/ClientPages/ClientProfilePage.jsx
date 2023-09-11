@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Input, Button, Form, Typography} from "antd";
 import "../../styles/ClientStyles/ClientProfilePage.css"; // Import the CSS file
-
+import {useAuth} from "../../context/AuthContext.jsx";
+import axios from "axios";
 // components
 import ClientDropDown from "../../components/client_components/ClientDropDown.jsx";
 
@@ -11,15 +12,15 @@ import ClientDropDown from "../../components/client_components/ClientDropDown.js
  * @return {React.Component} Client profile page
  */
 function ClientProfilePage() {
-    const user = {id: "1", name: "Tomer", email: "tomer@gmail.com", phone_prefix: "054", phone_suffix: "2097535"};
-    const [userInfo, setUserInfo] = useState(user);
+    const {userData, loggedIn, changeName} = useAuth();
+    const [client, setClient] = useState(null);
     const Text = Typography.Text;
     const [isNameEditable, setNameEditable] = useState(false);
     const [isPhoneEditable, setPhoneEditable] = useState(false);
     const [nameValidationFlag, setNameValidationFlag] = useState(null);
     const [phoneValidationFlag, setPhoneValidationFlag] = useState(null);
-    const [tempPhone, setTempPhone] = useState({prefix: user.phone_prefix, suffix: user.phone_suffix});
-    const [tempName, setTempName] = useState(user.name);
+    const [tempPhone, setTempPhone] = useState({prefix: "", suffix: ""});
+    const [tempName, setTempName] = useState(userData.name);
     const phonePrefix = ["050", "052", "053", "054", "055"];
 
 
@@ -32,14 +33,14 @@ function ClientProfilePage() {
         const {name, value} = e.target;
         switch (name) {
         case "name":
-            setNameValidationFlag(/^[A-Za-z]+([ ][A-Za-z])*$/.test(value));
+            setNameValidationFlag(/^[A-Za-z]+([ ][A-Za-z]+)*$/.test(value));
             setTempName(value);
             break;
-        case "phone_prefix":
+        case "phonePrefix":
             setTempPhone({...tempPhone, prefix: value});
             setPhoneValidationFlag(tempPhone.prefix.length === 3);
             break;
-        case "phone_suffix":
+        case "phoneSuffix":
             setTempPhone({...tempPhone, suffix: value});
             setPhoneValidationFlag(value.length === 7 && parseFloat(value));
             break;
@@ -47,27 +48,66 @@ function ClientProfilePage() {
             break;
                     // No default action
         }
-        console.log(tempPhone, e.target, userInfo, tempPhone.suffix, parseFloat(tempPhone.suffix));
+        console.log(client);
     };
 
+    useEffect(() => {
+        fetchData();
+    }, []);
 
+    useEffect(() => {
+        if (client) {
+            setTempPhone({prefix: client.phone.substring(0, 3), suffix: client.phone.substring(3)});
+            setTempName(client.name);
+            console.log(userData, client, " This is for the useEffect");
+        }
+    }, [client]);
+
+    const fetchData = async () =>{
+        if (loggedIn) {
+            const response = await axios.get(`client/get/${userData.id}`, {
+                headers: {"Authorization": `Bearer${userData.token}`},
+            });
+            setClient(response.data.client);
+            // setTempPhone({prefix: response.client.phone.substring(0, 3), suffix: response.client.phone.substring(3)});
+        }
+    };
     /**
      * Sends a request with an update to the backend, and updates the user's representation if any field has been changed.
      * @param {*} e
      */
-    const handleSave = (e) => {
-        if (nameValidationFlag || nameValidationFlag === null) {
+    const handleSave = async (e) => {
+        e.preventDefault();
+        if (nameValidationFlag || nameValidationFlag !== null) {
             /* call for backend */
-            setUserInfo({...userInfo, name: tempName});
+            await axios.patch(`client/update/${userData.id}`, {id: userData.id, name: tempName})
+                .then((response) => {
+                    console.log(response, tempName, " This is response!");
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            setClient({...client, name: tempName});
             setNameEditable(false);
             setNameValidationFlag(null);
-        }
-        if (phoneValidationFlag || phoneValidationFlag === null) {
+            const clientData = JSON.parse(localStorage.getItem("user"));
+            clientData.name = tempName;
+            changeName(tempName);
+        } else if (phoneValidationFlag || phoneValidationFlag === null) {
             /* call for backend */
-            setUserInfo({...userInfo, phone_prefix: tempPhone.prefix, phone_suffix: tempPhone.suffix});
+            await axios.patch(`client/update/${userData.id}`, {id: userData.id, phone: (tempPhone.prefix + tempPhone.suffix)})
+                .then((response) => {
+                    console.log(response, "This is response!", client);
+                })
+                .catch((err) => {
+                    console.log(err, " This is error");
+                });
             setPhoneEditable(false);
+            setPhoneValidationFlag(null);
+            console.log(typeof tempPhone, tempPhone);
+            setClient({...client, phone: tempPhone.prefix + tempPhone.suffix});
         }
-        console.log(e.target, tempPhone, user.phone_prefix, user.phone_suffix, phoneValidationFlag);
+        console.log(client);
     };
 
     return (
@@ -79,11 +119,11 @@ function ClientProfilePage() {
                     {isNameEditable ? (
                         <div>
                             <Input name="name" value={tempName} onChange={handleChange}/>
-                            <Button type="primary" onClick={handleSave}>Save</Button>
+                            <Button type="primary" onClick={handleSave} disabled={!nameValidationFlag}>Save </Button>
                         </div>
                     ) : (
                         <div className="non-editable-field">
-                            <span>{userInfo.name}</span>
+                            <span>{client? client.name:""}</span>
                             <Button className="non-editable-field button" type="link" onClick={() => {
                                 setNameEditable(true);
                             }}>Edit</Button>
@@ -96,20 +136,20 @@ function ClientProfilePage() {
                     validateStatus={(!phoneValidationFlag && phoneValidationFlag != null) ? "error" : "success"}>
                     {isPhoneEditable ? (
                         <div className="editable-field">
-                            <ClientDropDown id="phone-prefix" dropDownName="phone_prefix" placeholder={userInfo.phone_prefix} attributes={phonePrefix} handleSelectedValue={handleChange} >
+                            <ClientDropDown id="phone-prefix" dropDownName="phonePrefix" placeholder={tempPhone.prefix} attributes={phonePrefix} handleSelectedValue={handleChange} >
 
                             </ClientDropDown>
                             <Input
-                                name="phone_suffix"
+                                name="phoneSuffix"
                                 value={tempPhone.suffix}
                                 onChange={handleChange}
                                 autoFocus
                             />
-                            <Button type="primary" onClick={handleSave}>Save</Button>
+                            <Button type="primary" onClick={handleSave} disabled={!phoneValidationFlag}>Save</Button>
                         </div>
                     ) : (
                         <div className="non-editable-field">
-                            <span>{`(${tempPhone.prefix}) ${tempPhone.suffix}`}</span>
+                            <span>{`${client? client.phone:""}`}</span>
                             <Button className="non-editable-field button" type="link" onClick={() => {
                                 setPhoneEditable(true);
                             }}>Edit</Button>
@@ -118,7 +158,7 @@ function ClientProfilePage() {
                 </Form.Item>
 
                 <Form.Item label="Email">
-                    <Text label="Email">{userInfo.email}</Text>
+                    <Text label="Email">{userData.email}</Text>
                 </Form.Item>
             </Form>
         </div>

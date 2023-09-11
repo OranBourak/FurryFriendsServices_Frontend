@@ -23,6 +23,7 @@ import SearchServicePage from "./pages/ClientPages/SearchServicePage.jsx";
 import ErrorPage from "./pages/ServiceProviderPages/ErrorPage.jsx";
 import ProviderProfilePage from "./pages/ClientPages/ProviderProfilePage.jsx";
 import ClientProfilePage from "./pages/ClientPages/ClientProfilePage.jsx";
+import Appointments from "./components/client_components/Appointments.jsx";
 import {useAuth} from "./context/AuthContext.jsx";
 
 /**
@@ -54,11 +55,12 @@ function App() {
                 <Route path="/availability-managment" element={<AvailabilityManagmentPage/>} />
                 <Route path="/archive" element={<ArchivePage/>} />
                 <Route path="/appointment-managment" element={<AppointmentManagmentPage/>} />
-                <Route path="/clientSignup" element={<ClientRegistrationForm/>} />
+                <Route path="/client-register" element={<ClientRegistrationForm/>} />
                 <Route path="/client-dash-board" element={<ClientDashboardPage/>} />
                 <Route path="/Search-service" element={<SearchServicePage/>} />
                 <Route path="/error" element={<ErrorPage/>} />
                 <Route path="/provider-profile/:id" element={<ProviderProfilePage />} />
+                <Route path="/My-services" element={<Appointments />} />
             </Routes>
         </>
     );
