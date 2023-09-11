@@ -4,8 +4,11 @@ import "../../styles/ClientStyles/scheduleAppointment.css";
 import PropTypes from "prop-types";
 import moment from "moment";
 import axios from "axios";
+import {useNavigate} from "react-router";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 const {Option} = Select;
+
 
 // Main component for scheduling an appointment
 const ScheduleAppointment = ({providerID}) => {
@@ -17,6 +20,8 @@ const ScheduleAppointment = ({providerID}) => {
     const [blockedTimeSlots, setBlockedTimeSlots] = useState([]);
     const [appointments, setAppointments] = useState([]);
     const [appointmentTypes, setAppointmentTypes] = useState([]);
+    const {userData} = useAuth();
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -87,8 +92,7 @@ const ScheduleAppointment = ({providerID}) => {
 
         // Prepare the appointment data
         const appointmentData = {
-            // TODO: Replace with the actual client ID , useContext
-            clientId: "64fbbd0998813acba7948e20",
+            clientId: userData.id,
             serviceProviderId: providerID,
             status: "Upcoming",
             appointmentType: selectedService._id,
@@ -106,7 +110,7 @@ const ScheduleAppointment = ({providerID}) => {
 
             if (response.status === 201) {
                 notification.success({message: "Success", description: "Appointment successfully created!"});
-                // TODO: Refresh the appointments (or navigate to another page)
+                navigate("/dashboard");
             } else {
                 Modal.error({title: "Error", content: "Failed to create the appointment."});
             }
