@@ -1,5 +1,6 @@
 import {Calendar, TimePicker, Button, Select, Modal, notification} from "antd";
 import React, {useState, useEffect} from "react";
+import "../../styles/ClientStyles/scheduleAppointment.css";
 import PropTypes from "prop-types";
 import moment from "moment";
 import axios from "axios";
@@ -87,7 +88,7 @@ const ScheduleAppointment = ({providerID}) => {
         // Prepare the appointment data
         const appointmentData = {
             // TODO: Replace with the actual client ID , useContext
-            clientId: "64fbbd0998813acba7948e20", // FIXME: Replace with the actual client ID
+            clientId: "64fbbd0998813acba7948e20",
             serviceProviderId: providerID,
             status: "Upcoming",
             appointmentType: selectedService._id,

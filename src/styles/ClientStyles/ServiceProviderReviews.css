@@ -1,0 +1,62 @@
+/* ReviewCarousel Component Styling */
+
+h1 {
+    font-weight: bold;
+}
+
+.ReviewCarousel {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    max-width: 800px;
+}
+
+.ReviewCarousel h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #333333;
+}
+
+.ReviewCarousel .ant-carousel {
+    margin-bottom: 20px;
+}
+
+.ReviewCarousel .ant-card {
+    border-radius: 8px;
+}
+
+.ReviewCarousel .ant-rate {
+    margin-bottom: 10px;
+}
+
+.ReviewCarousel p {
+    font-size: 1em;
+    color: #555;
+}
+
+.ReviewCarousel .ant-btn {
+    background-color: #007bff;
+    color: white;
+    margin: 5px;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.ReviewCarousel .ant-btn:hover {
+    background-color: #0056b3;
+}
+
+.ReviewCarousel span {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 1em;
+}
+/* Make the stars yellow */
+.ReviewCarousel .ant-rate-star.ant-rate-star-full,
+.ReviewCarousel .ant-rate-star.ant-rate-star-zero,
+.ReviewCarousel .ant-rate-star.ant-rate-star-half .ant-rate-star-first {
+    color: rgb(247, 247, 26);
+}

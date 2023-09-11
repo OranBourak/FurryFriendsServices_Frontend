@@ -1,0 +1,63 @@
+/* General styling for the Profile page */
+div {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    color: #333;
+}
+
+.mainPageTitle{
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 60px;
+    color: #333;
+}
+/* Row and Column Styling */
+.Row {
+    margin: 0 auto;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.Col {
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Service Provider Info */
+.ServiceProviderInfo {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    max-width: 700px;
+    margin: auto;
+}
+
+/* Reviews */
+.ReviewCarousel {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    max-width: 700px;
+    margin: auto;
+}
+
+/* Schedule Meeting */
+.ScheduleAppointment {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: auto;
+}
