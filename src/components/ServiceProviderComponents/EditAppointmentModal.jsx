@@ -13,7 +13,7 @@ const EditAppointmentModal=({show, onHide, onSave, name, price, duration})=> {
     useEffect(() => {
         setNameError(!/^[A-Za-z ]+$/.test(editedName));
         setPriceError(!/^[1-9][0-9]*$/.test(editedPrice));
-        if (/^[A-Za-z ]+$/.test(editedName) && /^[0-9]+$/.test(editedPrice)) {
+        if (/^[A-Za-z ]+$/.test(editedName) && /^[1-9][0-9]*$/.test(editedPrice)) {
             setCompleteForm(true);
         } else {
             setCompleteForm(false);
@@ -22,7 +22,7 @@ const EditAppointmentModal=({show, onHide, onSave, name, price, duration})=> {
 
     const handleSave = () => {
         const goodName = /^[A-Za-z ]+$/.test(editedName);
-        const goodPrice = editedPrice > 0;
+        const goodPrice = /^[1-9][0-9]*$/.test(editedPrice);
         if (goodName && goodPrice) {
             onSave(editedName, editedPrice, editedDuration);
             onHide();
