@@ -11,6 +11,7 @@ import axios from "axios";
 const TypeManagementPage = () => {
     const {loggedIn, userData} = useAuth();
     const [appointments, setAppointments] = useState([]);
+    const [appointmentsSize, setAppointmentsSize] = useState(0);
 
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [editedAppointment, setEditedAppointment] = useState({
@@ -38,6 +39,7 @@ const TypeManagementPage = () => {
                 });
                 const appTypes = response.data.appointmentTypes;
                 setAppointments(appTypes);
+                setAppointmentsSize(appTypes.length);
                 console.log("apps type front: " + appTypes);
                 // setIsLoading(false);
             } catch (error) {
@@ -59,6 +61,9 @@ const TypeManagementPage = () => {
     };
 
     const handleSaveEdit = async (editedName, editedPrice, editedDuration) => {
+        if (!loggedIn) {
+            return;
+        }
         const updatedAppointments = appointments.map((app) => {
             // If the appointment is the appointment that is being edited
             if (app._id === editedAppointment._id) {
@@ -75,8 +80,6 @@ const TypeManagementPage = () => {
 
         // Update the appointment in backend using appointment id
         try {
-            console.log("in handleSaveEdit");
-            console.log(editedAppointment._id);
             const response = await axios.patch(`/appointmentType/update/${editedAppointment._id}`, {
                 name: editedName,
                 price: editedPrice,
@@ -105,27 +108,18 @@ const TypeManagementPage = () => {
         setDeleteConfirmationOpen(true);
     };
 
-    const confirmDelete = () => {
-        const updatedAppointments = appointments.filter(
-            (appointment) => appointment._id !== appointmentToDelete,
-        );
-        setAppointments(updatedAppointments);
+    const confirmDelete = async () => {
+        // const updatedAppointments = appointments.filter(
+        //     (appointment) => appointment._id !== appointmentToDelete,
+        // );
+        // setAppointments(updatedAppointments);
+        console.log(appointmentToDelete);
         setDeleteConfirmationOpen(false);
     };
 
-    const handleAddType = (name, price, duration) => {
-        const newType = {};
-        if (appointments.length < 10) {
-            const newId = appointments.length + 1;
-            newType.id = newId;
-            newType.name = name;
-            newType.price = price;
-            newType.duration = duration;
-            setAppointments([...appointments, newType]);
-            setAddModalOpen(false);
-        } else {
-            alert("You have reached the maximum limit of 10 types.");
-        }
+    const handleAddType = (newType) => {
+        setAppointments([...appointments, newType]);
+        setAddModalOpen(false);
     };
 
     // const getEditedAppTypeName = () => {
@@ -170,11 +164,12 @@ const TypeManagementPage = () => {
                 show={isAddModalOpen}
                 onHide={() => setAddModalOpen(false)}
                 onAddType={handleAddType}
+                appTypesSize={appointmentsSize}
             />
             <DeleteConfirmationModal
                 show={isDeleteConfirmationOpen}
                 onHide={() => setDeleteConfirmationOpen(false)}
-                onConfirm={confirmDelete}
+                onConfirm={async () => await confirmDelete()}
             />
         </Container>
     );
