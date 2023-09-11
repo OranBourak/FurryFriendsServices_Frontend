@@ -123,7 +123,7 @@ const TypeManagementPage = () => {
             );
             setAppointments(updatedAppointments);
             console.log(appointmentToDelete);
-        } catch (err) {
+        } catch (error) {
             console.error("Error deleting appointment:", error);
         };
         setDeleteConfirmationOpen(false);
