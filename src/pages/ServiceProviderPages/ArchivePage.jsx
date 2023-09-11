@@ -1,96 +1,55 @@
+/* eslint-disable no-unused-vars */
 import React, {useEffect, useState} from "react";
 import {Table, Alert, Button, ButtonGroup, Row, Col} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/archive.css";
-import moment from "moment"; // Import moment.js
+import {isBefore, format} from "date-fns";
+import axios from "axios";
+import {useAuth} from "../../context/AuthContext";
 
-const initialAppointments = [
-    {
-        id: 1,
-        clientName: "John Doe",
-        phoneNumber: "123-456-7890",
-        appointmentType: "Consultation",
-        date: "2020-09-10",
-        time: "09:00 AM",
-        status: "completed",
-    },
-    {
-        id: 2,
-        clientName: "Jane Smith",
-        phoneNumber: "987-654-3210",
-        appointmentType: "Follow-up",
-        date: "2020-09-15",
-        time: "02:00 PM",
-        status: "completed",
-    },
-    {
-        id: 3,
-        clientName: "Alice Johnson",
-        phoneNumber: "555-123-4567",
-        appointmentType: "Check-up",
-        date: "2020-09-20",
-        time: "10:00 AM",
-        status: "canceled",
-    },
-    {
-        id: 4,
-        clientName: "Bob Brown",
-        phoneNumber: "555-987-6543",
-        appointmentType: "Consultation",
-        date: "2020-09-25",
-        time: "03:00 PM",
-        status: "canceled",
-    },
-    {
-        id: 5,
-        clientName: "John Doe",
-        phoneNumber: "123-456-7890",
-        appointmentType: "Consultation",
-        date: "2021-09-10",
-        time: "10:00 AM",
-        status: "completed",
-    },
-    {
-        id: 6,
-        clientName: "John Doe",
-        phoneNumber: "123-456-7890",
-        appointmentType: "Consultation",
-        date: "2021-08-10",
-        time: "10:00 AM",
-        status: "completed",
-    },
-    // Add more appointments here...
-];
+
 const Archive = () => {
-    const [appointments, setAppointments] = useState(initialAppointments);
+    const {loggedIn, userData} = useAuth();
+    const [appointments, setAppointments] = useState([]);
     const [activeButton, setActiveButton] = useState("All");
-    const [filteredAppointments, setFilteredAppointments] = useState(
-        initialAppointments,
-    );
+    const [filteredAppointments, setFilteredAppointments] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getData = async () => {
+        if (loggedIn) {
+            try {
+                setIsLoading(true);
+                const response = await axios.get(`/serviceProvider/getAppointments/${userData.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${userData.token}`, // Replace 'userToken' with the actual user token
+                    },
+                });
+                const apps = response.data.appointments;
+
+                const today = new Date();
+
+                const filteredAppointments = apps.filter((appointment) => {
+                    console.log(appointment.date);
+                    const app = new Date(appointment.date);
+                    app.setMinutes(app.getMinutes() - 180);
+                    console.log(app, today);
+                    return isBefore(app, today);
+                });
+                setAppointments(filteredAppointments);
+                setIsLoading(false);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
+
+    useEffect( () => {
+        getData();
+    }, []);
 
     useEffect(() => {
-        const today = moment();
-        const filteredAppointments = appointments.filter((appointment) => {
-            const appointmentDate = moment(
-                `${appointment.date} ${appointment.time}`,
-                "YYYY-MM-DD hh:mm A",
-            );
-            return appointmentDate.isBefore(today, "day");
-        });
+        setFilteredAppointments(appointments);
+    }, [appointments]);
 
-        const sortedAppointments = filteredAppointments.sort((a, b) => {
-            const timestampA = moment(
-                `${a.date} ${a.time}`,
-                "YYYY-MM-DD hh:mm A",
-            ).valueOf();
-            const timestampB = moment(
-                `${b.date} ${b.time}`,
-                "YYYY-MM-DD hh:mm A",
-            ).valueOf();
-            return timestampA - timestampB;
-        }).reverse();
-
-        setAppointments(sortedAppointments);
-    }, []);
 
     const filterAppointments = (status) => {
         if (status === "All") {
@@ -119,33 +78,35 @@ const Archive = () => {
                         <th>Appointment Type</th>
                         <th>Date</th>
                         <th>Time</th>
+                        <th>Duration</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     {filteredAppointments.map((appointment, index) => (
-                        <tr key={appointment.id}>
+                        <tr key={appointment._id}>
                             <td>{index + 1}</td>
-                            <td>{appointment.clientName}</td>
-                            <td>{appointment.phoneNumber}</td>
-                            <td>{appointment.appointmentType}</td>
-                            <td>{appointment.date}</td>
-                            <td>{appointment.time}</td>
+                            <td>{appointment.client_id.name}</td>
+                            <td>{appointment.client_id.phone}</td>
+                            <td>{appointment.appointmentType.name}</td>
+                            <td>{format(new Date(appointment.date), "yyyy-MM-dd")}</td>
+                            <td>{format(new Date(appointment.date).setMinutes(new Date(appointment.date).getMinutes()-180), "HH:mm")}</td>
+                            <td>{`${appointment.duration} Hours`}</td>
                             <td
                                 className={`status-cell ${
-                                    appointment.status === "completed" ? "completed" : "canceled"
+                                    appointment.status === "Completed" ? "completed" : "canceled"
                                 }`}
                             >
-                                {appointment.status[0].toUpperCase() +
-                    appointment.status.slice(1)}
+                                {appointment.status}
                             </td>
                         </tr>
                     ))}
+
                 </tbody>
+
             </Table>
         );
     };
-
     const renderNavigationButtons = () => {
         const navigationButtons = ["All", "Completed", "Canceled"];
 
@@ -174,17 +135,25 @@ const Archive = () => {
             <Row>
                 <Col>{renderNavigationButtons()}</Col>
             </Row>
-            {appointments.length > 0 ? (
+            {!isLoading ? (
                 <>
-                    <Alert dismissible variant="info">
-              Below is a list of past appointments, sorted in ascending order
-              based on the date and time. This means that the closest appointment
-              to the current date and time appears first in the list.
-                    </Alert>
-                    {renderAppointmentsTable()}
+                    {filteredAppointments.length === 0 ? (
+                        <h3 className="table-mt-3 mt-3">No appointments scheduled yet!</h3>
+
+                    ) : (
+                        <>
+                            <Alert dismissible variant="info">
+                Below is a list of past appointments, sorted in ascending order
+                based on the date and time. This means that the closest appointment
+                to the current date and time appears first in the list.
+                            </Alert>
+                            {renderAppointmentsTable()}
+                        </>
+                    )}
                 </>
             ) : (
-                <h3 className="table-mt-3 mt-3">No appointments yet!</h3>
+            // Conditional rendering when appointments are empty
+                <h3 className="table-mt-3 mt-3">Loading appointments...</h3>
             )}
         </div>
     );

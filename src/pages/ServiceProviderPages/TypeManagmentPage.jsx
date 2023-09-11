@@ -1,21 +1,21 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import AppointmentType from "../../components/ServiceProviderComponents/AppointmentType";
 import EditAppointmentModal from "../../components/ServiceProviderComponents/EditAppointmentModal";
 import {Button, Container, Row} from "react-bootstrap";
 import AddAppointmentTypeModal from "../../components/ServiceProviderComponents/AddAppointmentModal.jsx";
 import DeleteConfirmationModal from "../../components/ServiceProviderComponents/DeleteConfirmationModal.jsx"; // Import the new component
 import "../../styles/ServiceProviderStyles/appType.css";
+import {useAuth} from "../../context/AuthContext";
+import axios from "axios";
 
 const TypeManagementPage = () => {
-    const [appointments, setAppointments] = useState([
-        {id: 1, name: "Basic Checkup", price: 50, duration: 1},
-        {id: 2, name: "Dental Cleaning", price: 80, duration: 2},
-        {id: 3, name: "X-Ray Examination", price: 120, duration: 3},
-    ]);
+    const {loggedIn, userData} = useAuth();
+    const [appointments, setAppointments] = useState([]);
+    const [appointmentsSize, setAppointmentsSize] = useState(0);
 
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [editedAppointment, setEditedAppointment] = useState({
-        id: 1,
+        _id: 1,
         name: "",
         price: 0,
         duration: 1,
@@ -27,28 +27,75 @@ const TypeManagementPage = () => {
     const [isDeleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
     const [appointmentToDelete, setAppointmentToDelete] = useState(null);
 
+    const getData = async () => {
+        if (loggedIn) {
+            console.log("in getData");
+            try {
+                // setIsLoading(true);
+                const response = await axios.get(`/serviceProvider/getAppointmentTypes/${userData.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${userData.token}`, // Replace 'userToken' with the actual user token
+                    },
+                });
+                const appTypes = response.data.appointmentTypes;
+                setAppointments(appTypes);
+                setAppointmentsSize(appTypes.length);
+                console.log("apps type front: " + appTypes);
+                // setIsLoading(false);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
+
+    useEffect( () => {
+        getData();
+    }, []);
+
     const handleEdit = (id) => {
-        const appointmentToEdit = appointments.find((app) => app.id === id);
-        console.log(appointmentToEdit);
+        console.log("in handle edit");
+        const appointmentToEdit = appointments.find((app) => app._id === id);
         setEditedAppointment(appointmentToEdit);
-        console.log(editedAppointment);
+        console.log("The appointment to edit name: " + appointmentToEdit._id);
         setEditModalOpen(true);
     };
 
-    const handleSaveEdit = (editedName, editedPrice, editedDuration) => {
+    const handleSaveEdit = async (editedName, editedPrice, editedDuration) => {
+        if (!loggedIn) {
+            return;
+        }
         const updatedAppointments = appointments.map((app) => {
-            if (app.id === editedAppointment.id) {
+            // If the appointment is the appointment that is being edited
+            if (app._id === editedAppointment._id) {
+                console.log("edited id: " + editedAppointment._id);
                 return {
                     ...app,
                     name: editedName,
-                    price: editedPrice,
+                    price: Number(editedPrice),
                     duration: editedDuration,
                 };
             }
             return app;
         });
 
-        setAppointments(updatedAppointments);
+        // Update the appointment in backend using appointment id
+        try {
+            const response = await axios.patch(`/appointmentType/update/${editedAppointment._id}`, {
+                name: editedName,
+                price: editedPrice,
+                duration: editedDuration,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${userData.token}`,
+                },
+            });
+            // On success
+            setAppointments(updatedAppointments);
+            console.log("reaponse" + response);
+        } catch (error) {
+            console.log(error);
+        }
+
         setEditModalOpen(false);
     };
 
@@ -61,41 +108,38 @@ const TypeManagementPage = () => {
         setDeleteConfirmationOpen(true);
     };
 
-    const confirmDelete = () => {
-        const updatedAppointments = appointments.filter(
-            (appointment) => appointment.id !== appointmentToDelete,
-        );
-        setAppointments(updatedAppointments);
+    const confirmDelete = async () => {
+        // const updatedAppointments = appointments.filter(
+        //     (appointment) => appointment._id !== appointmentToDelete,
+        // );
+        // setAppointments(updatedAppointments);
+        console.log(appointmentToDelete);
         setDeleteConfirmationOpen(false);
     };
 
-    const handleAddType = (name, price, duration) => {
-        const newType = {};
-        if (appointments.length < 10) {
-            const newId = appointments.length + 1;
-            newType.id = newId;
-            newType.name = name;
-            newType.price = price;
-            newType.duration = duration;
-            setAppointments([...appointments, newType]);
-            setAddModalOpen(false);
-        } else {
-            alert("You have reached the maximum limit of 10 types.");
-        }
+    const handleAddType = (newType) => {
+        setAppointments([...appointments, newType]);
+        setAddModalOpen(false);
     };
+
+    // const getEditedAppTypeName = () => {
+    //     console.log("editedAppointment.name: " + editedAppointment.name);
+    //     console.log(typeof(editedAppointment.name));
+    //     return editedAppointment.name;
+    // };
 
     return (
         <Container>
             <h1 className="text-center">Appointment Type Management</h1>
             <Row className="justify-content-center">
                 {appointments.map((appointment) => (
-                    <div key={appointment.id} className="text-center small-card">
+                    <div key={appointment._id} className="text-center small-card">
                         <AppointmentType
                             name={appointment.name}
                             price={appointment.price}
                             duration={appointment.duration}
-                            onEdit={() => handleEdit(appointment.id)}
-                            onDelete={() => handleDelete(appointment.id)}
+                            onEdit={() => handleEdit(appointment._id)}
+                            onDelete={() => handleDelete(appointment._id)}
                         />
                     </div>
                 ))}
@@ -120,11 +164,12 @@ const TypeManagementPage = () => {
                 show={isAddModalOpen}
                 onHide={() => setAddModalOpen(false)}
                 onAddType={handleAddType}
+                appTypesSize={appointmentsSize}
             />
             <DeleteConfirmationModal
                 show={isDeleteConfirmationOpen}
                 onHide={() => setDeleteConfirmationOpen(false)}
-                onConfirm={confirmDelete}
+                onConfirm={async () => await confirmDelete()}
             />
         </Container>
     );

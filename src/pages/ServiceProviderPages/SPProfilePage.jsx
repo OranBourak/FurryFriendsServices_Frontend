@@ -256,12 +256,12 @@ const ProfilePage = () => {
     if (!loggedIn) {
         // Redirect to the login page or another protected route
         return <Navigate to="/login" />;
-    } else if (userData.userType !== "Service Provider") {
+    } else if (userData.userType !== "serviceProvider") {
         return <Navigate to="/error"/>;
     }
 
     return (
-        <Container className="profile-container">
+        <Container className="container">
             <Row className="profile-header">
                 <Col className="profile-image" xs={6} md={4}>
                     <Image className="profile-picture" src={image? image : defaultImg} rounded fluid style={{maxHeight: "300px", maxWidth: "300px"}}/>

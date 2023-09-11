@@ -1,0 +1,91 @@
+/* ClientProfilePage.css */
+
+/* Main container for the profile page */
+.profile-container {
+    max-width: 600px;             /* Set a maximum width for the container */
+    margin: 50px auto;           /* Center the container on the page with 50px margin on top and bottom */
+    padding: 20px;               /* Add padding inside the container */
+    border-radius: 8px;          /* Rounded corners for the container */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted effect */
+    background-color: #ffffff;   /* White background color for the container */
+    
+}
+
+/* Styling for the title or header inside the container */
+.profile-container h2 {
+    text-align: center;          /* Center the title text */
+    margin-bottom: 30px;         /* Add space below the title */
+    color: #333;                 /* Dark gray color for the title */
+}
+
+/* General styling for each form item */
+.profile-container .ant-form-item {
+    margin-bottom: 20px;         /* Add space below each form item */
+}
+
+/* Styling for the label of each form item */
+.profile-container .ant-form-item-label {
+    text-transform: uppercase;   /* Convert label text to uppercase */
+    font-weight: bold;           /* Bold font for the label */
+    color: #555;                 /* Medium gray color for the label */
+}
+
+/* Styling for the input fields */
+.profile-container .ant-input {
+    border-radius: 4px;          /* Rounded corners for the input fields */
+}
+
+/* Styling for the container when a field is editable */
+.editable-field, 
+/* Styling for the container when a field is not editable */
+.non-editable-field {
+    display: flex;               /* Use flexbox for layout */
+    align-items: center;        /* Vertically center the content */
+    justify-content: space-between; /* Space out the content evenly */
+}
+
+/* Styling for the text when a field is not editable */
+.non-editable-field span {
+    font-size: 16px;             /* Font size for the text */
+    color: #444;                 /* Dark gray color for the text */
+}
+
+/* Styling for the edit button when a field is not editable */
+.non-editable-field.button {
+    background-color: #007bff;   /* Blue background color for the button */
+    border-color: #007bff;       /* Blue border color for the button */
+    color: #fff;                 /* White color for the button text */
+    border-radius: 4px;          /* Rounded corners for the button */
+    transition: all 0.3s ease;   /* Smooth transition for hover effects */
+    
+}
+.non-editable-field.button:hover{
+    background-color: #0056b3;   /* Darker blue background color on hover */
+    border-color: #0056b3;       /* Darker blue border color on hover */
+}
+
+/* Styling for the input field when it's editable */
+.editable-field .ant-input {
+    flex: 1;                     /* Allow the input to take up available space */
+    margin-right: 10px;          /* Add space to the right of the input */
+}
+
+/* Styling for the save button when a field is editable */
+.editable-field button {
+    margin-left: 10px;           /* Add space to the left of the button */
+}
+
+/* Styling for the primary button (Save button) */
+button[type="primary"] {
+    background-color: #007bff;   /* Blue background color for the button */
+    border-color: #007bff;       /* Blue border color for the button */
+    color: #fff;                 /* White color for the button text */
+    border-radius: 4px;          /* Rounded corners for the button */
+    transition: all 0.3s ease;   /* Smooth transition for hover effects */
+}
+
+/* Styling for the primary button when hovered */
+button[type="primary"]:hover {
+    background-color: #0056b3;   /* Darker blue background color on hover */
+    border-color: #0056b3;       /* Darker blue border color on hover */
+}

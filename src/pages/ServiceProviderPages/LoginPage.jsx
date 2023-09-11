@@ -62,7 +62,6 @@ function LoginPage({onLogin}) {
      * @param {sting} id - The user's ID
      */
     const handleLogIn = (name, token, email, id) => {
-        const userType = "Service Provider";
         login(name, token, email, id, userType);
         navigate("/profile");
     };

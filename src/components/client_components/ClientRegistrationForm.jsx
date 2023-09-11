@@ -4,6 +4,8 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "../../styles/ClientStyles/clientRegistrationForm.css";
+import axios from "axios";
+// import {useAuth} from "../../context/AuthContext.jsx";
 // name, email, password, secret question - combo box and text input, phone number - combo box and number input
 
 // validation
@@ -75,8 +77,24 @@ const ClientRegistrationForm = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        try {
+            const response = await axios.post("/client/createClient", {
+                name: fields.name,
+                email: fields.email,
+                password: fields.password,
+                secret_question: fields.secret_question,
+                answer: fields.answer,
+                phone: fields.phone_prefix.concat(fields.phone_suffix),
+            } );
+            const {id, token} = response.data;
+            console.log(id, token);
+            const clientData = {id, name: fields.name, token, userType: "Client", email: fields.email};
+            localStorage.setItem("Client", JSON.stringify(clientData));
+        } catch (e) {
+            console.log(e);
+        }
     };
     const isFormInvalid = !nameFlag || !passwordFlag || !emailFlag || !phoneFlag || !fields.answer || !fields.secret_question || !fields.phone_prefix;
     return (
