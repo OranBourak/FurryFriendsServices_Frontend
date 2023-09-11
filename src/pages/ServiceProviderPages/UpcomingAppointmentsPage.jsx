@@ -76,8 +76,8 @@ const UpcomingAppointments = () => {
                             {appointments.map((appointment, index) => (
                                 <tr key={appointment._id}>
                                     <td>{index + 1}</td>
-                                    <td>{appointment.client_id.name}</td>
-                                    <td>{appointment.client_id.phone}</td>
+                                    <td>{appointment.clientId.name}</td>
+                                    <td>{appointment.clientId.phone}</td>
                                     <td>{appointment.appointmentType.name}</td>
                                     <td>{format(new Date(appointment.date), "yyyy-MM-dd")}</td>
                                     <td>{format(new Date(appointment.date).setMinutes(new Date(appointment.date).getMinutes()-180), "HH:mm")}</td>
