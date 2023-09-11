@@ -109,11 +109,23 @@ const TypeManagementPage = () => {
     };
 
     const confirmDelete = async () => {
-        // const updatedAppointments = appointments.filter(
-        //     (appointment) => appointment._id !== appointmentToDelete,
-        // );
-        // setAppointments(updatedAppointments);
-        console.log(appointmentToDelete);
+        try {
+            await axios.delete(`/appointmentType/delete/${appointmentToDelete}`, {
+                headers: {
+                    Authorization: `Bearer ${userData.token}`,
+                },
+                data: {
+                    serviceProviderId: userData.id,
+                },
+            });
+            const updatedAppointments = appointments.filter(
+                (appointment) => appointment._id !== appointmentToDelete,
+            );
+            setAppointments(updatedAppointments);
+            console.log(appointmentToDelete);
+        } catch (err) {
+            console.error("Error deleting appointment:", error);
+        };
         setDeleteConfirmationOpen(false);
     };
 
