@@ -12,13 +12,14 @@ const EditAppointmentModal=({show, onHide, onSave, name, price, duration})=> {
 
     useEffect(() => {
         setNameError(!/^[A-Za-z ]+$/.test(editedName));
-        setPriceError(!/^[0-9]+$/.test(editedPrice));
+        setPriceError(!/^[1-9][0-9]*$/.test(editedPrice));
         if (/^[A-Za-z ]+$/.test(editedName) && /^[0-9]+$/.test(editedPrice)) {
             setCompleteForm(true);
         } else {
             setCompleteForm(false);
         }
     }, [editedName, editedPrice]);
+
     const handleSave = () => {
         const goodName = /^[A-Za-z ]+$/.test(editedName);
         const goodPrice = editedPrice > 0;
@@ -34,8 +35,15 @@ const EditAppointmentModal=({show, onHide, onSave, name, price, duration})=> {
         }
     };
 
+    const onEditorHide = () => {
+        setEditedName("");
+        setEditedDuration(1);
+        setEditedPrice(0);
+        onHide();
+    };
+
     return (
-        <Modal show={show} onHide={onHide}>
+        <Modal show={show} onHide={onEditorHide}>
             <Modal.Header closeButton>
                 <Modal.Title>Edit Appointment Type</Modal.Title>
             </Modal.Header>
@@ -56,9 +64,9 @@ const EditAppointmentModal=({show, onHide, onSave, name, price, duration})=> {
                     <Form.Group controlId="formPrice">
                         <Form.Label>Price:</Form.Label>
                         <Form.Control
-                            type="number"
+                            type="text"
                             value={editedPrice}
-                            onChange={(e) => setEditedPrice(Number(e.target.value))}
+                            onChange={(e) => setEditedPrice(e.target.value)}
                             isInvalid={priceError}
                         />
                         <Form.Control.Feedback type="invalid">
@@ -82,7 +90,7 @@ const EditAppointmentModal=({show, onHide, onSave, name, price, duration})=> {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onHide}>
+                <Button variant="secondary" onClick={onEditorHide}>
           Cancel
                 </Button>
 
