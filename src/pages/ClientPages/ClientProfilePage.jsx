@@ -58,7 +58,8 @@ function ClientProfilePage() {
     useEffect(() => {
         if (client) {
             setTempPhone({prefix: client.phone.substring(0, 3), suffix: client.phone.substring(3)});
-            setTempName(client.name);
+            setTempName(client.name); // changing TempName to client name
+            changeName(client.name); // changing UserData name to clients name
             console.log(userData, client, " This is for the useEffect");
         }
     }, [client]);
