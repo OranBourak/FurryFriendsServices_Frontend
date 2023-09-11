@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import "../../styles/ClientStyles/ServiceProviderReviews.css";
 import PropTypes from "prop-types";
 import {Carousel, Card, Rate, Button, Empty} from "antd";
 import axios from "axios";
@@ -41,7 +42,7 @@ const ReviewCarousel = ({providerID}) => {
 
     return (
         <div>
-            <h2>Reviews</h2>
+            <h1>Reviews</h1>
             {/* Carousel component to display reviews */}
             <Carousel
                 ref={carouselRef}

@@ -2,110 +2,98 @@ import React, {useState, useEffect} from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {ButtonGroup, Button, Table} from "react-bootstrap";
-import {isSameWeek, isSameMonth, isSameDay} from "date-fns";
+import {isSameWeek, isSameMonth, isSameDay, format} from "date-fns";
 import "../../styles/ServiceProviderStyles/appManagment.css";
+import {useAuth} from "../../context/AuthContext.jsx";
+import axios from "axios";
 
-const initialAppointments = [
-    {
-        id: 1,
-        clientName: "John Doe",
-        phoneNumber: "123-456-7890",
-        appointmentType: "Consultation",
-        date: new Date(2023, 8, 10, 9, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
-    },
-    {
-        id: 2,
-        clientName: "Jane Smith",
-        phoneNumber: "987-654-3210",
-        appointmentType: "Follow-up",
-        date: new Date(2023, 8, 15, 14, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
-    },
-    {
-        id: 3,
-        clientName: "Alice Johnson",
-        phoneNumber: "555-123-4567",
-        appointmentType: "Check-up",
-        date: new Date(2023, 8, 20, 10, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
-    },
-    {
-        id: 4,
-        clientName: "Bob Brown",
-        phoneNumber: "555-987-6543",
-        appointmentType: "Consultation",
-        date: new Date(2023, 8, 25, 15, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
-    },
-    {
-        id: 5,
-        clientName: "John Doe",
-        phoneNumber: "123-456-7890",
-        appointmentType: "Consultation",
-        date: new Date(2023, 8, 10, 10, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
-    },
-    {
-        id: 6,
-        clientName: "John Doe",
-        phoneNumber: "123-456-7890",
-        appointmentType: "Consultation",
-        date: new Date(2023, 7, 10, 10, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
-    },
-    // Add more appointments here...
-];
 
 const AppointmentsCalendar = () => {
     const [date, setDate] = useState(new Date());
-    const [appointments] = useState(initialAppointments);
+    const [appointments, setAppointments] = useState([]);
     const [filteredAppointments, setFilteredAppointments] = useState([]);
-    const [format, setFormat] = useState("month");
+    const [Cformat, setCFormat] = useState("month");
+    const {loggedIn, userData} = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
+
 
     useEffect(() => {
-        setFormat("month");
-        setFilteredAppointments(filterByMonth(date));
-        setDate(new Date());
-    }, []);
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                const response = await axios.get(`/serviceProvider/getAppointments/${userData.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${userData.token}`,
+                    },
+                });
+                const apps = response.data.appointments;
+                console.log(apps);
+                setAppointments(apps);
+                setIsLoading(false);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        if (loggedIn) {
+            fetchData();
+        }
+    }, [loggedIn, userData.id, userData.token]);
+
+    // Use another useEffect to set filteredAppointments when appointments change
+    useEffect(() => {
+        if (Cformat === "month") {
+            setFilteredAppointments(filterByMonth(date));
+        } else if (Cformat === "week") {
+            setFilteredAppointments(filterByWeek(date));
+        } else if (Cformat === "day") {
+            setFilteredAppointments(filterByDay(date));
+        }
+    }, [date, Cformat, appointments]);
 
     const filterByDay = (date) => {
         return appointments.filter((a) => {
-            return isSameDay(a.date, date);
+            return isSameDay(new Date(a.date), new Date(date));
         });
     };
 
     const filterByMonth = (date) => {
         return appointments.filter((a) => {
-            return isSameMonth(a.date, date);
+            return isSameMonth(new Date(a.date), new Date(date));
         });
     };
 
     const filterByWeek = (date) => {
         return appointments.filter((a) => {
-            return isSameWeek(a.date, date);
+            return isSameWeek(new Date(a.date), new Date(date));
         });
     };
 
     const handleDateChange = (newDate) => {
-        setDate(newDate);
-        if (format === "month") {
+        setDate(new Date(newDate));
+        if (Cformat === "month") {
             setFilteredAppointments(filterByMonth(newDate));
-        } else if (format === "week") {
+        } else if (Cformat === "week") {
             setFilteredAppointments(filterByWeek(newDate));
-        } else if (format === "day") {
+        } else if (Cformat === "day") {
             setFilteredAppointments(filterByDay(newDate));
         }
     };
 
-    const handleClick = (newFormat) => {
-        setFormat(newFormat);
-        if (newFormat === "month") {
+    const handleClick = (newCFormat) => {
+        setCFormat(newCFormat);
+        if (newCFormat === "month") {
             setFilteredAppointments(filterByMonth(date));
-        } else if (newFormat === "week") {
+        } else if (newCFormat === "week") {
             setFilteredAppointments(filterByWeek(date));
-        } else if (newFormat === "day") {
+        } else if (newCFormat === "day") {
             setFilteredAppointments(filterByDay(date));
         }
     };
 
     // Function to check if a date has appointments
     const dateHasAppointments = (date) => {
-        return filteredAppointments.some((a) => isSameDay(a.date, date));
+        return filteredAppointments.some((a) => isSameDay(new Date(a.date), new Date(date)));
     };
 
     // Function to determine the CSS class for calendar tiles
@@ -122,62 +110,78 @@ const AppointmentsCalendar = () => {
             <div className="container d-flex justify-content-center">
                 <div className="calendar-border">
                     <Calendar
-                        value={date}
+                        value={new Date(date)}
                         onClickDay={handleDateChange}
                         tileClassName={getTileClassName}
                     />
                 </div>
             </div>
-            <h2 className="mt-4">Appointments for {date.toLocaleDateString()}</h2>
+            <h2 className="mt-4">Appointments for {new Date(date).toLocaleDateString()}</h2>
             <ButtonGroup className="mb-3">
                 <Button
-                    variant={format === "day" ? "primary" : "secondary"}
+                    variant={Cformat === "day" ? "primary" : "secondary"}
                     onClick={() => handleClick("day")}
                 >
             Day
                 </Button>
                 <Button
-                    variant={format === "week" ? "primary" : "secondary"}
+                    variant={Cformat === "week" ? "primary" : "secondary"}
                     onClick={() => handleClick("week")}
                 >
             Week
                 </Button>
                 <Button
-                    variant={format === "month" ? "primary" : "secondary"}
+                    variant={Cformat === "month" ? "primary" : "secondary"}
                     onClick={() => handleClick("month")}
                 >
             Month
                 </Button>
             </ButtonGroup>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Client Name</th>
-                        <th>Phone Number</th>
-                        <th>Appointment Type</th>
-                        <th>Time</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredAppointments.map((appointment) => (
-                        <tr key={appointment.id}>
-                            <td>{appointment.id}</td>
-                            <td>{appointment.clientName}</td>
-                            <td>{appointment.phoneNumber}</td>
-                            <td>{appointment.appointmentType}</td>
-                            <td>
-                                {appointment.date.toLocaleTimeString([], {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                })}
-                            </td>
-                            <td>{appointment.date.toLocaleDateString()}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+            <>
+                {isLoading ? (
+                    <h1>Loading appointments...</h1>
+                ) : (
+                    filteredAppointments.length === 0 ? (
+                        <h1>No appointments scheduled yet!</h1>
+                    ) : (
+                        <>
+                            <Table striped bordered hover responsive className="text-center">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Client Name</th>
+                                        <th>Phone Number</th>
+                                        <th>Appointment Type</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Duration</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredAppointments.map((appointment, index) => (
+                                        <tr key={appointment._id}>
+                                            <td>{index + 1}</td>
+                                            <td>{appointment.clientId.name}</td>
+                                            <td>{appointment.clientId.phone}</td>
+                                            <td>{appointment.appointmentType.name}</td>
+                                            <td>{format(new Date(appointment.date), "yyyy-MM-dd")}</td>
+                                            <td>{format(new Date(appointment.date).setMinutes(new Date(appointment.date).getMinutes()-180), "HH:mm")}</td>
+                                            <td>{`${appointment.duration} Hours`}</td>
+                                            <td
+                                                className={`status-cell ${
+                                                    appointment.status === "Upcoming" || appointment.status === "Completed" ? "upcoming" : "canceled"
+                                                }`}
+                                            >
+                                                {appointment.status}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table></>
+                    )
+                )}
+            </>
         </div>
     );
 };

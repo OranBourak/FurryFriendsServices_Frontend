@@ -1,10 +1,14 @@
 import {Calendar, TimePicker, Button, Select, Modal, notification} from "antd";
 import React, {useState, useEffect} from "react";
+import "../../styles/ClientStyles/scheduleAppointment.css";
 import PropTypes from "prop-types";
 import moment from "moment";
 import axios from "axios";
+import {useNavigate} from "react-router";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 const {Option} = Select;
+
 
 // Main component for scheduling an appointment
 const ScheduleAppointment = ({providerID}) => {
@@ -16,6 +20,9 @@ const ScheduleAppointment = ({providerID}) => {
     const [blockedTimeSlots, setBlockedTimeSlots] = useState([]);
     const [appointments, setAppointments] = useState([]);
     const [appointmentTypes, setAppointmentTypes] = useState([]);
+    const {userData} = useAuth();
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,7 +49,7 @@ const ScheduleAppointment = ({providerID}) => {
 
     // Handler for when a time is selected from the time picker
     const handleTimeChange = (time) => {
-        setSelectedTime(time ? moment(time.format("HH") + ":00", "HH:mm") : null);
+        setSelectedTime(time ? moment().hour(time.hour()).startOf("hour") : null);
     };
 
     // Handler for when a service is selected from the dropdown
@@ -53,7 +60,6 @@ const ScheduleAppointment = ({providerID}) => {
 
 
     // Handler for creating an appointment with the selected details
-    // TODO: implement this function
     const handleCreateAppointment = async () => {
         // Validate that all required fields are selected
         if (!selectedDate || !selectedTime || !selectedService) {
@@ -64,27 +70,47 @@ const ScheduleAppointment = ({providerID}) => {
             return;
         }
 
+        // Calculate disabled hours for the selected date
+        const disabledHours = calculateDisabledHours();
+
+        const selectedHour = selectedTime.hour();
+        const serviceDuration = selectedService.duration;
+
+        // Check for time conflicts with disabled hours
+        for (let i = 0; i < serviceDuration; i++) {
+            const checkHour = selectedHour + i;
+            if (disabledHours.includes(checkHour)) {
+                console.log("Time conflict detected"); // For debugging
+                Modal.warning({
+                    title: "Time Conflict",
+                    content: "The selected time conflicts with blocked hours. Please choose another time.",
+                });
+                return;
+            }
+        }
+
+
         // Prepare the appointment data
         const appointmentData = {
-            // TODO: Replace with the actual client ID , useContext
-            client_id: "64fbbd0998813acba7948e20", // FIXME: Replace with the actual client ID
-            serviceProvider_id: providerID,
+            clientId: userData.id,
+            serviceProviderId: providerID,
             status: "Upcoming",
             appointmentType: selectedService._id,
-            date: moment(selectedDate).set({
+            date: moment().set({
                 hour: selectedTime.hour(),
                 minute: selectedTime.minute(),
-            }).toISOString(),
+                date: selectedDate.date(),
+            }).format("YYYY-MM-DDTHH:mm:ss"),
             duration: selectedService.duration,
         };
 
         try {
             // Make an API call to create the appointment
-            const response = await axios.post("/client/createAppointment", appointmentData);
+            const response = await axios.post("/appointment/createAppointment", appointmentData);
 
-            if (response.status === 200) {
+            if (response.status === 201) {
                 notification.success({message: "Success", description: "Appointment successfully created!"});
-                // TODO: Refresh the appointments (or navigate to another page)
+                navigate("/dashboard");
             } else {
                 Modal.error({title: "Error", content: "Failed to create the appointment."});
             }
@@ -93,6 +119,7 @@ const ScheduleAppointment = ({providerID}) => {
             Modal.error({title: "Error", content: "An error occurred while creating the appointment. Please try again later."});
         }
     };
+
 
     // Function to disable specific dates on the calendar
     const disabledDate = (current) => {
@@ -105,8 +132,22 @@ const ScheduleAppointment = ({providerID}) => {
 
     // Function to disable specific time slots in the time picker
     const disabledTime = () => {
+        return {
+            disabledHours: () => calculateDisabledHours(),
+        };
+    };
+
+    const calculateDisabledHours = () => {
         const selectedDateStr = selectedDate?.format("YYYY-MM-DD");
         const disabledHours = [];
+
+        // Disable hours outside of 8-21
+        for (let i = 0; i < 8; i++) {
+            disabledHours.push(i);
+        }
+        for (let i = 22; i < 24; i++) {
+            disabledHours.push(i);
+        }
 
         // Block time slots based on blockedTimeSlots
         const blockedTimeSlot = blockedTimeSlots.find(
@@ -132,9 +173,7 @@ const ScheduleAppointment = ({providerID}) => {
             }
         });
 
-        return {
-            disabledHours: () => disabledHours,
-        };
+        return disabledHours;
     };
 
 
@@ -168,7 +207,9 @@ const ScheduleAppointment = ({providerID}) => {
                     onChange={handleTimeChange}
                     format="HH"
                     disabledTime={disabledTime}
+                    disabled={!selectedDate || !selectedService} // Disable TimePicker if date or service is not selected
                 />
+
             </div>
             <div>
                 {/* Button to create the appointment */}

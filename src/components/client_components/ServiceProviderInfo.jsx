@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import "../../styles/ClientStyles/ServiceProviderInfo.css";
 import PropTypes from "prop-types";
 import {Card, Avatar, Tag} from "antd";
 import {UserOutlined} from "@ant-design/icons";

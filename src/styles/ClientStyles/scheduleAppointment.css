@@ -1,0 +1,45 @@
+/* ScheduleAppointment Component Styling */
+
+.ScheduleAppointment {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    max-width: 800px;
+}
+
+.ScheduleAppointment h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    color: #333;
+}
+
+.ScheduleAppointment h2 {
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    color: #555;
+}
+
+.ScheduleAppointment .Select, .TimePicker {
+    margin-bottom: 20px;
+}
+
+.ScheduleAppointment .Calendar {
+    margin-bottom: 20px;
+}
+
+.ScheduleAppointment .Button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.ScheduleAppointment .Button:hover {
+    background-color: #0056b3;
+}
+

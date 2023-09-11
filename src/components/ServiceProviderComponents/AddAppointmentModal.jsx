@@ -5,8 +5,11 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types";
+import {useAuth} from "../../context/AuthContext";
+import axios from "axios";
 
-const AddAppointmentTypeModal=({show, onHide, onAddType}) => {
+const AddAppointmentTypeModal=({show, onHide, onAddType, appTypesSize}) => {
+    const {loggedIn, userData} = useAuth();
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [duration, setDuration] = useState(1);
@@ -16,8 +19,8 @@ const AddAppointmentTypeModal=({show, onHide, onAddType}) => {
 
     useEffect(() => {
         setNameError(!/^[A-Za-z ]+$/.test(name));
-        setPriceError(!/^[0-9]+$/.test(price));
-        if (/^[A-Za-z ]+$/.test(name) && /^[0-9]+$/.test(price)) {
+        setPriceError(!/^[1-9][0-9]*$/.test(price));
+        if (/^[A-Za-z ]+$/.test(name) && /^[1-9][0-9]*$/.test(price)) {
             setCompleteForm(true);
         } else {
             setCompleteForm(false);
@@ -25,24 +28,57 @@ const AddAppointmentTypeModal=({show, onHide, onAddType}) => {
     }, [name, price]);
 
 
-    const handleAddType = () => {
+    const handleAddType = async () => {
+        if (!loggedIn) {
+            return;
+        }
+        if (appTypesSize === 10) {
+            window.alert("You have reached max capacity of 10 appointment types");
+            return;
+        }
         const goodName = /^[A-Za-z ]+$/.test(name);
-        const goodPrice = /^[0-9]+$/.test(price);
-        if (goodName && goodPrice) {
-            onAddType(name, price, duration);
-            onHide();
+        const goodPrice = /^[1-9][0-9]*$/.test(price);
+
+        if (!goodName) {
+            setNameError(true);
+            return;
+        }
+        if (!goodPrice) {
+            setPriceError(true);
+            return;
+        }
+
+        try {
+            const response = await axios.post(`/appointmentType/create/${userData.id}`, {
+                name: name,
+                price: Number(price),
+                duration: duration,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${userData.token}`,
+                },
+            });
+            // On success
+            const newType = response.data.appointmentType;
+            console.log("response id: " + newType._id);
+            onAddType(newType);
+            onModalHide();
             setNameError(false);
             setPriceError(false);
-        } else if (!goodName) {
-            setNameError(true);
-        } else if (!goodPrice) {
-            setPriceError(true);
+        } catch (error) {
+            console.log(error);
         }
     };
 
+    const onModalHide = () => {
+        setName("");
+        setPrice("");
+        setDuration(1);
+        onHide();
+    };
 
     return (
-        <Modal show={show} onHide={onHide}>
+        <Modal show={show} onHide={onModalHide}>
             <Modal.Header closeButton>
                 <Modal.Title>Add New Appointment Type</Modal.Title>
             </Modal.Header>
@@ -64,9 +100,9 @@ const AddAppointmentTypeModal=({show, onHide, onAddType}) => {
                     <Form.Group controlId="formPrice">
                         <Form.Label>Price:</Form.Label>
                         <Form.Control
-                            type="number"
+                            type="text"
                             value={price}
-                            onChange={(e) => setPrice(Number(e.target.value))}
+                            onChange={(e) => setPrice(e.target.value)}
                             placeholder="Enter a price"
                             isInvalid={priceError}
                         />
@@ -91,12 +127,12 @@ const AddAppointmentTypeModal=({show, onHide, onAddType}) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onHide}>
+                <Button variant="secondary" onClick={onModalHide}>
           Cancel
                 </Button>
                 <Button
                     variant="primary"
-                    onClick={handleAddType}
+                    onClick={async () => await handleAddType()}
                     disabled={!completeForm}>
           Add Type
                 </Button>
@@ -109,6 +145,7 @@ AddAppointmentTypeModal.propTypes = {
     show: PropTypes.bool,
     onHide: PropTypes.func,
     onAddType: PropTypes.func,
+    appTypesSize: PropTypes.number,
 };
 
 export default AddAppointmentTypeModal;
