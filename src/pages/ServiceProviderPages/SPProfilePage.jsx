@@ -20,7 +20,7 @@ const ProfilePage = () => {
     const [city, setCity] = useState("");
     const [gender, setGender] = useState("");
     const [image, setImage] = useState(
-        "https://cdn.pixabay.com/photo/2018/12/26/09/16/vet-3895477_960_720.jpg",
+        "",
     );
     const [isEditingPicture, setIsEditingPicture] = useState(false);
     const [phonePrefix, setPhonePrefix] = useState("");
@@ -320,7 +320,7 @@ const ProfilePage = () => {
                         </Form>
                     )}
                 </Col>
-                <Col className="profile-name" xs={6} md={4}>
+                <Col className="profile-name text-center" xs={6} md={4}>
                     <h1>{name}</h1>
                     <h3>{typeOfService}</h3>
                 </Col>
