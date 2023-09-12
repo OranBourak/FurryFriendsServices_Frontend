@@ -8,6 +8,7 @@ import {ButtonGroup, ToggleButton} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/PassRecoveryPage.css";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {message} from "antd";
 
 
 /**
@@ -62,6 +63,13 @@ function PassRecoveryPage() {
             setRealAnswer(securityAnswer);
         } catch (error) {
             console.log("error: " + error);
+            message.error({
+
+                content: `error: ${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
         }
 
     // for commit: https://furryfriendsbackend.onrender.com/login
@@ -115,6 +123,13 @@ function PassRecoveryPage() {
         } catch (error) {
             console.log("failed to change password");
             console.log(error);
+            message.error({
+
+                content: `error: ${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
             successfulChange = false;
         };
 

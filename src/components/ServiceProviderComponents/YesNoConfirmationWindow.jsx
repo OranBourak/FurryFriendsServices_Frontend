@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import {Modal, Button} from "react-bootstrap";
 import PropTypes from "prop-types";
@@ -20,9 +21,9 @@ function ConfirmationDialog(props) {
     * Handles the user's confirmation (clicks "Yes").
     * Executes the `props.onConfirm` callback and closes the dialog.
     */
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         if (onConfirm) {
-            onConfirm();
+            await onConfirm();
         }
         onClose();
     };

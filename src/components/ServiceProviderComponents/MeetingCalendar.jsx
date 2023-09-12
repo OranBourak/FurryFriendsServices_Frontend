@@ -1,63 +1,78 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable no-unused-vars */
-import {useState, React} from "react";
+import {useState, React, useEffect} from "react";
 import {format, isSameDay} from "date-fns";
 import "react-calendar/dist/Calendar.css";
 import {Calendar as MyCalendar} from "react-calendar";
 import Time from "../../components/ServiceProviderComponents/Time.jsx";
 import "../../styles/ServiceProviderStyles/MeetingCalendar.css";
-import Button from "react-bootstrap/Button";
-
-const serviceProvider = {
-    country: "",
-    city: "",
-    name: "",
-    gender: ["Male", "Female", "Other"],
-    picture: "",
-    email: "",
-    phone: "",
-    bio: "",
-    password: "",
-    typeOfService: "",
-    reviews: [],
-    averageRating: "",
-    blockedDates: ["Sep 7 2023"],
-    blockedTimeSlots: [
-        {
-            date: "Sep 8 2023",
-            blockedHours: ["08:00", "10:00"],
-        },
-    ],
-    appointments: [
-        {
-            id: 2,
-            clientName: "Jane Smith",
-            phoneNumber: "987-654-3210",
-            appointmentType: "Follow-up",
-            date: new Date(2023, 8, 15, 14, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
-            duration: 5,
-        },
-        {
-            id: 3,
-            clientName: "Jane For",
-            phoneNumber: "987-654-3210",
-            appointmentType: "Follow-up",
-            date: new Date(2023, 9, 15, 14, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
-        },
-    ],
-    appointmentTypes: [],
-};
+import {useAuth} from "../../context/AuthContext";
+import axios from "axios";
+import {message} from "antd";
 
 /**
  * Component to display a calendar with date selection and appointment times.
  * @return {React.component} - The component displaying the calendar.
  */
 const MeetingCalendar = () => {
+    const {loggedIn, userData} = useAuth();
     const [date, setDate] = useState(new Date());
     const [showTime, setShowTime] = useState(false);
     const [isDayBlocked, setIsDayBlocked] = useState(false);
-    const [blockedHours, setBlockedHours] = useState([]);
+    const [blockedTimeSlotOfDate, setblockedTimeSlotOfDate] = useState({});
     const [currDateAppointments, setCurrDateAppointments] = useState([]);
+    // New
+    const [blockedDates, setBlockedDates] = useState([]);
+    const [appointments, setAppointments] = useState([]);
+    const [blockedTimeSlots, setBlockedTimeSlots] = useState();
+    // for re-rendering after blocking operations
+    const [isAfterBlockOperation, setIsAfterBlockOperation] = useState(false);
+
+    const getData = async () => {
+        if (loggedIn) {
+            try {
+                // setIsLoading(true);
+                const response = await axios.get(`/serviceProvider/getAvailabilityManagmentData/${userData.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${userData.token}`, // Replace 'userToken' with the actual user token
+                    },
+                });
+
+                const spBlockedDates = response.data.blockedDates;
+                const spBlockedTimeSlots = response.data.blockedTimeSlots;
+                const spAppointments = response.data.appointments;
+                console.log("fron blocked time slots: " + spBlockedTimeSlots);
+                console.log("front appontments slots: " + spAppointments);
+                console.log("front blocked time slots : " + spBlockedTimeSlots);
+                setBlockedDates(spBlockedDates);
+                setAppointments(spAppointments);
+                setBlockedTimeSlots(spBlockedTimeSlots);
+                // setIsLoading(false);
+            } catch (error) {
+                console.log(error);
+                message.error({
+
+                    content: `${error}`,
+
+                    style: {yIndex: 1000, fontSize: "24px"},
+
+                }, 2);
+            }
+        }
+    };
+
+    useEffect( () => {
+        getData();
+    }, []);
+
+    useEffect( () => {
+        getData();
+        setShowTime(false);
+    }, [isAfterBlockOperation]);
+
+    // useEffect( () => {
+    //     getData();
+    // }, [date]);
 
     /**
      * Filter appointments by a specific date.
@@ -66,9 +81,11 @@ const MeetingCalendar = () => {
      * @param {Array} appointmentsArr - An array of appointment objects, each containing a `date` property.
      * @return {Array} - An array of appointments that match the specified date.
      */
-    const filterAppointemtnsByDay = (date, appointmentsArr) => {
+    const filterAppointemtnsByDayAndStatus = (date, appointmentsArr) => {
         return appointmentsArr.filter((appointemt)=>{
-            return isSameDay(appointemt.date, date);
+            console.log("filtering appointemnts: " + appointemt.status);
+
+            return isSameDay(new Date(appointemt.date), date) && appointemt.status !== "Canceled";
         });
     };
 
@@ -79,15 +96,15 @@ const MeetingCalendar = () => {
      * @param {Array} blockedTimesSlotsArr - An array containing objects representing blocked time slots, each with a `date` and `blockedHours` property.
      * @return {Array} - An array of blocked hours for the specified date, or an empty array if there are none.
      */
-    function getBlockedTimeSlotsOfDate(dateStr, blockedTimesSlotsArr) {
+    function getBlockedTimeSlotOfDate(dateStr, blockedTimesSlotsArr) {
         // Run on all the blocked time slots of the user
         for (const timeSlotObj of blockedTimesSlotsArr) {
             // If the user has a blocked time slots on the chosen date
             if (timeSlotObj.date === dateStr) {
-                return timeSlotObj.blockedHours;
+                return timeSlotObj;
             }
         }
-        return [];
+        return {};
     }
 
     /**  changes the date eselected in the calendar and shows the available hours
@@ -100,29 +117,26 @@ const MeetingCalendar = () => {
         const newDate = e;
         const formatString = "MMM d yyyy";
         const newDateToString = format(newDate, formatString);
-        const blockedDates = serviceProvider.blockedDates;
-        const blockedTimeSlots = getBlockedTimeSlotsOfDate(newDateToString, serviceProvider.blockedTimeSlots);
-        const chosenDateAppointments = filterAppointemtnsByDay(newDate, serviceProvider.appointments);
+        // const blockedDates = serviceProvider.blockedDates;
+        const blockedTimeSlotsOfDate = getBlockedTimeSlotOfDate(newDateToString, blockedTimeSlots);
+        const chosenDateAppointments = filterAppointemtnsByDayAndStatus(newDate, appointments);
+
         // If the chosen date is a blocked date
         if (blockedDates.includes(newDateToString)) {
             setIsDayBlocked(true);
         } else {
-            // If it's not a blocked date
+            // else it's not a blocked date
             setIsDayBlocked(false);
-            // Check if the chosen date has blocked hours
-            setBlockedHours(blockedTimeSlots);
-            // Check if the chosen date has booked appointmens
-            if (chosenDateAppointments.length > 0) {
-                setCurrDateAppointments(chosenDateAppointments);
-            } else {
-                setCurrDateAppointments([]);
-            }
+            // set the blocked hours for the current date
+            setblockedTimeSlotOfDate(blockedTimeSlotsOfDate);
+            // set the appointments for the current date
+            setCurrDateAppointments(chosenDateAppointments);
         }
     }
 
 
     const getTitleClassName = ({view, date}) => {
-        if (view === "month" && serviceProvider.blockedDates.includes(format(date, "MMM d yyyy"))) {
+        if (view === "month" && blockedDates.includes(format(date, "MMM d yyyy"))) {
             return "unavailable";
         }
         return "";
@@ -138,7 +152,7 @@ const MeetingCalendar = () => {
         <div className="calendar-container">
             <h1>React Calendar</h1>
             <MyCalendar value={date} defaultView="month" onClickDay={onClickDate} tileClassName={getTitleClassName}/>
-            <Time showTime={showTime} date={date} isDayBlocked={isDayBlocked} blockedHours={blockedHours} scheduledAppointments={currDateAppointments} />
+            <Time showTime={showTime} date={date} isDayBlocked={isDayBlocked} blockedTimeSlotOfDate={blockedTimeSlotOfDate} scheduledAppointments={currDateAppointments} setIsAfterBlockOperation={() => setIsAfterBlockOperation(!isAfterBlockOperation)} />
         </div>
     );
 };

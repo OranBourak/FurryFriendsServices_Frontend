@@ -44,8 +44,9 @@ const ServiceProviderInfo = ({providerID}) => {
 
     return (
         <Card
-            title="Service Provider Info"
-            extra={<Avatar icon={<UserOutlined />} src={serviceProvider.image} />}
+            title={<span style={{fontSize: "30px", fontWeight: "bold"}}>Service Provider Info</span>}
+            extra={<Avatar className="avatar" size={70} src={serviceProvider.image?serviceProvider.image: "/" } icon={<UserOutlined />}/>
+            }
         >
             <p><strong>Name:</strong> {serviceProvider.name}</p>
             <p><strong>Email:</strong> {serviceProvider.email}</p>

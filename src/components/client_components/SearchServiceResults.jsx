@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import {Col, Empty} from "antd";
 import {Card, List, Avatar, Typography, Rate, Button} from "antd";
+import {UserOutlined} from "@ant-design/icons";
 import "../../styles/ClientStyles/ServiceProviderResults.css";
 
 const {Title, Text} = Typography;
@@ -36,8 +37,7 @@ const ServiceProviderResults = ({serviceData}) => {
                             <div className="list-item-content">
                                 {/* Avatar and basic details of the service provider */}
                                 <List.Item.Meta
-                                    avatar={<Avatar className="avatar"
-                                        src={require("../../images/defaultProfileImage.jpg")} />}
+                                    avatar={<Avatar className="avatar" src={ provider.image} icon={<UserOutlined />}/>}
                                     title={<Text strong>{provider.name}</Text>}
                                     description={
                                         <>

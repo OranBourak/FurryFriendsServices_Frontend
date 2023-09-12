@@ -7,6 +7,7 @@ import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types";
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
+import {message} from "antd";
 
 const AddAppointmentTypeModal=({show, onHide, onAddType, appTypesSize}) => {
     const {loggedIn, userData} = useAuth();
@@ -67,6 +68,13 @@ const AddAppointmentTypeModal=({show, onHide, onAddType, appTypesSize}) => {
             setPriceError(false);
         } catch (error) {
             console.log(error);
+            message.error({
+
+                content: `${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
         }
     };
 

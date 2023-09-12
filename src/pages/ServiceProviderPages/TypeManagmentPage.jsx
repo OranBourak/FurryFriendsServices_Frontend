@@ -7,6 +7,7 @@ import DeleteConfirmationModal from "../../components/ServiceProviderComponents/
 import "../../styles/ServiceProviderStyles/appType.css";
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
+import {message} from "antd";
 
 const TypeManagementPage = () => {
     const {loggedIn, userData} = useAuth();
@@ -44,6 +45,13 @@ const TypeManagementPage = () => {
                 // setIsLoading(false);
             } catch (error) {
                 console.log(error);
+                message.error({
+
+                    content: `error: ${error}`,
+
+                    style: {yIndex: 1000, fontSize: "24px"},
+
+                }, 2);
             }
         }
     };
@@ -94,6 +102,13 @@ const TypeManagementPage = () => {
             console.log("reaponse" + response);
         } catch (error) {
             console.log(error);
+            message.error({
+
+                content: `error: ${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
         }
 
         setEditModalOpen(false);
@@ -125,6 +140,13 @@ const TypeManagementPage = () => {
             console.log(appointmentToDelete);
         } catch (error) {
             console.error("Error deleting appointment:", error);
+            message.error({
+
+                content: `Error deleting appointment: ${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
         };
         setDeleteConfirmationOpen(false);
     };

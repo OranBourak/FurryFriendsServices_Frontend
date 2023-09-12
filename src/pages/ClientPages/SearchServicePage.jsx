@@ -4,6 +4,9 @@ import {Typography} from "antd";
 import SearchForm from "../../components/client_components/SearchForServiceForm.jsx";
 import ServiceProviderResults from "../../components/client_components/SearchServiceResults.jsx";
 import "../../styles/ClientStyles/SearchServicePage.css";
+import {message} from "antd";
+
+
 const {Text} = Typography;
 /**
  * SearchServicePage is a React component that serves as the main page for searching service providers.
@@ -36,6 +39,13 @@ function SearchServicePage() {
         } catch (error) {
             // Log any errors that occur during the API call
             console.error("An error occurred while fetching data: ", error);
+            message.error({
+
+                content: `An error occurred while fetching data: ${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
         }
     };
 

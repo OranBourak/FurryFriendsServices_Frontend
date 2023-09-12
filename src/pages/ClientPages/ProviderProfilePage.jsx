@@ -9,7 +9,7 @@ import {Row, Col} from "antd";
 const ProviderProfilePage = () => {
     const {id} = useParams();
     return (
-        <div>
+        <div className="mainPage">
             <h1 className="mainPageTitle">Profile</h1>
             <Row gutter={16} className="Row">
                 {/* First Column */}

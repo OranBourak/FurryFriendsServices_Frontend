@@ -5,6 +5,7 @@ import "../../styles/ServiceProviderStyles/archive.css";
 import {isBefore, format} from "date-fns";
 import axios from "axios";
 import {useAuth} from "../../context/AuthContext";
+import {message} from "antd";
 
 
 const Archive = () => {
@@ -38,6 +39,13 @@ const Archive = () => {
                 setIsLoading(false);
             } catch (error) {
                 console.log(error);
+                message.error({
+
+                    content: `${error}`,
+
+                    style: {yIndex: 1000, fontSize: "24px"},
+
+                }, 2);
             }
         }
     };

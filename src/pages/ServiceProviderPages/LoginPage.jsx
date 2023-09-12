@@ -9,6 +9,7 @@ import "../../styles/ServiceProviderStyles/LoginPage.css";
 import {useNavigate} from "react-router-dom";
 import {ButtonGroup, ToggleButton} from "react-bootstrap";
 import {useAuth} from "../../context/AuthContext.jsx";
+import {message} from "antd";
 
 
 /**
@@ -50,6 +51,13 @@ function LoginPage({onLogin}) {
             handleLogIn(name, token, email, id);
         } catch (error) {
             console.log("error: " + error);
+            message.error({
+
+                content: `error: ${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
             setError("Bad credentials. Please check your email and password.");
         }
     };
@@ -63,7 +71,7 @@ function LoginPage({onLogin}) {
      */
     const handleLogIn = (name, token, email, id) => {
         login(name, token, email, id, userType);
-        navigate("/profile");
+        userType === "client"?navigate("/dashboard") :navigate("/profile");
     };
 
     /**
@@ -98,7 +106,9 @@ function LoginPage({onLogin}) {
                 <Form className="text-light p-4" onSubmit={handleSubmit} style={{
                     backgroundColor: "rgba(0, 0, 0, 0.5)", // Background color with transparency
                     padding: "20px",
-                    borderRadius: "10px"}}>
+                    borderRadius: "10px",
+                    marginTop: "15%",
+                }}>
                     {error && <div className="text-danger mb-3">{error}</div>}
                     {/* user type */}
                     <Form.Group className="mb-3" controlId="formBasicUserType">
