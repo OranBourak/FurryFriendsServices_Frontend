@@ -148,26 +148,30 @@ const ProfilePage = () => {
     };
 
     const testURL = () => {
+        if (image) { // check if there's an image from the db else don't check
         // List of common image file extensions
-        const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"];
+            const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"];
 
-        // Get the file extension from the URL (if it exists)
-        const fileExtensionMatch = image.match(/\.\w+$/);
-        if (fileExtensionMatch) {
-            const fileExtension = fileExtensionMatch[0].toLowerCase();
-            if (imageExtensions.includes(fileExtension)) {
+            // Get the file extension from the URL (if it exists)
+            const fileExtensionMatch = image.match(/\.\w+$/);
+            if (fileExtensionMatch) {
+                const fileExtension = fileExtensionMatch[0].toLowerCase();
+                if (imageExtensions.includes(fileExtension)) {
+                    return true;
+                }
+            }
+
+            // Check if the URL contains keywords that suggest it's an image
+            const imageKeywords = ["image", "imgur", "jpg", "jpeg", "png", "gif", "bmp"];
+            const urlLowercase = image.toLowerCase();
+            if (imageKeywords.some((keyword) => urlLowercase.includes(keyword))) {
                 return true;
             }
-        }
 
-        // Check if the URL contains keywords that suggest it's an image
-        const imageKeywords = ["image", "imgur", "jpg", "jpeg", "png", "gif", "bmp"];
-        const urlLowercase = image.toLowerCase();
-        if (imageKeywords.some((keyword) => urlLowercase.includes(keyword))) {
+            return false;
+        } else {
             return true;
         }
-
-        return false;
     };
 
 
@@ -184,7 +188,7 @@ const ProfilePage = () => {
             setValidationErrorName(true);
             return;
         }
-
+        console.log("test");
         if (!testURL()) {
             setValidationErrorImage(true);
             return;
@@ -266,6 +270,7 @@ const ProfilePage = () => {
 
     const handleImageUpload = (e) => {
         const selectedImage = e.target.value;
+        console.log(selectedImage);
         setImage(selectedImage);
         setValidationErrorImage(!testURL());
     };
@@ -288,7 +293,6 @@ const ProfilePage = () => {
                             <Form.Control
                                 type="input"
                                 label="Input an image url"
-                                custom
                                 onChange={handleImageUpload}
                                 placeholder="Input an image url"
                                 isInvalid={validationErrorImage}
@@ -360,7 +364,7 @@ const ProfilePage = () => {
                                     value={country}
                                     onChange={(e) => setCountry(e.target.value)}
                                     isInvalid={isFormIncomplete}
-                                    disabled="true"
+                                    disabled={true}
                                     required
                                 />
                                 <Form.Label>City</Form.Label>
@@ -409,7 +413,7 @@ const ProfilePage = () => {
                 )}
             </Row>
             <Row>
-                {(validationErrorName || validationErrorEmail) && (
+                {(validationErrorName || validationErrorEmail || validationErrorImage) && (
                     <Alert variant="danger">
           Please fix the validation errors before saving.
                     </Alert>
