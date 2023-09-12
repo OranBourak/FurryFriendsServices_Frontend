@@ -51,7 +51,7 @@ const NavbarCustom=()=> {
                     )}
                 </Container>
             </Navbar>
-            <div style={{paddingTop: "70px"}}>
+            <div style={{paddingTop: "50px"}}>
                 {/* Add this div to create space so that the content does not get hidden under the sticky navbar */}
             </div>
         </>
