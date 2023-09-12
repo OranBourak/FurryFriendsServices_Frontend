@@ -1,6 +1,5 @@
 /* eslint-disable linebreak-style */
 import React from "react";
-import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavbarCustom from "./components/ServiceProviderComponents/NavbarCustom.jsx";
 import RegisterPage from "./pages/ServiceProviderPages/RegisterPage.jsx";

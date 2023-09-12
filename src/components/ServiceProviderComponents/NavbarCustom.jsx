@@ -4,6 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import {NavDropdown} from "react-bootstrap";
 import {useAuth} from "../../context/AuthContext";
+import logo from "../../images/logo.png";
 
 const NavbarCustom=()=> {
     const {loggedIn, logout, userData} = useAuth();
@@ -19,7 +20,15 @@ const NavbarCustom=()=> {
         <>
             <Navbar className="border-bottom fixed-top" bg="dark" data-bs-theme="dark">
                 <Container>
-                    <Navbar.Brand href="/">Furry Friends</Navbar.Brand>
+                    <Navbar.Brand href="/">
+                        <img
+                            src={logo}
+                            width="60"
+                            height="60"
+                            className="d-inline-block align-top"
+                            alt="Furry Friends logo"
+                        />
+                    </Navbar.Brand>
                     <Nav className="me-auto">
                         <Nav.Link href="/">Home</Nav.Link>
                         {loggedIn ? (
@@ -51,7 +60,7 @@ const NavbarCustom=()=> {
                     )}
                 </Container>
             </Navbar>
-            <div style={{paddingTop: "50px"}}>
+            <div style={{paddingTop: "60px"}}>
                 {/* Add this div to create space so that the content does not get hidden under the sticky navbar */}
             </div>
         </>
