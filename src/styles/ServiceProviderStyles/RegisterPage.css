@@ -46,6 +46,10 @@
     width: 100%;
 }
 
+.width-80{
+    width: 80%;
+}
+
 .margin-top {
     margin-top: 3rem;
 }
