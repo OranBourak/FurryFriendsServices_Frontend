@@ -9,46 +9,6 @@ import "../../styles/ServiceProviderStyles/MeetingCalendar.css";
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
 
-const serviceProvider = {
-    country: "",
-    city: "",
-    name: "",
-    gender: ["Male", "Female", "Other"],
-    picture: "",
-    email: "",
-    phone: "",
-    bio: "",
-    password: "",
-    typeOfService: "",
-    reviews: [],
-    averageRating: "",
-    blockedDates: ["Sep 7 2023"],
-    blockedTimeSlots: [
-        {
-            date: "Sep 8 2023",
-            blockedHours: ["08:00", "10:00"],
-        },
-    ],
-    appointments: [
-        {
-            id: 2,
-            clientName: "Jane Smith",
-            phoneNumber: "987-654-3210",
-            appointmentType: "Follow-up",
-            date: new Date(2023, 8, 15, 14, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
-            duration: 5,
-        },
-        {
-            id: 3,
-            clientName: "Jane For",
-            phoneNumber: "987-654-3210",
-            appointmentType: "Follow-up",
-            date: new Date(2023, 9, 15, 14, 0), // Date format: Year, Month (0-based index), Day, Hour, Minute
-        },
-    ],
-    appointmentTypes: [],
-};
-
 /**
  * Component to display a calendar with date selection and appointment times.
  * @return {React.component} - The component displaying the calendar.
@@ -58,7 +18,7 @@ const MeetingCalendar = () => {
     const [date, setDate] = useState(new Date());
     const [showTime, setShowTime] = useState(false);
     const [isDayBlocked, setIsDayBlocked] = useState(false);
-    const [blockedHours, setBlockedHours] = useState([]);
+    const [blockedTimeSlotOfDate, setblockedTimeSlotOfDate] = useState({});
     const [currDateAppointments, setCurrDateAppointments] = useState([]);
     // New
     const [blockedDates, setBlockedDates] = useState([]);
@@ -126,15 +86,15 @@ const MeetingCalendar = () => {
      * @param {Array} blockedTimesSlotsArr - An array containing objects representing blocked time slots, each with a `date` and `blockedHours` property.
      * @return {Array} - An array of blocked hours for the specified date, or an empty array if there are none.
      */
-    function getBlockedTimeSlotsOfDate(dateStr, blockedTimesSlotsArr) {
+    function getBlockedTimeSlotOfDate(dateStr, blockedTimesSlotsArr) {
         // Run on all the blocked time slots of the user
         for (const timeSlotObj of blockedTimesSlotsArr) {
             // If the user has a blocked time slots on the chosen date
             if (timeSlotObj.date === dateStr) {
-                return timeSlotObj.blockedHours;
+                return timeSlotObj;
             }
         }
-        return [];
+        return {};
     }
 
     /**  changes the date eselected in the calendar and shows the available hours
@@ -148,7 +108,7 @@ const MeetingCalendar = () => {
         const formatString = "MMM d yyyy";
         const newDateToString = format(newDate, formatString);
         // const blockedDates = serviceProvider.blockedDates;
-        const blockedTimeSlotsOfDate = getBlockedTimeSlotsOfDate(newDateToString, blockedTimeSlots);
+        const blockedTimeSlotsOfDate = getBlockedTimeSlotOfDate(newDateToString, blockedTimeSlots);
         const chosenDateAppointments = filterAppointemtnsByDay(newDate, appointments);
 
         // If the chosen date is a blocked date
@@ -158,7 +118,7 @@ const MeetingCalendar = () => {
             // else it's not a blocked date
             setIsDayBlocked(false);
             // set the blocked hours for the current date
-            setBlockedHours(blockedTimeSlotsOfDate);
+            setblockedTimeSlotOfDate(blockedTimeSlotsOfDate);
             // set the appointments for the current date
             setCurrDateAppointments(chosenDateAppointments);
         }
@@ -182,7 +142,7 @@ const MeetingCalendar = () => {
         <div className="calendar-container">
             <h1>React Calendar</h1>
             <MyCalendar value={date} defaultView="month" onClickDay={onClickDate} tileClassName={getTitleClassName}/>
-            <Time showTime={showTime} date={date} isDayBlocked={isDayBlocked} blockedHours={blockedHours} scheduledAppointments={currDateAppointments} setIsAfterBlockOperation={setIsAfterBlockOperation} />
+            <Time showTime={showTime} date={date} isDayBlocked={isDayBlocked} blockedTimeSlotOfDate={blockedTimeSlotOfDate} scheduledAppointments={currDateAppointments} setIsAfterBlockOperation={() => setIsAfterBlockOperation(!isAfterBlockOperation)} />
         </div>
     );
 };
