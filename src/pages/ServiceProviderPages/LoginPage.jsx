@@ -63,7 +63,7 @@ function LoginPage({onLogin}) {
      */
     const handleLogIn = (name, token, email, id) => {
         login(name, token, email, id, userType);
-        navigate("/profile");
+        userType === "client"?navigate("/dashboard") :navigate("/profile");
     };
 
     /**
@@ -98,7 +98,9 @@ function LoginPage({onLogin}) {
                 <Form className="text-light p-4" onSubmit={handleSubmit} style={{
                     backgroundColor: "rgba(0, 0, 0, 0.5)", // Background color with transparency
                     padding: "20px",
-                    borderRadius: "10px"}}>
+                    borderRadius: "10px",
+                    marginTop: "15%",
+                }}>
                     {error && <div className="text-danger mb-3">{error}</div>}
                     {/* user type */}
                     <Form.Group className="mb-3" controlId="formBasicUserType">

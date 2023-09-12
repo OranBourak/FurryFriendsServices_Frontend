@@ -3,7 +3,6 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import "../../styles/ClientStyles/clientRegistrationForm.css";
-import {useAuth} from "../../context/AuthContext.jsx";
 import {message} from "antd";
 import axios from "axios";
 
@@ -23,7 +22,6 @@ import ClientDropDown from "./ClientDropDown.jsx";
 const ClientRegistrationForm = () => {
     // form fields include all attributes in the fields state
     const navigate = useNavigate();
-    const {login} = useAuth();
     const [fields, setFields] = useState({
         name: "",
         email: "",
@@ -105,23 +103,20 @@ const ClientRegistrationForm = () => {
                 answer: fields.answer,
                 phone: fields.phonePrefix.concat(fields.phoneSuffix),
             });
-            const {id, token} = response.data;
-            const clientData = {name: fields.name, token, email: fields.email, id, userType: "client"};
 
-            // Login the user after successful registration
-            login(clientData.name, clientData.token, clientData.email, clientData.id, clientData.userType);
-
-            // Show the Ant Design message
-            message.success({
-                content: "Registration Successful!",
-                style: {yIndex: 1000, fontSize: "24px"},
-            }, 2);
+            if (response.status === 200) {
+                // Show the Ant Design message
+                message.success({
+                    content: "Registration Successful!",
+                    style: {yIndex: 1000, fontSize: "24px"},
+                }, 2);
 
 
-            // Navigate to the dashboard after 2 seconds
-            setTimeout(() => {
-                navigate("/dashboard");
-            }, 3000);
+                // Navigate to the login page after 3 seconds
+                setTimeout(() => {
+                    navigate("/login");
+                }, 3000);
+            }
         } catch (e) {
             console.log(e);
             message.error({
