@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 import YesNoConfirmationWindow from "./YesNoConfirmationWindow.jsx";
 import ErrorToast from "./ErrorToast.jsx";
 import {isBefore, isToday, format} from "date-fns";
+import {useAuth} from "../../context/AuthContext";
+import axios from "axios";
 
 const times = [
     "08:00",
@@ -31,6 +33,7 @@ const times = [
  * @return {React.Component} - The component displaying available times and selected time info.
  */
 const Times = (props) => {
+    const {loggedIn, userData} = useAuth();
     const [selectedTimes, setSelectedTimes] = useState([]);
     // Yes No Dialog
     const [showDialog, setShowDialog] = useState(false);
@@ -75,16 +78,30 @@ const Times = (props) => {
         // Run on all the appointemnts scheduled to the selected date
         for (const appointment of props.scheduledAppointments) {
             // Take the start hour of the appointemnt as a string
-            const startHour = appointment.date.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-            });
+            // const startHour = appointment.date.toLocaleTimeString([], {
+            //     hour: "2-digit",
+            //     minute: "2-digit",
+            //     hour12: false,
+            // });
+            const startHour = getAppointemntStartHour(appointment);
             // calculate the following hours based on the appointment's duration
             const appointmentHours = generateHoursArray(startHour, appointment.duration);
             res.push(...appointmentHours);
         }
         return res;
+    };
+
+    const getAppointemntStartHour = (appointment) => {
+        // set the time fof the appointemnt date to Isarel time
+        const appointmentDate = new Date(appointment.date);
+        appointmentDate.setMinutes(appointmentDate.getMinutes() - 180);
+        // get the start hour of the appointment
+        const hours = appointmentDate.getHours();
+        const minutes = appointmentDate.getMinutes();
+
+        // Formatting to "hh:mm" format
+        const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+        return formattedTime;
     };
 
     /**
@@ -121,16 +138,36 @@ const Times = (props) => {
     /**
      * Handles blocking the selected date.
      * This function should be used to save the blocked date in the database.
+     * @param {boolean} isLoggedin - service provider token
+     * @param {string} userToken - service provider token
      * @return {void}
      */
-    function blockDay() {
+    const blockDay = async () => {
+        if (!loggedIn) {
+            handleError("Unauthorized");
+            return;
+        }
+        console.log("is logged in");
         // Disable Block Buttons
         setIsInBlockOperation(true);
+        const dateToBlock = getFormatedDate();
         // TODO: Add logic for saving the blocked date in the database
-        // TODO: Add logic for removing the blocked hours from the db if the user blocked specific hours on that date
+        // TODO: Add logic for removing the blocked timeslots object from the db if the user blocked specific hours on that date
+        try {
+            const response = await axios.post(`/serviceProvider/blockDate/${userData.id}`, {
+                dateToBlock: dateToBlock,
+            });
+            const serviceProvider = response.data.serviceProvider;
+            console.log("response in front" + serviceProvider);
+            console.log("In block date, should save in db");
+        } catch (error) {
+            console.log(error);
+        }
         console.log("In block date, should save in db");
         // Enable Block Buttons
         setIsInBlockOperation(false);
+        console.log("setIsAfterBlockOperation");
+        props.setIsAfterBlockOperation(true);
     };
 
     const handleBlockDay = () => {
@@ -147,9 +184,8 @@ const Times = (props) => {
             return;
         }
 
-        console.log("type: " + typeof(onDialogConfirm));
         setShowDialog(true);
-        setOnDialogConfirm(() => blockDay);
+        setOnDialogConfirm( () => blockDay );
         setDialogText(`Are you sure you want to block the date: ${getFormatedDate()}?`);
     };
 
@@ -201,7 +237,7 @@ const Times = (props) => {
      * This function should be used to save the blocked date in the database.
      * @return {void}
      */
-    function blockHours() {
+    const blockHours = async () => {
         // Disable Block Buttons
         setIsInBlockOperation(true);
         // TODO: Add logic for saving the blocked hours in the database
@@ -217,6 +253,7 @@ const Times = (props) => {
         const endHour = sortedTimes[1];
         const res = times.filter((time) => time >= startHour && time < endHour);
         console.log("Generated blocked hours list: " + res);
+        return res;
         // const res = [startHour];
         // for (const time of times) {
 
@@ -324,6 +361,7 @@ Times.propTypes = {
     isDayBlocked: PropTypes.bool,
     blockedHours: PropTypes.arrayOf(PropTypes.string),
     scheduledAppointments: PropTypes.arrayOf(PropTypes.object),
+    setIsAfterBlockOperation: PropTypes.func,
 };
 
 // className={
