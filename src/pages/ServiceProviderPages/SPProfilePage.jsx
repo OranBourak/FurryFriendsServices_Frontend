@@ -394,7 +394,7 @@ const ProfilePage = () => {
                             <br />
               Country: {country}
                             <br />
-              city: {city}
+              City: {city}
                         </p>
                     )}
                 </Row>

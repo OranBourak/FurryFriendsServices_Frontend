@@ -119,7 +119,6 @@ function RegisterPage() {
             return;
         }
         setError(""); // Clear any previous errors
-        printFields();
         // for commit: https://furryfriendsbackend.onrender.com/login
         // for testing: http://localhost:5000/login
         try {
@@ -161,18 +160,18 @@ function RegisterPage() {
         }
     };
 
-    const printFields = () =>{
-        console.log(name);
-        console.log(email);
-        console.log(password);
-        console.log(question);
-        console.log(answer);
-        console.log("is form incomplete: " + isFormInvalid);
-        console.log(phonePrefix);
-        console.log(phoneNumber);
-        console.log(gender);
-        console.log(serviceType);
-    };
+    // const printFields = () =>{
+    //     console.log(name);
+    //     console.log(email);
+    //     console.log(password);
+    //     console.log(question);
+    //     console.log(answer);
+    //     console.log("is form incomplete: " + isFormInvalid);
+    //     console.log(phonePrefix);
+    //     console.log(phoneNumber);
+    //     console.log(gender);
+    //     console.log(serviceType);
+    // };
 
 
     /**
@@ -183,12 +182,6 @@ function RegisterPage() {
         const newName = event.target.value;
         setName(newName);
         setNameFlag(!/^[A-Za-z ]+$/.test(newName));
-        console.log(isFormInvalid);
-        console.log("Email:" + emailFlag);
-        console.log("name:" + nameFlag);
-        console.log("Password:" + passwordFlag);
-        console.log("Phone flag:" + phoneNumberFlag);
-        console.log("phone number: " + phoneNumber);
     }
 
     /**

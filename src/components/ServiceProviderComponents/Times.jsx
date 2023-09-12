@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, {useEffect, useState} from "react";
 import {Button} from "react-bootstrap";
 import PropTypes from "prop-types";
@@ -148,17 +147,13 @@ const Times = (props) => {
             handleError("Unauthorized");
             return;
         }
-        console.log("is logged in");
         // Disable Block Buttons
         setIsInBlockOperation(true);
         const dateToBlock = getFormatedDate();
         try {
-            const response = await axios.post(`/serviceProvider/blockDate/${userData.id}`, {
+            await axios.post(`/serviceProvider/blockDate/${userData.id}`, {
                 dateToBlock: dateToBlock,
             });
-            const serviceProvider = response.data.serviceProvider;
-            console.log("response in front" + serviceProvider);
-            console.log("In block date, should save in db");
         } catch (error) {
             console.log(error);
             message.error({
@@ -169,15 +164,12 @@ const Times = (props) => {
 
             }, 2);
         }
-        console.log("In block date, should save in db");
         // Enable Block Buttons
         setIsInBlockOperation(false);
-        console.log("setIsAfterBlockOperation");
         props.setIsAfterBlockOperation();
     };
 
     const handleBlockDay = () => {
-        console.log("in handle block day");
         const chosenDate = props.date;
         // If the selected date has already past
         if (isBefore( chosenDate, new Date() ) && !isToday(chosenDate) ) {
@@ -252,20 +244,14 @@ const Times = (props) => {
         setIsInBlockOperation(true);
         // TODO: Add logic for saving the blocked hours in the database
         const hoursToBlock = generateBlockedHoursList();
-        console.log("In block hours, should save in db");
-        console.log("hoursToBlock: " + hoursToBlock);
-        console.log("blocked hours: " + props.blockedTimeSlotOfDate.blockedHours);
         // If there are no blocked hours on the selected date
         if (!props.blockedTimeSlotOfDate._id) {
-            console.log("No blocked time slots for this date");
             // create a new BlockedTimeSlot object
             try {
-                const response = await axios.post(`/blockedTimeSlot/create/${userData.id}`, {
+                await axios.post(`/blockedTimeSlot/create/${userData.id}`, {
                     date: getFormatedDate(),
                     blockedHours: hoursToBlock,
                 });
-                console.log("response in front" + response);
-                console.log("In block date, should save in db");
             } catch (error) {
                 console.log(error);
                 message.error({
@@ -278,7 +264,6 @@ const Times = (props) => {
             }
         } else {
             // If there are blocked hours on the selected date
-            console.log("There are blocked time slots for this date");
             // Prepare the new array of blocked hours
             const blockedHoursArr = props.blockedTimeSlotOfDate.blockedHours;
             for (const time of hoursToBlock) {
@@ -287,12 +272,10 @@ const Times = (props) => {
                 }
             }
             const sortedblockedHoursArr = blockedHoursArr.sort();
-            console.log("sortedblockedHoursArr: " + sortedblockedHoursArr);
             try {
-                const response = await axios.patch(`/blockedTimeSlot/update/${props.blockedTimeSlotOfDate._id}`, {
+                await axios.patch(`/blockedTimeSlot/update/${props.blockedTimeSlotOfDate._id}`, {
                     blockedHours: sortedblockedHoursArr,
                 });
-                console.log(response);
             } catch (error) {
                 console.log(error);
                 message.error({

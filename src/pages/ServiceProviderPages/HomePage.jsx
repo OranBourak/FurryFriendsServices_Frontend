@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import React from "react";
 import dogImage from "../../images/homepagebackground.jpg";
 import {Container, Row, Col, Image, ListGroup} from "react-bootstrap";

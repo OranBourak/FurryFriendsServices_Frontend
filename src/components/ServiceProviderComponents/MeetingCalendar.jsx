@@ -1,5 +1,3 @@
-/* eslint-disable require-jsdoc */
-/* eslint-disable no-unused-vars */
 import {useState, React, useEffect} from "react";
 import {format, isSameDay} from "date-fns";
 import "react-calendar/dist/Calendar.css";
@@ -41,9 +39,6 @@ const MeetingCalendar = () => {
                 const spBlockedDates = response.data.blockedDates;
                 const spBlockedTimeSlots = response.data.blockedTimeSlots;
                 const spAppointments = response.data.appointments;
-                console.log("fron blocked time slots: " + spBlockedTimeSlots);
-                console.log("front appontments slots: " + spAppointments);
-                console.log("front blocked time slots : " + spBlockedTimeSlots);
                 setBlockedDates(spBlockedDates);
                 setAppointments(spAppointments);
                 setBlockedTimeSlots(spBlockedTimeSlots);
@@ -83,8 +78,6 @@ const MeetingCalendar = () => {
      */
     const filterAppointemtnsByDayAndStatus = (date, appointmentsArr) => {
         return appointmentsArr.filter((appointemt)=>{
-            console.log("filtering appointemnts: " + appointemt.status);
-
             return isSameDay(new Date(appointemt.date), date) && appointemt.status !== "Canceled";
         });
     };

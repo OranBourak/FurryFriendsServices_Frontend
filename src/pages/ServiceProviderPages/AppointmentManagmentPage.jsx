@@ -28,7 +28,6 @@ const AppointmentsCalendar = () => {
                     },
                 });
                 const apps = response.data.appointments;
-                console.log(apps);
                 setAppointments(apps);
                 setIsLoading(false);
             } catch (error) {

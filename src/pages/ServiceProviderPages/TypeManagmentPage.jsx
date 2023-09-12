@@ -30,7 +30,6 @@ const TypeManagementPage = () => {
 
     const getData = async () => {
         if (loggedIn) {
-            console.log("in getData");
             try {
                 // setIsLoading(true);
                 const response = await axios.get(`/serviceProvider/getAppointmentTypes/${userData.id}`, {
@@ -41,7 +40,6 @@ const TypeManagementPage = () => {
                 const appTypes = response.data.appointmentTypes;
                 setAppointments(appTypes);
                 setAppointmentsSize(appTypes.length);
-                console.log("apps type front: " + appTypes);
                 // setIsLoading(false);
             } catch (error) {
                 console.log(error);
@@ -61,10 +59,8 @@ const TypeManagementPage = () => {
     }, []);
 
     const handleEdit = (id) => {
-        console.log("in handle edit");
         const appointmentToEdit = appointments.find((app) => app._id === id);
         setEditedAppointment(appointmentToEdit);
-        console.log("The appointment to edit name: " + appointmentToEdit._id);
         setEditModalOpen(true);
     };
 
@@ -75,7 +71,6 @@ const TypeManagementPage = () => {
         const updatedAppointments = appointments.map((app) => {
             // If the appointment is the appointment that is being edited
             if (app._id === editedAppointment._id) {
-                console.log("edited id: " + editedAppointment._id);
                 return {
                     ...app,
                     name: editedName,
@@ -88,7 +83,7 @@ const TypeManagementPage = () => {
 
         // Update the appointment in backend using appointment id
         try {
-            const response = await axios.patch(`/appointmentType/update/${editedAppointment._id}`, {
+            await axios.patch(`/appointmentType/update/${editedAppointment._id}`, {
                 name: editedName,
                 price: editedPrice,
                 duration: editedDuration,
@@ -99,7 +94,6 @@ const TypeManagementPage = () => {
             });
             // On success
             setAppointments(updatedAppointments);
-            console.log("reaponse" + response);
         } catch (error) {
             console.log(error);
             message.error({
@@ -137,7 +131,6 @@ const TypeManagementPage = () => {
                 (appointment) => appointment._id !== appointmentToDelete,
             );
             setAppointments(updatedAppointments);
-            console.log(appointmentToDelete);
         } catch (error) {
             console.error("Error deleting appointment:", error);
             message.error({
