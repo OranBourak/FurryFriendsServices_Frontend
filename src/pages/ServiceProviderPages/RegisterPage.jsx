@@ -119,7 +119,6 @@ function RegisterPage() {
             return;
         }
         setError(""); // Clear any previous errors
-        printFields();
         // for commit: https://furryfriendsbackend.onrender.com/login
         // for testing: http://localhost:5000/login
         try {
@@ -161,18 +160,18 @@ function RegisterPage() {
         }
     };
 
-    const printFields = () =>{
-        console.log(name);
-        console.log(email);
-        console.log(password);
-        console.log(question);
-        console.log(answer);
-        console.log("is form incomplete: " + isFormInvalid);
-        console.log(phonePrefix);
-        console.log(phoneNumber);
-        console.log(gender);
-        console.log(serviceType);
-    };
+    // const printFields = () =>{
+    //     console.log(name);
+    //     console.log(email);
+    //     console.log(password);
+    //     console.log(question);
+    //     console.log(answer);
+    //     console.log("is form incomplete: " + isFormInvalid);
+    //     console.log(phonePrefix);
+    //     console.log(phoneNumber);
+    //     console.log(gender);
+    //     console.log(serviceType);
+    // };
 
 
     /**
@@ -183,12 +182,6 @@ function RegisterPage() {
         const newName = event.target.value;
         setName(newName);
         setNameFlag(!/^[A-Za-z ]+$/.test(newName));
-        console.log(isFormInvalid);
-        console.log("Email:" + emailFlag);
-        console.log("name:" + nameFlag);
-        console.log("Password:" + passwordFlag);
-        console.log("Phone flag:" + phoneNumberFlag);
-        console.log("phone number: " + phoneNumber);
     }
 
     /**
@@ -280,7 +273,7 @@ function RegisterPage() {
                             {/* name input */}
                             <Form.Group className="mb-3 m-3" controlId="registrationFormName">
                                 <Form.Label>Name</Form.Label>
-                                <Form.Control className name="name" type="text" placeholder="Enter Your Name" onChange={handleName} required value={name} isInvalid={nameFlag}isValid={!nameFlag} />
+                                <Form.Control className ="width-80" name="name" type="text" placeholder="Enter Your Name" onChange={handleName} required value={name} isInvalid={nameFlag}isValid={!nameFlag} />
                                 <Form.Control.Feedback type="invalid">
                                     Name must contain only letters and spaces
                                 </Form.Control.Feedback>
@@ -288,7 +281,7 @@ function RegisterPage() {
                             {/* email input */}
                             <Form.Group className="mb-3 m-3" controlId="registrationFormEmail">
                                 <Form.Label>Email address</Form.Label>
-                                <Form.Control name="email" type="email" placeholder="Enter Email" isInvalid={emailFlag} isValid={!emailFlag} onChange={handleEmail} required value={email} />
+                                <Form.Control className="width-80" name="email" type="email" placeholder="Enter Email" isInvalid={emailFlag} isValid={!emailFlag} onChange={handleEmail} required value={email} />
                                 <Form.Control.Feedback type="invalid">
                                     Email format should be as follows: example@mail.domain
                                 </Form.Control.Feedback>
@@ -297,7 +290,7 @@ function RegisterPage() {
                             {/* password input */}
                             <Form.Group className="mb-3 m-3" controlId="registrationFormPassword">
                                 <Form.Label>Password</Form.Label>
-                                <Form.Control name="password" type="password" placeholder="Enter Password" isInvalid={passwordFlag}isValid={!passwordFlag} onChange={handlePassword} required value={password} />
+                                <Form.Control className="width-80" name="password" type="password" placeholder="Enter Password" isInvalid={passwordFlag}isValid={!passwordFlag} onChange={handlePassword} required value={password} />
                                 <Form.Control.Feedback type="invalid">
                                     Should contain at least: 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special case character, min size:12, max size:30
                                 </Form.Control.Feedback>
@@ -330,7 +323,7 @@ function RegisterPage() {
                                     <ComboBoxDropdown onSelectedValueChange={handleQuestionChange} options={questions} placeholder="Choose Security Question" variant="danger" id="service-type-cmb" required/>
                                     {/* answer to the security question */}
                                     <Form.Label>Answer</Form.Label>
-                                    <Form.Control name="answer" type="text" placeholder="Enter Answer" onChange={handleAnswer} required value={answer} />
+                                    <Form.Control className="width-80" name="answer" type="text" placeholder="Enter Answer" onChange={handleAnswer} required value={answer} />
                                     <Form.Text className="text-light bold">The answer will be used for password restoration.</Form.Text>
                                 </Form.Group>
                             </div>

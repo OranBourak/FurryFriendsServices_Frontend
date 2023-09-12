@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavbarCustom from "./components/ServiceProviderComponents/NavbarCustom.jsx";

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, {useEffect, useState} from "react";
 import {Table, Alert, Button, ButtonGroup, Row, Col} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/archive.css";
@@ -29,10 +28,8 @@ const Archive = () => {
                 const today = new Date();
 
                 const filteredAppointments = apps.filter((appointment) => {
-                    console.log(appointment.date);
                     const app = new Date(appointment.date);
                     app.setMinutes(app.getMinutes() - 180);
-                    console.log(app, today);
                     return isBefore(app, today);
                 });
                 setAppointments(filteredAppointments);

@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import React, {useState} from "react";
 import ComboBoxDropdown from "./ComboBox";
 import Form from "react-bootstrap/Form";

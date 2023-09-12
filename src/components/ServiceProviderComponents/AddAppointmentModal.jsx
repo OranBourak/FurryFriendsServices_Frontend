@@ -61,7 +61,6 @@ const AddAppointmentTypeModal=({show, onHide, onAddType, appTypesSize}) => {
             });
             // On success
             const newType = response.data.appointmentType;
-            console.log("response id: " + newType._id);
             onAddType(newType);
             onModalHide();
             setNameError(false);

@@ -1,5 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-unused-vars */
 import React, {useState} from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
@@ -31,7 +29,6 @@ function LoginPage({onLogin}) {
      */
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(userType);
         if (!email.trim() || !password.trim() || !userType.trim()) {
             setError("Please fill in all fields.");
             return;

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from "react";
 import {useState} from "react";
 import Form from "react-bootstrap/Form";
@@ -46,15 +45,12 @@ function PassRecoveryPage() {
      */
     const handleEmailSubmit = async (event) => {
         event.preventDefault();
-        console.log("type: " + userType);
-        // TODO: Add logic to check if email is in the database, if yes fetch security question and answer if no show error and return
         try {
             const response = await axios.get(`/${userType}/pass-recovery`, {
                 params: {
                     email: email,
                 },
             });
-            // TODO: handle the token
             const {securityQuestion, securityAnswer, id} = response.data;
             // User found and exists
             setId(id);
@@ -97,11 +93,8 @@ function PassRecoveryPage() {
         event.preventDefault();
         setHasTriedToAnswer(true);
         if (realAnswer === answer) {
-            console.log("answer match");
             setIsAnswerCorrect(true);
             setShowAnswer(false);
-        } else {
-            console.log("answer don't match");
         }
     };
 
@@ -112,16 +105,14 @@ function PassRecoveryPage() {
     const handlePasswordSubmit = async (event) => {
         event.preventDefault();
         let successfulChange = false;
-        // TODO: add logic for saving the password and the confirmPassword in the db
         try {
-            const response = await axios.patch(`/${userType}/password-change`, {
+            await axios.patch(`/${userType}/password-change`, {
                 password,
                 id,
             });
-            console.log(response);
             successfulChange = true;
+            setHasPasswordReset(true);
         } catch (error) {
-            console.log("failed to change password");
             console.log(error);
             message.error({
 

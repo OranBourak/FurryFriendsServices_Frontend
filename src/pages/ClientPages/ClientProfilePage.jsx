@@ -48,7 +48,6 @@ function ClientProfilePage() {
             break;
                     // No default action
         }
-        console.log(client);
     };
 
     useEffect(() => {
@@ -60,7 +59,6 @@ function ClientProfilePage() {
             setTempPhone({prefix: client.phone.substring(0, 3), suffix: client.phone.substring(3)});
             setTempName(client.name); // changing TempName to client name
             changeName(client.name); // changing UserData name to clients name
-            console.log(userData, client, " This is for the useEffect");
         }
     }, [client]);
 
@@ -108,7 +106,6 @@ function ClientProfilePage() {
             console.log(typeof tempPhone, tempPhone);
             setClient({...client, phone: tempPhone.prefix + tempPhone.suffix});
         }
-        console.log(client);
     };
 
     return (
