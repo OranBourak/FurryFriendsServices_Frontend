@@ -23,8 +23,8 @@ const NavbarCustom=()=> {
                     <Navbar.Brand href="/">
                         <img
                             src={logo}
-                            width="60"
-                            height="60"
+                            width="55"
+                            height="55"
                             className="d-inline-block align-top"
                             alt="Furry Friends logo"
                         />
@@ -60,7 +60,7 @@ const NavbarCustom=()=> {
                     )}
                 </Container>
             </Navbar>
-            <div style={{paddingTop: "60px"}}>
+            <div style={{paddingTop: "55px", marginBottom: "20px"}}>
                 {/* Add this div to create space so that the content does not get hidden under the sticky navbar */}
             </div>
         </>

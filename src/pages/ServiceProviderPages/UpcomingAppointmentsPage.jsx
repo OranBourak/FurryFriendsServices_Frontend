@@ -5,6 +5,7 @@ import {useAuth} from "../../context/AuthContext.jsx";
 import axios from "axios";
 import {Navigate} from "react-router-dom";
 import {isAfter, format} from "date-fns";
+import {message} from "antd";
 
 
 const UpcomingAppointments = () => {
@@ -32,6 +33,13 @@ const UpcomingAppointments = () => {
                 setIsLoading(false);
             } catch (error) {
                 console.error(error);
+                message.error({
+
+                    content: `Error deleting appointment: ${error}`,
+
+                    style: {yIndex: 1000, fontSize: "24px"},
+
+                }, 2);
             };
         }
     };

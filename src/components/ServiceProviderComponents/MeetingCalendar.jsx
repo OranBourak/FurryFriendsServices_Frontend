@@ -8,6 +8,7 @@ import Time from "../../components/ServiceProviderComponents/Time.jsx";
 import "../../styles/ServiceProviderStyles/MeetingCalendar.css";
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
+import {message} from "antd";
 
 /**
  * Component to display a calendar with date selection and appointment times.
@@ -49,6 +50,13 @@ const MeetingCalendar = () => {
                 // setIsLoading(false);
             } catch (error) {
                 console.log(error);
+                message.error({
+
+                    content: `${error}`,
+
+                    style: {yIndex: 1000, fontSize: "24px"},
+
+                }, 2);
             }
         }
     };
@@ -73,9 +81,11 @@ const MeetingCalendar = () => {
      * @param {Array} appointmentsArr - An array of appointment objects, each containing a `date` property.
      * @return {Array} - An array of appointments that match the specified date.
      */
-    const filterAppointemtnsByDay = (date, appointmentsArr) => {
+    const filterAppointemtnsByDayAndStatus = (date, appointmentsArr) => {
         return appointmentsArr.filter((appointemt)=>{
-            return isSameDay(new Date(appointemt.date), date);
+            console.log("filtering appointemnts: " + appointemt.status);
+
+            return isSameDay(new Date(appointemt.date), date) && appointemt.status !== "Canceled";
         });
     };
 
@@ -109,7 +119,7 @@ const MeetingCalendar = () => {
         const newDateToString = format(newDate, formatString);
         // const blockedDates = serviceProvider.blockedDates;
         const blockedTimeSlotsOfDate = getBlockedTimeSlotOfDate(newDateToString, blockedTimeSlots);
-        const chosenDateAppointments = filterAppointemtnsByDay(newDate, appointments);
+        const chosenDateAppointments = filterAppointemtnsByDayAndStatus(newDate, appointments);
 
         // If the chosen date is a blocked date
         if (blockedDates.includes(newDateToString)) {

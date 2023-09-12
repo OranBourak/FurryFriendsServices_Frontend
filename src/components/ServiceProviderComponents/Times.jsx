@@ -7,6 +7,7 @@ import ErrorToast from "./ErrorToast.jsx";
 import {isBefore, isToday, format} from "date-fns";
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
+import {message} from "antd";
 
 const times = [
     "08:00",
@@ -160,6 +161,13 @@ const Times = (props) => {
             console.log("In block date, should save in db");
         } catch (error) {
             console.log(error);
+            message.error({
+
+                content: `${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
         }
         console.log("In block date, should save in db");
         // Enable Block Buttons
@@ -260,6 +268,13 @@ const Times = (props) => {
                 console.log("In block date, should save in db");
             } catch (error) {
                 console.log(error);
+                message.error({
+
+                    content: `${error}`,
+
+                    style: {yIndex: 1000, fontSize: "24px"},
+
+                }, 2);
             }
         } else {
             // If there are blocked hours on the selected date
@@ -280,6 +295,13 @@ const Times = (props) => {
                 console.log(response);
             } catch (error) {
                 console.log(error);
+                message.error({
+
+                    content: `${error}`,
+
+                    style: {yIndex: 1000, fontSize: "24px"},
+
+                }, 2);
             }
         }
         // Enable Block Buttons

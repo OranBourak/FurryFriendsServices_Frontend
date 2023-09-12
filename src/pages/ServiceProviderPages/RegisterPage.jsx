@@ -9,6 +9,7 @@ import Card from "react-bootstrap/Card";
 import ErrorToast from "../../components/ServiceProviderComponents/ErrorToast";
 import {Navigate} from "react-router-dom";
 import {useAuth} from "../../context/AuthContext.jsx";
+import {message} from "antd";
 
 /**
  * Register page component.
@@ -148,6 +149,13 @@ function RegisterPage() {
             setRedirectToProfile(true);
         } catch (error) {
             console.log("error: " + error);
+            message.error({
+
+                content: `error: ${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
             setError(error.response.data.message || "Registration failed.");
             setShow(true);
         }

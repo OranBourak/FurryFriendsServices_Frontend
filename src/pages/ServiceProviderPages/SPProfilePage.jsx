@@ -6,6 +6,7 @@ import ComboBoxDropdown from "../../components/ServiceProviderComponents/ComboBo
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
 import {Navigate} from "react-router-dom";
+import {message} from "antd";
 
 const ProfilePage = () => {
     const defaultImg = "https://cdn.pixabay.com/photo/2018/12/26/09/16/vet-3895477_960_720.jpg";
@@ -94,6 +95,13 @@ const ProfilePage = () => {
                 setCity(provider.city);
             } catch (error) {
                 console.log(error);
+                message.error({
+
+                    content: `error: ${error}`,
+
+                    style: {yIndex: 1000, fontSize: "24px"},
+
+                }, 2);
             }
         }
     };
@@ -225,6 +233,13 @@ const ProfilePage = () => {
         } catch (error) {
             restoreBeforeEdit();
             console.log(error);
+            message.error({
+
+                content: `error: ${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
         }
         removeBeforeEdit();
     };
@@ -277,14 +292,14 @@ const ProfilePage = () => {
 
 
     if (!loggedIn) {
-        // Redirect to the login page or another protected route
-        return <Navigate to="/login" />;
+        // Redirect to the home page or another protected route
+        return <Navigate to="/" />;
     } else if (userData.userType !== "serviceProvider") {
         return <Navigate to="/error"/>;
     }
 
     return (
-        <Container className="container">
+        <Container className="container mt-5">
             <Row className="profile-header">
                 <Col className="profile-image" xs={6} md={4}>
                     <Image className="profile-picture" src={image? image : defaultImg} rounded fluid style={{maxHeight: "300px", maxWidth: "300px"}}/>

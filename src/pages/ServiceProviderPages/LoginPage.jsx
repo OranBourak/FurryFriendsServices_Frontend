@@ -9,6 +9,7 @@ import "../../styles/ServiceProviderStyles/LoginPage.css";
 import {useNavigate} from "react-router-dom";
 import {ButtonGroup, ToggleButton} from "react-bootstrap";
 import {useAuth} from "../../context/AuthContext.jsx";
+import {message} from "antd";
 
 
 /**
@@ -50,6 +51,13 @@ function LoginPage({onLogin}) {
             handleLogIn(name, token, email, id);
         } catch (error) {
             console.log("error: " + error);
+            message.error({
+
+                content: `error: ${error}`,
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
             setError("Bad credentials. Please check your email and password.");
         }
     };

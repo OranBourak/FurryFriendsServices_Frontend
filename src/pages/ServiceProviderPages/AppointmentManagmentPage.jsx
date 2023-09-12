@@ -6,6 +6,7 @@ import {isSameWeek, isSameMonth, isSameDay, format} from "date-fns";
 import "../../styles/ServiceProviderStyles/appManagment.css";
 import {useAuth} from "../../context/AuthContext.jsx";
 import axios from "axios";
+import {message} from "antd";
 
 
 const AppointmentsCalendar = () => {
@@ -32,6 +33,13 @@ const AppointmentsCalendar = () => {
                 setIsLoading(false);
             } catch (error) {
                 console.error(error);
+                message.error({
+
+                    content: `${error}`,
+
+                    style: {yIndex: 1000, fontSize: "24px"},
+
+                }, 2);
             }
         };
 
