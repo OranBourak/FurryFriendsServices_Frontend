@@ -43,6 +43,8 @@ h1 {
     margin: 5px;
     padding: 10px 20px;
     border-radius: 4px;
+    width: 120px;  
+    height: 40px;  
 }
 
 .ReviewCarousel .ant-btn:hover {
@@ -59,4 +61,9 @@ h1 {
 .ReviewCarousel .ant-rate-star.ant-rate-star-zero,
 .ReviewCarousel .ant-rate-star.ant-rate-star-half .ant-rate-star-first {
     color: rgb(247, 247, 26);
+}
+
+.ReviewCarousel .ant-card {
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;  /* Light-colored border */
 }

@@ -4,12 +4,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color:rgb(111, 180, 180);
+  background-color:#96B6C5;
   height: 100vh; /* This will take the full height of the viewport */
 }
 
 /* header tag */
 .header-content {
+  margin-top: 3%;
   background-color: transparent;
   font-size:40px;
   padding:50px 100px;
@@ -21,8 +22,9 @@
 
 
 .custom-button {
+  margin-top: 13%;
   font-size: 30px; /* Larger font size */
-  width:460px;
+  width:500px;
   white-space: nowrap;
   text-overflow: ellipsis; 
   padding: 120px 20px; /* More padding for a bigger button */
@@ -52,3 +54,4 @@
   background: linear-gradient(45deg, #1A535C, #4E937A);
   border: none;
 }
+

@@ -23,6 +23,7 @@ h1 {
     font-size: 60px;
     color: #333;
 }
+
 /* Row and Column Styling */
 .Row {
     margin: 0 auto;
@@ -42,7 +43,7 @@ h1 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin-bottom: 20px;  /* Added margin-bottom */
     max-width: 700px;
     margin: auto;
 }
@@ -53,9 +54,8 @@ h1 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin: 20px auto 20px auto;  /* Adjusted margin */
     max-width: 700px;
-    margin: auto;
 }
 
 /* Schedule Meeting */
@@ -63,6 +63,7 @@ h1 {
     background-color: #f9f9f9;
     padding: 20px;
     border-radius: 8px;
+    height: auto; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: auto;
 }
