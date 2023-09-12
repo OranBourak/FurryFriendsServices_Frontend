@@ -10,7 +10,7 @@ import {Navigate} from "react-router-dom";
 const ProfilePage = () => {
     const defaultImg = "https://cdn.pixabay.com/photo/2018/12/26/09/16/vet-3895477_960_720.jpg";
 
-    const {loggedIn, userData} = useAuth();
+    const {loggedIn, userData, changeName} = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -27,6 +27,7 @@ const ProfilePage = () => {
     const [validationErrorName, setValidationErrorName] = useState(false);
     const [validationErrorEmail, setValidationErrorEmail] = useState(false);
     const [typeOfService, setTypeOfService] = useState("");
+    const [validationErrorImage, setValidationErrorImage] = useState(false);
 
     const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -87,7 +88,7 @@ const ProfilePage = () => {
                 setCountry(provider.country);
                 setGender(provider.gender);
                 // TODO: FIX IMAGE
-                // setImage(require(provider.image));
+                setImage(provider.image);
                 setBio(provider.bio);
                 setTypeOfService(provider.typeOfService);
                 setCity(provider.city);
@@ -146,6 +147,30 @@ const ProfilePage = () => {
         setFormSubmitted(false); // Reset the formSubmitted state
     };
 
+    const testURL = () => {
+        // List of common image file extensions
+        const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"];
+
+        // Get the file extension from the URL (if it exists)
+        const fileExtensionMatch = image.match(/\.\w+$/);
+        if (fileExtensionMatch) {
+            const fileExtension = fileExtensionMatch[0].toLowerCase();
+            if (imageExtensions.includes(fileExtension)) {
+                return true;
+            }
+        }
+
+        // Check if the URL contains keywords that suggest it's an image
+        const imageKeywords = ["image", "imgur", "jpg", "jpeg", "png", "gif", "bmp"];
+        const urlLowercase = image.toLowerCase();
+        if (imageKeywords.some((keyword) => urlLowercase.includes(keyword))) {
+            return true;
+        }
+
+        return false;
+    };
+
+
     const handleSave = async () => {
         if (!/[A-Za-z]+[0-9A-Za-z]*[@][a-z]+[.][a-z]+/.test(email)) {
             setValidationErrorEmail(true);
@@ -157,6 +182,11 @@ const ProfilePage = () => {
         }
         if (!/[A-Za-z ]+/.test(name)) {
             setValidationErrorName(true);
+            return;
+        }
+
+        if (!testURL()) {
+            setValidationErrorImage(true);
             return;
         }
 
@@ -173,27 +203,28 @@ const ProfilePage = () => {
 
         // post the new data to the backend
         try {
-            const response = await axios.patch(`/serviceProvider/update/${userData.id}`, {
+            await axios.patch(`/serviceProvider/update/${userData.id}`, {
                 name: name,
                 email: email,
                 phone: phonePrefix + phone,
                 country: country,
                 city: city,
                 gender: gender,
+                image: image,
                 bio: bio,
             }, {
                 headers: {
                     Authorization: `Bearer ${userData.token}`,
                 },
             });
-            const {serviceProvider} = response.data;
-            console.log(serviceProvider.name);
+            changeName(name);
         } catch (error) {
             restoreBeforeEdit();
             console.log(error);
         }
         removeBeforeEdit();
     };
+
 
     const handleNameChange=(event)=> {
         const newName = event.target.value;
@@ -234,25 +265,12 @@ const ProfilePage = () => {
 
 
     const handleImageUpload = (e) => {
-        const selectedImage = e.target.files[0];
-
-        // Check if a file was selected
-        if (selectedImage) {
-            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-            if (selectedImage.size <= maxSize) {
-                const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
-                if (validImageTypes.includes(selectedImage.type)) {
-                    const imageUrl = URL.createObjectURL(selectedImage);
-                    console.log(imageUrl);
-                    setImage(imageUrl);
-                } else {
-                    alert("Please select a valid image file (JPEG, PNG, GIF).");
-                }
-            } else {
-                alert("Image size must be below 5MB.");
-            }
-        }
+        const selectedImage = e.target.value;
+        setImage(selectedImage);
+        setValidationErrorImage(!testURL());
     };
+
+
     if (!loggedIn) {
         // Redirect to the login page or another protected route
         return <Navigate to="/login" />;
@@ -268,13 +286,18 @@ const ProfilePage = () => {
                     {isEditingPicture && (
                         <Form>
                             <Form.Control
-                                type="file"
-                                id="custom-file"
-                                label="Choose an image file"
+                                type="input"
+                                label="Input an image url"
                                 custom
                                 onChange={handleImageUpload}
+                                placeholder="Input an image url"
+                                isInvalid={validationErrorImage}
+                                isValid={!validationErrorImage}
                                 required
                             />
+                            <Form.Control.Feedback type="invalid">
+                                Must be a valid image format
+                            </Form.Control.Feedback>
                         </Form>
                     )}
                 </Col>
