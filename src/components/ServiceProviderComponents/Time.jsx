@@ -17,7 +17,7 @@ function Time(props) {
     return (
         <div className="appointment-time">
             {props.showTime ? (
-                <Times date={props.date} isDayBlocked={props.isDayBlocked} blockedHours={props.blockedHours} scheduledAppointments={props.scheduledAppointments} setIsAfterBlockOperation={props.setIsAfterBlockOperation} />
+                <Times date={props.date} isDayBlocked={props.isDayBlocked} blockedTimeSlotOfDate={props.blockedTimeSlotOfDate} scheduledAppointments={props.scheduledAppointments} setIsAfterBlockOperation={props.setIsAfterBlockOperation} />
             ) : null}
         </div>
     );
@@ -27,7 +27,7 @@ Time.propTypes = {
     date: PropTypes.instanceOf(Date),
     showTime: PropTypes.bool,
     isDayBlocked: PropTypes.bool,
-    blockedHours: PropTypes.arrayOf(PropTypes.string),
+    blockedTimeSlotOfDate: PropTypes.object,
     scheduledAppointments: PropTypes.arrayOf(PropTypes.object),
     setHour: PropTypes.func,
     setIsAfterBlockOperation: PropTypes.func,
