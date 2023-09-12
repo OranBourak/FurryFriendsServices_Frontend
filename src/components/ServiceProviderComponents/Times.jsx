@@ -151,8 +151,6 @@ const Times = (props) => {
         // Disable Block Buttons
         setIsInBlockOperation(true);
         const dateToBlock = getFormatedDate();
-        // TODO: Add logic for saving the blocked date in the database
-        // TODO: Add logic for removing the blocked timeslots object from the db if the user blocked specific hours on that date
         try {
             const response = await axios.post(`/serviceProvider/blockDate/${userData.id}`, {
                 dateToBlock: dateToBlock,
@@ -167,7 +165,7 @@ const Times = (props) => {
         // Enable Block Buttons
         setIsInBlockOperation(false);
         console.log("setIsAfterBlockOperation");
-        props.setIsAfterBlockOperation(true);
+        props.setIsAfterBlockOperation();
     };
 
     const handleBlockDay = () => {
@@ -238,13 +236,55 @@ const Times = (props) => {
      * @return {void}
      */
     const blockHours = async () => {
+        if (!loggedIn) {
+            handleError("Unauthorized");
+            return;
+        }
         // Disable Block Buttons
         setIsInBlockOperation(true);
         // TODO: Add logic for saving the blocked hours in the database
-        generateBlockedHoursList();
+        const hoursToBlock = generateBlockedHoursList();
         console.log("In block hours, should save in db");
+        console.log("hoursToBlock: " + hoursToBlock);
+        console.log("blocked hours: " + props.blockedTimeSlotOfDate.blockedHours);
+        // If there are no blocked hours on the selected date
+        if (!props.blockedTimeSlotOfDate._id) {
+            console.log("No blocked time slots for this date");
+            // create a new BlockedTimeSlot object
+            try {
+                const response = await axios.post(`/blockedTimeSlot/create/${userData.id}`, {
+                    date: getFormatedDate(),
+                    blockedHours: hoursToBlock,
+                });
+                console.log("response in front" + response);
+                console.log("In block date, should save in db");
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            // If there are blocked hours on the selected date
+            console.log("There are blocked time slots for this date");
+            // Prepare the new array of blocked hours
+            const blockedHoursArr = props.blockedTimeSlotOfDate.blockedHours;
+            for (const time of hoursToBlock) {
+                if (!blockedHoursArr.includes(time)) {
+                    blockedHoursArr.push(time);
+                }
+            }
+            const sortedblockedHoursArr = blockedHoursArr.sort();
+            console.log("sortedblockedHoursArr: " + sortedblockedHoursArr);
+            try {
+                const response = await axios.patch(`/blockedTimeSlot/update/${props.blockedTimeSlotOfDate._id}`, {
+                    blockedHours: sortedblockedHoursArr,
+                });
+                console.log(response);
+            } catch (error) {
+                console.log(error);
+            }
+        }
         // Enable Block Buttons
         setIsInBlockOperation(false);
+        props.setIsAfterBlockOperation();
     };
 
     const generateBlockedHoursList = () => {
@@ -252,7 +292,6 @@ const Times = (props) => {
         const startHour = sortedTimes[0];
         const endHour = sortedTimes[1];
         const res = times.filter((time) => time >= startHour && time < endHour);
-        console.log("Generated blocked hours list: " + res);
         return res;
         // const res = [startHour];
         // for (const time of times) {
@@ -308,6 +347,14 @@ const Times = (props) => {
         return "time-button time-deselected";
     };
 
+    const getIsBlockedHour = (timeStr) => {
+        // If there are no blocked hours on the selected date
+        if (!props.blockedTimeSlotOfDate._id) {
+            return false;
+        }
+        return props.blockedTimeSlotOfDate.blockedHours.includes(timeStr);
+    };
+
     return (
         <div className="flex-col">
             <div className="container d-flex justify-content-center mt-3">
@@ -320,7 +367,7 @@ const Times = (props) => {
                 {/* The hours list */}
                 {times.map((time) => {
                     const isSelected = selectedTimes.includes(time);
-                    const isBlockedHour = props.blockedHours.includes(time);
+                    const isBlockedHour = getIsBlockedHour(time);
                     const isAppointmentHour = bookedHoursArr.includes(time);
                     return (
                         <button
@@ -351,7 +398,7 @@ const Times = (props) => {
  * @typedef {Object} TimesPropTypes
  * @property {Date} date - The date for which to display available times.
  * @property {boolean} isDayBlocked - A flag indicating whether the selected date is blocked.
- * @property {string[]} blockedHours - An array of strings representing blocked hours for the selected date.
+ * @property {object} blockedTimeSlotOfDate - An array of strings representing blocked hours for the selected date.
  * @property {Object[]} scheduledAppointments - An array of appointment objects scheduled for the specific date.
  * @property {Date} scheduledAppointments[].date - The date and time of a scheduled appointment.
  * @property {Number} scheduledAppointments[].duration - The duration of the appointment(one of: 1, 2, 3, 4, 5)
@@ -359,7 +406,7 @@ const Times = (props) => {
 Times.propTypes = {
     date: PropTypes.instanceOf(Date),
     isDayBlocked: PropTypes.bool,
-    blockedHours: PropTypes.arrayOf(PropTypes.string),
+    blockedTimeSlotOfDate: PropTypes.object,
     scheduledAppointments: PropTypes.arrayOf(PropTypes.object),
     setIsAfterBlockOperation: PropTypes.func,
 };
