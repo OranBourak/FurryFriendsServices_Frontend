@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "../../styles/ClientStyles/clientRegistrationForm.css";
+import {useAuth} from "../../context/AuthContext.jsx";
+import {message} from "antd";
 import axios from "axios";
-// import {useAuth} from "../../context/AuthContext.jsx";
-// name, email, password, secret question - combo box and text input, phone number - combo box and number input
+
 
 // validation
 import validator from "validator";
@@ -16,7 +16,6 @@ import {useNavigate} from "react-router";
 
 // components
 import ClientDropDown from "./ClientDropDown.jsx";
-
 /**
  * client registration form with the fields of name,email,password, secret question, answer, phone number prefix and phone suffix.
  * @return {React.Component} client registration form
@@ -24,6 +23,7 @@ import ClientDropDown from "./ClientDropDown.jsx";
 const ClientRegistrationForm = () => {
     // form fields include all attributes in the fields state
     const navigate = useNavigate();
+    const {login} = useAuth();
     const [fields, setFields] = useState({
         name: "",
         email: "",
@@ -104,128 +104,135 @@ const ClientRegistrationForm = () => {
                 secretQuestion: fields.secretQuestion,
                 answer: fields.answer,
                 phone: fields.phonePrefix.concat(fields.phoneSuffix),
-            } );
+            });
             const {id, token} = response.data;
-            console.log(id, token);
-            const clientData = {id, name: fields.name, token, userType: "Client", email: fields.email};
-            localStorage.setItem("user", JSON.stringify(clientData));
-            navigate("/profile");
+            const clientData = {name: fields.name, token, email: fields.email, id, userType: "client"};
+
+            // Login the user after successful registration
+            login(clientData.name, clientData.token, clientData.email, clientData.id, clientData.userType);
+
+            // Show the Ant Design message
+            message.success({
+                content: "Registration Successful!",
+                style: {yIndex: 1000, fontSize: "24px"},
+            }, 2);
+
+
+            // Navigate to the dashboard after 2 seconds
+            setTimeout(() => {
+                navigate("/dashboard");
+            }, 3000);
         } catch (e) {
             console.log(e);
+            message.error({
+                content: "Registration Failed!",
+                style: {fontSize: "24px"},
+            });
         }
     };
+
     const isFormInvalid = !nameFlag || !passwordFlag || !emailFlag || !phoneFlag || !fields.answer || !fields.secretQuestion || !fields.phonePrefix;
     return (
         <div className="registration-form-container">
             <Form noValidate onSubmit={handleSubmit}>
-                <Row className="mb-3">
-                    <Form.Group as={Col} md="4" controlId="registrationName">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                            isValid={nameFlag}
-                            isInvalid={!nameFlag && nameFlag !== null}
-                            required
-                            name = "name"
-                            type="text"
-                            placeholder="First name"
-                            value={fields.name}
-                            onChange = {handleChange}
-                        />
-                        <Form.Control.Feedback type="invalid">
+                <Form.Group as={Col} md="4" controlId="registrationName" className="centered-form-group">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control
+                        isValid={nameFlag}
+                        isInvalid={!nameFlag && nameFlag !== null}
+                        required
+                        name = "name"
+                        type="text"
+                        placeholder="First name"
+                        value={fields.name}
+                        onChange = {handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
                 Name can only contain letters and spaces.
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                    </Form.Control.Feedback>
+                </Form.Group>
 
 
-                    <Form.Group as={Col} md="4" controlId="registrationEmail">
-                        <Form.Label>email</Form.Label>
-                        <Form.Control
-                            required
-                            isValid={emailFlag}
-                            isInvalid={!emailFlag && emailFlag !== null}
-                            name = "email"
-                            type="email"
-                            placeholder="Email address"
-                            value={fields.email}
-                            onChange = {handleChange}
-                        />
-                        <Form.Control.Feedback type="invalid">Email must be in the form of email@email.tld</Form.Control.Feedback>
-                    </Form.Group>
+                <Form.Group as={Col} md="4" controlId="registrationEmail" className="centered-form-group">
+                    <Form.Label>email</Form.Label>
+                    <Form.Control
+                        required
+                        isValid={emailFlag}
+                        isInvalid={!emailFlag && emailFlag !== null}
+                        name = "email"
+                        type="email"
+                        placeholder="Email address"
+                        value={fields.email}
+                        onChange = {handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">Email must be in the form of email@email.tld</Form.Control.Feedback>
+                </Form.Group>
 
 
-                    <Form.Group as={Col} md="4" controlId="registrationPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            required
-                            isInvalid={!passwordFlag && passwordFlag !== null}
-                            isValid={passwordFlag}
-                            name = "password"
-                            type="password"
-                            placeholder="Password"
-                            value = {fields.password}
-                            onChange = {handleChange}
-                        />
-                        <Form.Control.Feedback type="invalid">
+                <Form.Group as={Col} md="4" controlId="registrationPassword" className="centered-form-group">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                        required
+                        isInvalid={!passwordFlag && passwordFlag !== null}
+                        isValid={passwordFlag}
+                        name = "password"
+                        type="password"
+                        placeholder="Password"
+                        value = {fields.password}
+                        onChange = {handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
                 Password must contain at least 1 uppercase character, 1 special character, 1 lowercase character, 1 digit and in the length of 8-30.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                </Row>
-
-
-                <Row className="mb-3">
-                    <Form.Group as={Col} md="6" controlId="secretQuestionRegistration">
-                        <Form.Label>Secret question</Form.Label>
-                        <ClientDropDown
-                            dropDownName= "secretQuestion"
-                            handleSelectedValue = {handleChange}
-                            attributes={questions}
-                            id="secret-question-dropbox"
-                            placeholder="Questions"
-                            required/>
-                        <Form.Label>Answer</Form.Label>
-                        <Form.Control
-                            name="answer"
-                            type="text"
-                            placeholder="Answer"
-                            onChange={handleChange}
-                            required />
-                        <Form.Control.Feedback type="invalid">
-                Please provide an answer to the question
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group as={Col} md="6" controlId="phoneGroup">
-                        <Form.Label>Phone number</Form.Label>
-                        <ClientDropDown
-                            dropDownName= "phonePrefix"
-                            handleSelectedValue = {handleChange}
-                            attributes={phonePrefix}
-                            id="phone-prefix-dropbox"
-                            placeholder="Phone prefixes"
-                            required
-                            variant="primary"/>
-                        <Form.Control
-                            name="phoneSuffix"
-                            type="text"
-                            placeholder="Phone"
-                            required
-                            onChange={handleChange}
-                            value={fields.phoneSuffix}
-                            isInvalid={!phoneFlag && phoneFlag !== null}
-                            isValid={phoneFlag} />
-                        <Form.Control.Feedback type="invalid">
+                    </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group as={Col} md="6" controlId="phoneGroup" className="centered-form-group">
+                    <Form.Label>Phone number</Form.Label>
+                    <ClientDropDown
+                        dropDownName= "phonePrefix"
+                        handleSelectedValue = {handleChange}
+                        attributes={phonePrefix}
+                        id="phone-prefix-dropbox"
+                        placeholder="Phone prefixes"
+                        required
+                        variant="primary"/>
+                    <Form.Control
+                        name="phoneSuffix"
+                        type="text"
+                        placeholder="Phone"
+                        required
+                        onChange={handleChange}
+                        value={fields.phoneSuffix}
+                        isInvalid={!phoneFlag && phoneFlag !== null}
+                        isValid={phoneFlag} />
+                    <Form.Control.Feedback type="invalid">
                     Phone number must contain only digits.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                </Row>
-                {/* <Form.Group className="mb-3">
-            <Form.Check
-            required
-            label="Agree to terms and conditions"
-            feedback="You must agree before submitting."
-            feedbackType="invalid"
-            />
-        </Form.Group> */}
-                <Button disabled={isFormInvalid} type="submit">Register</Button>
+                    </Form.Control.Feedback>
+                </Form.Group>
+                <br/>
+                <div style={{height: "2px", backgroundColor: "white"}}></div>
+                <Form.Group as={Col} md="6" controlId="secretQuestionRegistration" className="centered-form-group">
+                    <Form.Label>Secret question</Form.Label>
+                    <ClientDropDown
+                        dropDownName= "secretQuestion"
+                        handleSelectedValue = {handleChange}
+                        attributes={questions}
+                        id="secret-question-dropbox"
+                        placeholder="Questions"
+                        variant="danger"
+                        required/>
+                    <Form.Label>Answer</Form.Label>
+                    <Form.Control
+                        name="answer"
+                        type="text"
+                        placeholder="Answer"
+                        onChange={handleChange}
+                        required />
+                    <Form.Control.Feedback type="invalid">
+                Please provide an answer to the question
+                    </Form.Control.Feedback>
+                </Form.Group>
+
+                <Button disabled={isFormInvalid} type="submit" className="centered-form-group">Register</Button>
             </Form>
         </div>
     );
