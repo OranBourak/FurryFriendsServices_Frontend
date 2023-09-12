@@ -56,7 +56,6 @@ function App() {
                 <Route path="/archive" element={<ArchivePage/>} />
                 <Route path="/appointment-managment" element={<AppointmentManagmentPage/>} />
                 <Route path="/client-register" element={<ClientRegistrationForm/>} />
-                <Route path="/client-dash-board" element={<ClientDashboardPage/>} />
                 <Route path="/Search-service" element={<SearchServicePage/>} />
                 <Route path="/error" element={<ErrorPage/>} />
                 <Route path="/provider-profile/:id" element={<ProviderProfilePage />} />

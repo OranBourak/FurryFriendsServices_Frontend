@@ -22,7 +22,7 @@ function ClientDashboardPage() {
                         <Button className="custom-button search-button button-spacing" type="primary" icon={<SearchOutlined />}>Search for a Service</Button>
                     </Link>
 
-                    <Link to="/Client-edit-profile">
+                    <Link to="/profile">
                         <Button className="custom-button edit-button button-spacing" type="primary" icon={<EditOutlined />}>Edit Profile</Button>
                     </Link>
 
