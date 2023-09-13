@@ -161,13 +161,13 @@ function StatisticsPage() {
                 <div className="row">
                     <div className="col-4">
                         <AppointmentTypeRevenueChart
-                            categories={["1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999"]}
+                            categories={appTypeRevenueChartCategories}
                             id="appointment-type-revenue-chart"
                             series={
                                 [
                                     {
-                                        name: "series-1",
-                                        data: [30, 40, 45, 50, 49, 60, 70, 91],
+                                        name: "Appointment Type",
+                                        data: appTypeRevenueChartData,
                                     },
                                 ]
                             }
