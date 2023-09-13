@@ -3,6 +3,8 @@ import {React, useEffect, useState} from "react";
 import axios from "axios";
 import {useAuth} from "../../context/AuthContext";
 import {message} from "antd";
+import AppointmentTypeRevenueChart from "../../components/ServiceProviderComponents/AppointmentTypeRevenueChart.jsx";
+import "../../styles/ServiceProviderStyles/statisticsPage.css";
 
 /**
  * Statistics page component.
@@ -153,7 +155,42 @@ function StatisticsPage() {
     }, []);
 
     return (
-        <div>StatisticsPage</div>
+        <>
+            <div className="statistic-page-bgcolor">
+                <h1>Statistics</h1>
+                <div className="row">
+                    <div className="col-4">
+                        <AppointmentTypeRevenueChart
+                            categories={["1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999"]}
+                            id="appointment-type-revenue-chart"
+                            series={
+                                [
+                                    {
+                                        name: "series-1",
+                                        data: [30, 40, 45, 50, 49, 60, 70, 91],
+                                    },
+                                ]
+                            }
+                            type="bar"
+                        />
+                        <AppointmentTypeRevenueChart
+                            categories={["199", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999"]}
+                            id="appointment-typse-revenue-chart"
+                            series={
+                                [
+                                    {
+                                        name: "series-1",
+                                        data: [30, 40, 45, 50, 49, 60, 70, 91],
+                                    },
+                                ]
+                            }
+                            type="bar"
+                        />
+                    </div>
+                </div>
+            </div>
+
+        </>
     );
 }
 
