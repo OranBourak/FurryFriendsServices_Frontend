@@ -149,6 +149,20 @@ const TypeManagementPage = () => {
         setAddModalOpen(false);
     };
 
+    const handleAddNewTypeClick = () => {
+        if (appointments.length >= 10) {
+            message.error({
+
+                content: "Max types reached. Please delete existing types before makeing new type.",
+
+                style: {yIndex: 1000, fontSize: "24px"},
+
+            }, 2);
+        } else {
+            setAddModalOpen(true);
+        }
+    };
+
     // const getEditedAppTypeName = () => {
     //     console.log("editedAppointment.name: " + editedAppointment.name);
     //     console.log(typeof(editedAppointment.name));
@@ -174,7 +188,7 @@ const TypeManagementPage = () => {
             <Row className="justify-content-center add-button">
                 <Button
                     variant="info"
-                    onClick={() => setAddModalOpen(true)}
+                    onClick={handleAddNewTypeClick}
                 >
               Add New Type
                 </Button>

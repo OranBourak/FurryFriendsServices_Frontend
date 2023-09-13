@@ -70,7 +70,7 @@ const EditAppointmentModal=({show, onHide, onSave, name, price, duration})=> {
                             isInvalid={priceError}
                         />
                         <Form.Control.Feedback type="invalid">
-                        Price must be positive.
+                        Price must be a positive number.
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group controlId="formDuration">
