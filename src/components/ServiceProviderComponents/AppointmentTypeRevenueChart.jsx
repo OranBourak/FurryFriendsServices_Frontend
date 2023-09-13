@@ -15,30 +15,6 @@ import PropTypes from "prop-types";
  * @return {React.Component} React component representing the Appointment Revenue Chart component.
  */
 const AppointmentTypeRevenueChart = (props) => {
-    const [appRevenueChart, setAppRevenueChart] = useState({
-        options: {
-            chart: {
-                id: props.id,
-            },
-            xaxis: {
-                categories: props.categories,
-                labels: {
-                    style: {
-                        fontSize: "6px", // Adjust the font size as needed
-                    },
-                },
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        fontSize: "12px", // Adjust the font size as needed
-                    },
-                },
-            },
-        },
-        series: props.series,
-    });
-
     // Define inline styles for the chart container
     const chartStyles = {
         className: "mixed-chart",
@@ -49,11 +25,32 @@ const AppointmentTypeRevenueChart = (props) => {
         boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)", // Example box shadow
     };
 
+    const options = {
+        chart: {
+            id: props.id,
+        },
+        xaxis: {
+            categories: props.categories,
+            labels: {
+                style: {
+                    fontSize: "6px", // Adjust the font size as needed
+                },
+            },
+        },
+        yaxis: {
+            labels: {
+                style: {
+                    fontSize: "12px", // Adjust the font size as needed
+                },
+            },
+        },
+    };
+
     return (
         <div style={chartStyles}>
             <Chart
-                options={appRevenueChart.options}
-                series={appRevenueChart.series}
+                options={options}
+                series={props.series}
                 type={props.type}
                 width="100%"
                 height="100%"
