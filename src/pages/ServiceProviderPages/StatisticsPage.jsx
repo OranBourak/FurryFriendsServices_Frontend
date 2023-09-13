@@ -5,6 +5,7 @@ import {useAuth} from "../../context/AuthContext";
 import {message} from "antd";
 import AppointmentTypeRevenueChart from "../../components/ServiceProviderComponents/AppointmentTypeRevenueChart.jsx";
 import "../../styles/ServiceProviderStyles/statisticsPage.css";
+import {Row, Col} from "antd";
 
 /**
  * Statistics page component.
@@ -158,8 +159,8 @@ function StatisticsPage() {
         <>
             <div className="statistic-page-bgcolor">
                 <h1>Statistics</h1>
-                <div className="row">
-                    <div className="col-4">
+                <Col>
+                    <Row>
                         <AppointmentTypeRevenueChart
                             categories={appTypeRevenueChartCategories}
                             id="appointment-type-revenue-chart"
@@ -174,20 +175,38 @@ function StatisticsPage() {
                             type="bar"
                         />
                         <AppointmentTypeRevenueChart
-                            categories={["199", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999"]}
-                            id="appointment-typse-revenue-chart"
+                            categories={canceledVsCompletedChartCategories}
+                            id="completed-vs-canceled-chart"
                             series={
                                 [
                                     {
-                                        name: "series-1",
-                                        data: [30, 40, 45, 50, 49, 60, 70, 91],
+                                        name: "completed",
+                                        data: completedData,
+                                    },
+                                    {
+                                        name: "canceled",
+                                        data: canceledData,
                                     },
                                 ]
                             }
                             type="bar"
                         />
-                    </div>
-                </div>
+                    </Row>
+
+                    <AppointmentTypeRevenueChart
+                        categories={canceledVsCompletedChartCategories}
+                        id="revenue-per-month"
+                        series={
+                            [
+                                {
+                                    name: "Revenue Per Month",
+                                    data: revenueChartData,
+                                },
+                            ]
+                        }
+                        type="line"
+                    />
+                </Col>
             </div>
 
         </>
