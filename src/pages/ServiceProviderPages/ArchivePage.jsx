@@ -143,7 +143,7 @@ const Archive = () => {
             {!isLoading ? (
                 <>
                     {filteredAppointments.length === 0 ? (
-                        <h3 className="table-mt-3 mt-3">No appointments scheduled yet!</h3>
+                        <h3 className="table-mt-3 mt-3">No appointments completed or canceled yet!</h3>
 
                     ) : (
                         <>
