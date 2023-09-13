@@ -39,7 +39,7 @@ const Dashboard = () => {
             </Row>
             <Row className="justify-content-center">
                 <Col>
-                    <Button variant="primary" size="lg" className="db-m-3 long-button">
+                    <Button variant="primary" size="lg" className="db-m-3 long-button" onClick={()=>navigate("/statistics")}>
                         <RiBarChartHorizontalLine className="button-icon" /> Statistics
                     </Button>
                 </Col>
