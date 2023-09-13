@@ -23,6 +23,7 @@ function StatisticsPage() {
     const [canceledData, setCanceledData] = useState();
     // Revenue per month
     const [revenueChartData, setRevenueChartData] = useState();
+    const [isAppointments, setIsAppointments] = useState(false);
 
     const getData = async () => {
         if (loggedIn) {
@@ -36,6 +37,9 @@ function StatisticsPage() {
                 });
 
                 const appointments = appResponse.data.appointments;
+                if (appointments.length > 0) {
+                    setIsAppointments(true);
+                }
                 console.log("app 5 months ago:" + appointments);
                 console.log(appointments[0].date);
                 console.log(appointments[0].appointmentType[0].name);
@@ -53,13 +57,7 @@ function StatisticsPage() {
                 analizeData(appointments, appointmentTypes);
             } catch (error) {
                 console.log(error);
-                message.error({
-
-                    content: `${error}`,
-
-                    style: {yIndex: 1000, fontSize: "24px"},
-
-                }, 2);
+                setIsAppointments(false);
             }
         }
     };
@@ -157,59 +155,70 @@ function StatisticsPage() {
 
     return (
         <>
-            <div className="statistic-page-bgcolor">
-                <h1>Statistics</h1>
-                <Col>
-                    <Row>
-                        <AppointmentTypeRevenueChart
-                            categories={appTypeRevenueChartCategories}
-                            id="appointment-type-revenue-chart"
-                            series={
-                                [
-                                    {
-                                        name: "Appointment Type",
-                                        data: appTypeRevenueChartData,
-                                    },
-                                ]
-                            }
-                            type="bar"
-                        />
-                        <AppointmentTypeRevenueChart
-                            categories={canceledVsCompletedChartCategories}
-                            id="completed-vs-canceled-chart"
-                            series={
-                                [
-                                    {
-                                        name: "completed",
-                                        data: completedData,
-                                    },
-                                    {
-                                        name: "canceled",
-                                        data: canceledData,
-                                    },
-                                ]
-                            }
-                            type="bar"
-                        />
-                    </Row>
-
-                    <AppointmentTypeRevenueChart
-                        categories={canceledVsCompletedChartCategories}
-                        id="revenue-per-month"
-                        series={
-                            [
-                                {
-                                    name: "Revenue Per Month",
-                                    data: revenueChartData,
-                                },
-                            ]
-                        }
-                        type="line"
-                    />
-                </Col>
-            </div>
-
+            {isAppointments? (
+                <>
+                    <h1>Statistics</h1>
+                    <div className="statistic-page-bgcolor d-flex justify-content-center">
+                        <Col>
+                            <Row>
+                                <Col className="chart-gap">
+                                    <AppointmentTypeRevenueChart
+                                        categories={appTypeRevenueChartCategories}
+                                        id="appointment-type-revenue-chart"
+                                        series={[
+                                            {
+                                                name: "Appointment Type",
+                                                data: appTypeRevenueChartData,
+                                            },
+                                        ]}
+                                        type="bar"
+                                        title="Revenue per appointment type in the last half of the year"
+                                    />
+                                </Col>
+                                <Col className="chart-gap">
+                                    <AppointmentTypeRevenueChart
+                                        categories={canceledVsCompletedChartCategories}
+                                        id="completed-vs-canceled-chart"
+                                        series={[
+                                            {
+                                                name: "completed",
+                                                data: completedData,
+                                            },
+                                            {
+                                                name: "canceled",
+                                                data: canceledData,
+                                            },
+                                        ]}
+                                        type="bar"
+                                        title="Completed vs. canceled appointments in the last half of the year"
+                                    />
+                                </Col>
+                            </Row>
+                            <div className="my-4"></div> {/* Add space between the top tables and the bottom chart */}
+                            <Row className="d-flex justify-content-center">
+                                <Col>
+                                    <AppointmentTypeRevenueChart
+                                        categories={canceledVsCompletedChartCategories}
+                                        id="revenue-per-month"
+                                        series={[
+                                            {
+                                                name: "Revenue Per Month",
+                                                data: revenueChartData,
+                                            },
+                                        ]}
+                                        type="line"
+                                        title="Revenue per Month"
+                                    />
+                                </Col>
+                            </Row>
+                        </Col>
+                    </div>
+                </>
+            ) : (
+                <h1>No appointments in the past six months!</h1>
+            )}
         </>
+
     );
 }
 

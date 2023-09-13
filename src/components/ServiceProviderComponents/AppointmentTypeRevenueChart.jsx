@@ -29,6 +29,9 @@ const AppointmentTypeRevenueChart = (props) => {
         chart: {
             id: props.id,
         },
+        title: {
+            text: props.title,
+        },
         xaxis: {
             categories: props.categories,
             labels: {
@@ -64,6 +67,7 @@ AppointmentTypeRevenueChart.propTypes = {
     series: PropTypes.arrayOf(PropTypes.object).isRequired, // series prop is required and should be an array of objects
     type: String.isRequired,
     id: String.isRequired,
+    title: String.isRequired,
 };
 
 export default AppointmentTypeRevenueChart;

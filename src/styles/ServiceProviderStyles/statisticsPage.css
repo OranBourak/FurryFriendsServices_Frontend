@@ -3,3 +3,9 @@
     background-color: #ffffff;
     min-height: 100vh;
 }
+
+.chart-gap {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 2rem;
+}
