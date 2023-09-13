@@ -33,7 +33,7 @@ const AppointmentTypeRevenueChart = (props) => {
             categories: props.categories,
             labels: {
                 style: {
-                    fontSize: "6px", // Adjust the font size as needed
+                    fontSize: "12px", // Adjust the font size as needed
                 },
             },
         },
