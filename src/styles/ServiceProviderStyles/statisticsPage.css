@@ -1,11 +1,47 @@
+body {
+    background-color: #FBAB7E;
+    background-image: linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%);
+}
 
-.statistic-page-bgcolor {
-    background-color: #ffffff;
-    min-height: 100vh;
+.statistic-page-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
 }
 
 .chart-gap {
-    margin-left: 1rem;
-    margin-right: 1rem;
-    margin-top: 2rem;
+    /* margin-left: 2rem;
+    margin-right: 2rem; */
+    margin-bottom: 1rem;
+}
+
+.statistics-page-title-text {
+    font-size: 100px;
+    margin-bottom: 3rem;
+    margin-top: 1rem;
+    font-weight: bold; /* Adjust the font weight as needed */
+    text-align: center; /* Center-align the text */
+    position: relative; /* Create a positioning context for the line */
+    display: inline-block; /* Make the h1 element inline-block to match text width */
+}
+
+/* Add a line (border) under the h1 text */
+.statistics-page-title-text::after {
+    content: ''; /* Create an empty content box */
+    display: block; /* Make it a block-level element */
+    width: 100%; /* Make the line span the width of the h1 element */
+    height: 10px; /* Adjust the line thickness as needed */
+    background-color: #333; /* Adjust the line color as needed */
+    position: absolute; /* Position it absolutely relative to the h1 */
+    bottom: 0; /* Position it at the bottom of the h1 element */
+    left: 0; /* Align it with the left edge of the h1 element */
+    border-radius: 5px;
+}
+
+/* Style the center container */
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
