@@ -9,17 +9,3 @@
 .statistics-chart-title-text-size {
     font-size: 20px !important;
 }
-
-/* CSS to style the line below the chart title */
-.chart-title-line {
-    display: block;
-    border-bottom: 2px solid #333; /* Adjust the line color and thickness as needed */
-    margin-top: 8px; /* Adjust the spacing between the title and the line */
-    width: 100px; /* Adjust the width of the line */
-  }
-
-/* .chart-div {
-    overflow: hidden;
-    display: block; 
-    background-color: aliceblue;
-} */
