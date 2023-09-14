@@ -171,7 +171,7 @@ function StatisticsPage() {
     return (
         <>
             {isAppointments? (
-                <>
+                <div className="statistics-bg">
                     <div className="center-container">
                         <h1 className="statistics-page-title-text">Statistics</h1>
                     </div>
@@ -233,7 +233,7 @@ function StatisticsPage() {
                             </Row>
                         </Col>
                     </div>
-                </>
+                </div>
             ) : (
                 <h1>No appointments in the past six months!</h1>
             )}
