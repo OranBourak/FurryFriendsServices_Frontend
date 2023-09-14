@@ -42,7 +42,6 @@ function LoginPage({onLogin}) {
                 email: email,
                 password: password,
             });
-            // TODO: handle the token
             const {name, token, id} = response.data;
             setEmail(response.data.email);
             handleLogIn(name, token, email, id);
@@ -50,7 +49,7 @@ function LoginPage({onLogin}) {
             console.log("error: " + error);
             message.error({
 
-                content: `error: ${error}`,
+                content: `error: ${error.response.data.error}`,
 
                 style: {yIndex: 1000, fontSize: "24px"},
 

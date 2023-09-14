@@ -158,7 +158,7 @@ const Times = (props) => {
             console.log(error);
             message.error({
 
-                content: `${error}`,
+                content: `${error.response.data.error}`,
 
                 style: {yIndex: 1000, fontSize: "24px"},
 
@@ -256,7 +256,7 @@ const Times = (props) => {
                 console.log(error);
                 message.error({
 
-                    content: `${error}`,
+                    content: `${error.response.data.error}`,
 
                     style: {yIndex: 1000, fontSize: "24px"},
 
@@ -280,7 +280,7 @@ const Times = (props) => {
                 console.log(error);
                 message.error({
 
-                    content: `${error}`,
+                    content: `${error.response.data.error}`,
 
                     style: {yIndex: 1000, fontSize: "24px"},
 
