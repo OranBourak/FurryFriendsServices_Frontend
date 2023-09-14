@@ -37,6 +37,11 @@ const AppointmentTypeRevenueChart = (props) => {
         plotOptions: {
             bar: {
                 columnWidth: "50px",
+                dataLabels: {
+                    Enabled: true,
+                    position: "top",
+                    maxItems: 100,
+                },
             },
         },
         title: {
