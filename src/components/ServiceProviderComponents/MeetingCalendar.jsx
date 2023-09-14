@@ -42,12 +42,11 @@ const MeetingCalendar = () => {
                 setBlockedDates(spBlockedDates);
                 setAppointments(spAppointments);
                 setBlockedTimeSlots(spBlockedTimeSlots);
-                // setIsLoading(false);
             } catch (error) {
                 console.log(error);
                 message.error({
 
-                    content: `${error}`,
+                    content: `${error.response.data.error}`,
 
                     style: {yIndex: 1000, fontSize: "24px"},
 

@@ -29,7 +29,7 @@ const ProfilePage = () => {
     const [validationErrorEmail, setValidationErrorEmail] = useState(false);
     const [typeOfService, setTypeOfService] = useState("");
     const [validationErrorImage, setValidationErrorImage] = useState(false);
-
+    const [validationErrorPhone, setValidationErrorPhone] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
 
     const israelCities = [
@@ -97,7 +97,7 @@ const ProfilePage = () => {
                 console.log(error);
                 message.error({
 
-                    content: `error: ${error}`,
+                    content: `error: ${error.response.data.error}`,
 
                     style: {yIndex: 1000, fontSize: "24px"},
 
@@ -190,6 +190,7 @@ const ProfilePage = () => {
         }
         // if the phone number doesn't consists of 7 digits
         if (!/^\d{7}$/.test(phone)) {
+            setValidationErrorPhone(true);
             return;
         }
         if (!/[A-Za-z ]+/.test(name)) {
@@ -233,13 +234,15 @@ const ProfilePage = () => {
         } catch (error) {
             restoreBeforeEdit();
             console.log(error);
-            message.error({
+            if (error.response && error.response.data) {
+                message.error({
 
-                content: `error: ${error}`,
+                    content: `error: ${error.response.data.error}`,
 
-                style: {yIndex: 1000, fontSize: "24px"},
+                    style: {yIndex: 1000, fontSize: "24px"},
 
-            }, 2);
+                }, 2);
+            }
         }
         removeBeforeEdit();
     };
@@ -264,8 +267,10 @@ const ProfilePage = () => {
      * @param {Event} event - The input change event.
      */
     function handlePhoneNumber(event) {
+        const newPhoneNumber = event.target.value;
         console.log("handle phone number");
-        setPhone(event.target.value);
+        setPhone(newPhoneNumber);
+        setValidationErrorPhone(!/^\d{7}$/.test(newPhoneNumber));
     }
 
     const handleCityChange = (newCity) => {
@@ -428,7 +433,7 @@ const ProfilePage = () => {
                 )}
             </Row>
             <Row>
-                {(validationErrorName || validationErrorEmail || validationErrorImage) && (
+                {(validationErrorName || validationErrorEmail || validationErrorImage || validationErrorPhone) && (
                     <Alert variant="danger">
           Please fix the validation errors before saving.
                     </Alert>
@@ -441,7 +446,7 @@ const ProfilePage = () => {
                             Edit Profile Picture
                     </Button></>
                 ) : (
-                    <Button variant="primary" onClick={handleSave} disabled={isFormIncomplete}>
+                    <Button variant="primary" onClick={handleSave} disabled={isFormIncomplete || validationErrorEmail || validationErrorName || validationErrorPhone}>
                         Save
                     </Button>
                 )}

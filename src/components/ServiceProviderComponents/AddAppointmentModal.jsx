@@ -69,7 +69,7 @@ const AddAppointmentTypeModal=({show, onHide, onAddType, appTypesSize}) => {
             console.log(error);
             message.error({
 
-                content: `${error}`,
+                content: `${error.response.data.error}`,
 
                 style: {yIndex: 1000, fontSize: "24px"},
 

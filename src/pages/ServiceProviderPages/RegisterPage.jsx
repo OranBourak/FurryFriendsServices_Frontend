@@ -150,7 +150,7 @@ function RegisterPage() {
             console.log("error: " + error);
             message.error({
 
-                content: `error: ${error}`,
+                content: `error: ${error.response.data.error}`,
 
                 style: {yIndex: 1000, fontSize: "24px"},
 

@@ -33,8 +33,12 @@ export const AuthProvider=({children}) => {
 
     // changes the name of the user and saves it in the localstorage.
     const changeName = (newName) => {
-        setUserData({...userData, name: newName});
-        localStorage.setItem("user", JSON.stringify(userData));
+        setUserData((prevUserData) => {
+            const updatedUserData = {...prevUserData, name: newName};
+            console.log(updatedUserData);
+            localStorage.setItem("user", JSON.stringify(updatedUserData));
+            return updatedUserData;
+        });
     };
     const logout = () => {
     // Perform logout logic here

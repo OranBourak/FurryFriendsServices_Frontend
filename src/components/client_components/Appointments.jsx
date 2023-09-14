@@ -13,13 +13,14 @@ function Appointments() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedType, setSelectedType] = useState("Upcoming");
+    const [selectedSort, setSelectedSort] = useState("Sort by date");
     const {userData} = useAuth();
 
 
     useEffect(()=> {
         const fetchAppointments = async () => {
             try {
-                const response = await axios.get(`client/get-appointments/${userData.id}`);
+                const response = await axios.get(`client/get-appointments/${userData?.id}`);
                 setAppointments(response.data.appointments);
             } catch (err) {
                 console.error(err);
@@ -49,6 +50,30 @@ function Appointments() {
         }
     };
 
+    /**
+     * Sorting function, can sort by date/price(descending and ascending order) and by name. depends on input value.
+     * Sort by date
+     * Sort by price - descending
+     * Sort by price - ascending
+     * Sort by service provider name
+     * @param {*} e
+     */
+    const sortByChoice = (e) => {
+        console.log(e.target.value);
+        setSelectedSort(e.target.value);
+        if (e.target.value === "Sort by date") {
+            appointments.sort((a, b) => new Date(a.date) - new Date(b.date));
+        } else if (e.target.value.includes("Sort by price")) {
+            if (e.target.value.includes("descending")) {
+                appointments.sort((a, b) => b.appointmentType.price - a.appointmentType.price);
+            } else {
+                appointments.sort((a, b) => a.appointmentType.price - b.appointmentType.price);
+            }
+        } else if (e.target.value === "Sort by service provider name") {
+            appointments.sort((a, b) => a.serviceProviderId.name.localeCompare(b.serviceProviderId.name));
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
@@ -64,6 +89,16 @@ function Appointments() {
                         <option>Upcoming</option>
                         <option>Completed</option>
                         <option>Canceled</option>
+                    </Form.Control>
+                    <Form.Control
+                        as="select"
+                        value={selectedSort}
+                        onChange={sortByChoice}
+                    >
+                        <option>Sort by date</option>
+                        <option>Sort by price - descending</option>
+                        <option>Sort by price - ascending</option>
+                        <option>Sort by service provider name</option>
                     </Form.Control>
                     <h2 style={{color: "white"}}>{selectedType} Appointments </h2>
                     {appointments.filter((appointment) => appointment.status === selectedType).map((appointment) => (

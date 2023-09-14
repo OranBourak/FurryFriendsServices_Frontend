@@ -6,6 +6,7 @@ import {message} from "antd";
 import AppointmentTypeRevenueChart from "../../components/ServiceProviderComponents/AppointmentTypeRevenueChart.jsx";
 import "../../styles/ServiceProviderStyles/statisticsPage.css";
 import {Row, Col} from "antd";
+import {useNavigate} from "react-router-dom";
 
 /**
  * Statistics page component.
@@ -24,6 +25,7 @@ function StatisticsPage() {
     // Revenue per month
     const [revenueChartData, setRevenueChartData] = useState();
     const [isAppointments, setIsAppointments] = useState(false);
+    const navigate = useNavigate();
 
     const getData = async () => {
         if (loggedIn) {
@@ -150,6 +152,19 @@ function StatisticsPage() {
     };
 
     useEffect( () => {
+        // Redirect if not logged in
+        if (!loggedIn) {
+            // Use a navigation method here to redirect, for example:
+            navigate("/");
+            return; // Return early to prevent the rest of the code from executing
+        }
+
+        // Redirect if user type is not serviceProvider
+        if (userData.userType !== "serviceProvider") {
+            // Use a navigation method here to redirect, for example:
+            navigate("/error");
+            return; // Return early to prevent the rest of the code from executing
+        }
         getData();
     }, []);
 

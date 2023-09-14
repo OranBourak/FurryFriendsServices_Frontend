@@ -8,6 +8,7 @@ import "../../styles/ServiceProviderStyles/appType.css";
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
 import {message} from "antd";
+import {useNavigate} from "react-router-dom";
 
 const TypeManagementPage = () => {
     const {loggedIn, userData} = useAuth();
@@ -27,6 +28,8 @@ const TypeManagementPage = () => {
     // New state for delete confirmation
     const [isDeleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
     const [appointmentToDelete, setAppointmentToDelete] = useState(null);
+    const navigate = useNavigate();
+
 
     const getData = async () => {
         if (loggedIn) {
@@ -45,7 +48,7 @@ const TypeManagementPage = () => {
                 console.log(error);
                 message.error({
 
-                    content: `error: ${error}`,
+                    content: `error: ${error.response.data.error}`,
 
                     style: {yIndex: 1000, fontSize: "24px"},
 
@@ -54,7 +57,22 @@ const TypeManagementPage = () => {
         }
     };
 
-    useEffect( () => {
+
+    useEffect(() => {
+        // Redirect if not logged in
+        if (!loggedIn) {
+            // Use a navigation method here to redirect, for example:
+            navigate("/");
+            return; // Return early to prevent the rest of the code from executing
+        }
+
+        // Redirect if user type is not serviceProvider
+        if (userData.userType !== "serviceProvider") {
+            // Use a navigation method here to redirect, for example:
+            navigate("/error");
+            return; // Return early to prevent the rest of the code from executing
+        }
+
         getData();
     }, []);
 
@@ -98,7 +116,7 @@ const TypeManagementPage = () => {
             console.log(error);
             message.error({
 
-                content: `error: ${error}`,
+                content: `error: ${error.response.data.error}`,
 
                 style: {yIndex: 1000, fontSize: "24px"},
 
@@ -135,7 +153,7 @@ const TypeManagementPage = () => {
             console.error("Error deleting appointment:", error);
             message.error({
 
-                content: `Error deleting appointment: ${error}`,
+                content: `Error deleting appointment: ${error.response.data.error}`,
 
                 style: {yIndex: 1000, fontSize: "24px"},
 
