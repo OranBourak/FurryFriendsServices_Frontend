@@ -12,3 +12,12 @@
     height: 100vh;
     overflow: auto;
 }
+
+.login-container{
+    width: 25%;
+}
+
+.fields-group{
+    margin-bottom: 4%;
+    width: 100%;
+}

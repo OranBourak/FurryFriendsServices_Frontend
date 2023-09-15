@@ -10,6 +10,10 @@
     background-color: #ffffff;   /* White background color for the container */
     
 }
+.profile-page{
+    background-color:#96B6C5;
+    height: 100vh;
+}
 
 /* Styling for the title or header inside the container */
 .profile-container h2 {
