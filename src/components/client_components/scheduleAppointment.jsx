@@ -20,6 +20,7 @@ const ScheduleAppointment = ({providerID}) => {
     const [blockedTimeSlots, setBlockedTimeSlots] = useState([]);
     const [appointments, setAppointments] = useState([]);
     const [appointmentTypes, setAppointmentTypes] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const {userData} = useAuth();
     const navigate = useNavigate();
 
@@ -61,12 +62,15 @@ const ScheduleAppointment = ({providerID}) => {
 
     // Handler for creating an appointment with the selected details
     const handleCreateAppointment = async () => {
+        setIsSubmitting(true); // Disable the button
+
         // Validate that all required fields are selected
         if (!selectedDate || !selectedTime || !selectedService) {
             Modal.warning({
                 title: "Missing Information",
                 content: "Please select a date, time, and service type before creating an appointment.",
             });
+            setIsSubmitting(false); // Enable the button
             return;
         }
 
@@ -80,11 +84,11 @@ const ScheduleAppointment = ({providerID}) => {
         for (let i = 0; i < serviceDuration; i++) {
             const checkHour = selectedHour + i;
             if (disabledHours.includes(checkHour)) {
-                console.log("Time conflict detected"); // For debugging
                 Modal.warning({
                     title: "Time Conflict",
                     content: "The selected time conflicts with blocked hours. Please choose another time.",
                 });
+                setIsSubmitting(false); // Enable the button
                 return;
             }
         }
@@ -117,6 +121,8 @@ const ScheduleAppointment = ({providerID}) => {
         } catch (error) {
             console.error("Error creating appointment:", error);
             Modal.error({title: "Error", content: "An error occurred while creating the appointment. Please try again later."});
+        } finally {
+            setIsSubmitting(false); // Enable the button
         }
     };
 
@@ -213,7 +219,7 @@ const ScheduleAppointment = ({providerID}) => {
             </div>
             <div>
                 {/* Button to create the appointment */}
-                <Button type="primary" onClick={handleCreateAppointment}>
+                <Button type="primary" onClick={handleCreateAppointment} disabled={isSubmitting}>
                     Create Appointment
                 </Button>
             </div>
