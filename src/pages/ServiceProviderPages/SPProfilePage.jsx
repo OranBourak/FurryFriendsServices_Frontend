@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from "react";
-import {Container, Row, Col, Image, Form, Alert, Button} from "react-bootstrap";
+import {Container, Row, Col, Image, Form, Alert, Button, Card} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/ProfilePage.css";
 import PhoneNumberEl from "../../components/ServiceProviderComponents/PhoneNumberEl.jsx";
 import ComboBoxDropdown from "../../components/ServiceProviderComponents/ComboBox.jsx";
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
 import {Navigate} from "react-router-dom";
-import {message} from "antd";
+import {message, Divider} from "antd";
+import ReviewCarousel from "../../components/client_components/ServiceProviderReviews.jsx";
 
 const ProfilePage = () => {
     const defaultImg = "https://cdn.pixabay.com/photo/2018/12/26/09/16/vet-3895477_960_720.jpg";
@@ -31,6 +32,7 @@ const ProfilePage = () => {
     const [validationErrorImage, setValidationErrorImage] = useState(false);
     const [validationErrorPhone, setValidationErrorPhone] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
+    const [averageRating, setAverageRating] = useState("No reviews yet!");
 
     const israelCities = [
         "Afula",
@@ -75,6 +77,7 @@ const ProfilePage = () => {
 
     const getData = async () => {
         if (loggedIn) {
+            // get provider information
             try {
                 const response = await axios.get(`/serviceProvider/get/${userData.id}`, {
                     headers: {
@@ -88,11 +91,13 @@ const ProfilePage = () => {
                 setPhonePrefix(provider.phone.substr(0, 3));
                 setCountry(provider.country);
                 setGender(provider.gender);
-                // TODO: FIX IMAGE
                 setImage(provider.image);
                 setBio(provider.bio);
                 setTypeOfService(provider.typeOfService);
                 setCity(provider.city);
+                if (provider.averageRating > 0) {
+                    setAverageRating(provider.averageRating);
+                }
             } catch (error) {
                 console.log(error);
                 message.error({
@@ -305,32 +310,43 @@ const ProfilePage = () => {
 
     return (
         <Container className="container mt-5">
-            <Row className="profile-header">
-                <Col className="profile-image" xs={6} md={4}>
-                    <Image className="profile-picture" src={image? image : defaultImg} rounded fluid style={{maxHeight: "300px", maxWidth: "300px"}}/>
+            <Row className="profile-header justify-content-start">
+                {/* Column for the text and image */}
+                <Col xs="auto" className="text-center">
+                    <Image
+                        className="profile-picture"
+                        src={image ? image : defaultImg}
+                        rounded
+                        fluid
+                        style={{maxHeight: "300px", maxWidth: "300px"}}
+                    />
                     {isEditingPicture && (
                         <Form>
                             <Form.Control
                                 type="input"
-                                label="Input an image url"
+                                label="Input an image URL"
                                 onChange={handleImageUpload}
-                                placeholder="Input an image url"
+                                placeholder="Input an image URL"
                                 isInvalid={validationErrorImage}
                                 isValid={!validationErrorImage}
                                 required
                             />
                             <Form.Control.Feedback type="invalid">
-                                Must be a valid image format
+                    Must be a valid image format
                             </Form.Control.Feedback>
                         </Form>
                     )}
+
                 </Col>
-                <Col className="profile-name text-center" xs={6} md={4}>
-                    <h1>{name}</h1>
-                    <h3>{typeOfService}</h3>
+                <Col xs="auto" className="text-center align-items-center">
+                    <p className="SP-Header">{name}</p>
+                    <p className="SP-Header2">{typeOfService}</p>
                 </Col>
             </Row>
-            <Row className="profile-section">
+
+
+            <Divider/>
+            <Row className="SP-profile-section">
                 <Col className="profile-subsection">
                     <h4 className="profile-subtitle">Name</h4>
                     {isEditing ? (
@@ -353,6 +369,7 @@ const ProfilePage = () => {
                         <p>{name}</p>
                     )}
                 </Col>
+                <Divider />
                 <Row className="profile-subsection">
                     <h4 className="profile-subtitle">Contact Details</h4>
                     {isEditing ? (
@@ -403,6 +420,7 @@ const ProfilePage = () => {
                         </p>
                     )}
                 </Row>
+                <Divider />
                 <Col className="profile-subsection">
                     <h4 className="profile-subtitle">Gender</h4>
                     {isEditing ? (
@@ -419,18 +437,21 @@ const ProfilePage = () => {
                         <p>{gender}</p>
                     )}
                 </Col>
+                <Divider/>
             </Row>
-            <Row className="profile-section">
-                <h4 className="profile-subtitle">Bio</h4>
-                {isEditing ? (
-                    <Form.Control
-                        as="textarea"
-                        value={bio}
-                        onChange={(e) => setBio(e.target.value)}
-                    />
-                ) : (
-                    <p>{bio}</p>
-                )}
+            <Row className="SP-profile-section mb-3">
+                <Card>
+                    <Card.Title className="profile-subtitle">Bio</Card.Title>
+                    {isEditing ? (
+                        <Form.Control
+                            as="textarea"
+                            value={bio}
+                            onChange={(e) => setBio(e.target.value)}
+                        />
+                    ) : (
+                        <Card.Text>{bio}</Card.Text>
+                    )}
+                </Card>
             </Row>
             <Row>
                 {(validationErrorName || validationErrorEmail || validationErrorImage || validationErrorPhone) && (
@@ -440,13 +461,22 @@ const ProfilePage = () => {
                 )}
                 {}
                 {!isEditing && !isEditingPicture ? (
-                    <><Button variant="primary" onClick={handleEdit}>
+                    <>
+                        <Button
+                            variant="primary"
+                            onClick={handleEdit}>
                         Edit Profile
-                    </Button><Button variant="secondary" onClick={handleEditPicture}>
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            onClick={handleEditPicture}>
                             Edit Profile Picture
-                    </Button></>
+                        </Button></>
                 ) : (
-                    <Button variant="primary" onClick={handleSave} disabled={isFormIncomplete || validationErrorEmail || validationErrorName || validationErrorPhone}>
+                    <Button
+                        variant="primary"
+                        onClick={handleSave}
+                        disabled={isFormIncomplete || validationErrorEmail || validationErrorName || validationErrorPhone}>
                         Save
                     </Button>
                 )}
@@ -457,9 +487,12 @@ const ProfilePage = () => {
                     Form submitted successfully!
                 </Alert>
             </Row>)}
-            <Row className="profile-section">
-                <p>Rating: No rating</p>
-                <h2>Reviews</h2>
+            <Row className="SP-profile-section mb-3 pb-3">
+                <h2>Rating: {averageRating}</h2>
+                <Divider />
+                <ReviewCarousel
+                    providerID={userData.id}
+                />
             </Row>
         </Container>
     );

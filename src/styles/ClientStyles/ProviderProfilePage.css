@@ -8,11 +8,18 @@
     height: 100vh;
 }
 
-h1 {
-    text-align: center;
+.SP-Header {
+    text-align: start;
+    text-decoration: underline;
     font-weight: bold;
-    margin-bottom: 20px;
-    font-size: 2.5em;
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.SP-Header2 {
+    text-align: start;
+    font-weight: normal;
+    font-size: 1.5rem;
     color: #333;
 }
 
@@ -66,4 +73,8 @@ h1 {
     height: auto; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: auto;
+}
+
+.SP-profile-section {
+    border-radius: 10px;
 }
