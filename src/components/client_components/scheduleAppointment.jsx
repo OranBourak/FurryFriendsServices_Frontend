@@ -1,4 +1,4 @@
-import {Calendar, TimePicker, Button, Select, Modal, notification} from "antd";
+import {Calendar, TimePicker, Button, Select, Modal, notification, Popconfirm} from "antd";
 import React, {useState, useEffect} from "react";
 import "../../styles/ClientStyles/scheduleAppointment.css";
 import PropTypes from "prop-types";
@@ -11,7 +11,7 @@ const {Option} = Select;
 
 
 // Main component for scheduling an appointment
-const ScheduleAppointment = ({providerID}) => {
+const ScheduleAppointment = ({providerID, handleSteps, handleStatus}) => {
     // State variables to hold user selections
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
@@ -42,6 +42,16 @@ const ScheduleAppointment = ({providerID}) => {
         fetchData();
     }, [providerID]);
 
+    useEffect(() => {
+        if (selectedDate && selectedTime && selectedService) {
+            handleSteps(2);
+            handleStatus("process");
+        } else {
+            handleSteps(1);
+            handleStatus("process");
+        }
+    }, [selectedDate, selectedTime, selectedService]);
+
 
     // Handler for when a date is selected from the calendar
     const handleDateChange = (date) => {
@@ -71,6 +81,8 @@ const ScheduleAppointment = ({providerID}) => {
                 content: "Please select a date, time, and service type before creating an appointment.",
             });
             setIsSubmitting(false); // Enable the button
+            handleStatus("error"); // Set the status to error
+            handleSteps(1); // Go back to the second step
             return;
         }
 
@@ -89,6 +101,8 @@ const ScheduleAppointment = ({providerID}) => {
                     content: "The selected time conflicts with blocked hours. Please choose another time.",
                 });
                 setIsSubmitting(false); // Enable the button
+                handleStatus("error");
+                handleSteps(1);
                 return;
             }
         }
@@ -113,8 +127,11 @@ const ScheduleAppointment = ({providerID}) => {
             const response = await axios.post("/appointment/createAppointment", appointmentData);
 
             if (response.status === 201) {
+                handleStatus("finish");
                 notification.success({message: "Success", description: "Appointment successfully created!"});
-                navigate("/dashboard");
+                setTimeout(() => {
+                    navigate("/dashboard");
+                }, 1000); // 1 seconds delay
             } else {
                 Modal.error({title: "Error", content: "Failed to create the appointment."});
             }
@@ -219,9 +236,11 @@ const ScheduleAppointment = ({providerID}) => {
             </div>
             <div>
                 {/* Button to create the appointment */}
-                <Button type="primary" onClick={handleCreateAppointment} disabled={isSubmitting}>
+                <Popconfirm onConfirm={handleCreateAppointment} title="Are you sure you want to schedule this appointment?" okText="Yes" cancelText="No">
+                    <Button type="primary" disabled={isSubmitting}>
                     Create Appointment
-                </Button>
+                    </Button>
+                </Popconfirm>
             </div>
         </div>
     );
@@ -232,4 +251,6 @@ export default ScheduleAppointment;
 
 ScheduleAppointment.propTypes = {
     providerID: PropTypes.string.isRequired,
+    handleSteps: PropTypes.func.isRequired,
+    handleStatus: PropTypes.func.isRequired,
 };

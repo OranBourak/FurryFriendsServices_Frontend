@@ -4,7 +4,7 @@ import {Typography} from "antd";
 import SearchForm from "../../components/client_components/SearchForServiceForm.jsx";
 import ServiceProviderResults from "../../components/client_components/SearchServiceResults.jsx";
 import "../../styles/ClientStyles/SearchServicePage.css";
-import {message, Skeleton} from "antd";
+import {message, Skeleton, Steps} from "antd";
 
 
 const {Text} = Typography;
@@ -18,6 +18,7 @@ function SearchServicePage() {
     // State to hold the service provider data
     const [serviceData, serviceDataSet] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const description = "Please select a service provider";
 
     /**
      * handleSearch is an asynchronous function that fetches service provider data based on search parameters.
@@ -56,6 +57,22 @@ function SearchServicePage() {
     return (
         // Main container for the search page
         <div className="search-page-container">
+            <Steps
+                current={0}
+                status="process"
+                items={[
+                    {
+                        title: "Selecting a service provider",
+                        description,
+                    },
+                    {
+                        title: "Select Appointment type and time",
+                    },
+                    {
+                        title: "Appointment has been scheduled",
+                    },
+                ]}
+            />
             {/* Container for the search form */}
             <div className="search-form-container">
                 {/* SearchForm component to handle the search input */}

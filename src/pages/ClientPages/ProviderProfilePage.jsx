@@ -4,22 +4,40 @@ import ServiceProviderInfo from "../../components/client_components/ServiceProvi
 import ReviewCarousel from "../../components/client_components/ServiceProviderReviews.jsx";
 import ScheduleAppointment from "../../components/client_components/scheduleAppointment.jsx";
 import "../../styles/ClientStyles/ProviderProfilePage.css";
-import {Row, Col, Skeleton} from "antd";
+import {Row, Col, Skeleton, Steps} from "antd";
 
 const ProviderProfilePage = () => {
     const {id} = useParams();
     const [loading, setLoading] = useState(true);
+    const [step, setStep] = useState(0);
+    const [status, setStatus] = useState("process");
 
     useEffect(() => {
         // Simulate an API call to fetch data
         setTimeout(() => {
             setLoading(false);
-        }, 1000); // 1 seconds delay
+        }, 500); // 0.5 seconds delay
+        setStep(1);
     }, []);
 
     return (
+
         <div className="mainPage">
-            <h1 className="mainPageTitle">Profile</h1>
+            <Steps
+                current={step}
+                status= {status}
+                items={[
+                    {
+                        title: "Selecting a service provider",
+                    },
+                    {
+                        title: "Select Appointment type and time",
+                    },
+                    {
+                        title: "Appointment has been scheduled",
+                    },
+                ]}
+            />
             <Row gutter={16} className="Row">
                 {/* First Column */}
                 <Col span={8} className="Col">
@@ -45,7 +63,7 @@ const ProviderProfilePage = () => {
                         {loading ? (
                             <Skeleton active />
                         ) : (
-                            <ScheduleAppointment providerID={id} />
+                            <ScheduleAppointment providerID={id} handleSteps={setStep} handleStatus={setStatus} />
                         )}
                     </div>
                 </Col>

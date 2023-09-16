@@ -1,11 +1,11 @@
-/* General styling for the Profile page */
+    /* General styling for the Profile page */
 .mainPage {
     font-family: Arial, sans-serif;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 2vh;
     background-color: #96B6C5;
-    height: 100vh;
+    height:auto;
 }
 
 .SP-Header {
@@ -42,6 +42,7 @@
 .Col {
     padding: 10px;
     box-sizing: border-box;
+    height: 80%;
 }
 
 /* Service Provider Info */
@@ -51,7 +52,8 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;  /* Added margin-bottom */
-    max-width: 700px;
+    width: 90%;
+    height: 60%;
     margin: auto;
 }
 
@@ -62,7 +64,8 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 20px auto 20px auto;  /* Adjusted margin */
-    max-width: 700px;
+    width: 90%;
+    height: 40%;
 }
 
 /* Schedule Meeting */
@@ -70,7 +73,7 @@
     background-color: #f9f9f9;
     padding: 20px;
     border-radius: 8px;
-    height: auto; 
+    height: 100%; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: auto;
 }
