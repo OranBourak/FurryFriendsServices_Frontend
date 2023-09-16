@@ -362,11 +362,11 @@ const Times = (props) => {
 
     return (
         <div className="flex-col">
-            <div className="container d-flex justify-content-center mt-3">
+            <div className="container d-flex justify-content-center mt-3 mb-3">
                 <ErrorToast show={errorFlag} errorText={errorText} setShow={setErrorFlag}/>
             </div>
-            <div className="d-flex align-items-center justify-content-center">
-                <Button variant="dark mt-3 mb-3" disabled={props.isDayBlocked || isInBlockOperation} onClick={handleBlockDay}>Block Day</Button>
+            <div className="d-flex align-items-center justify-content-center mb-3">
+                <Button variant="dark" disabled={props.isDayBlocked || isInBlockOperation} onClick={handleBlockDay}>Block Day</Button>
             </div>
             <div className="time-buttons">
                 {/* The hours list */}
@@ -386,7 +386,7 @@ const Times = (props) => {
                     );
                 })}
             </div>
-            <div className="container d-flex justify-content-center mt-3">
+            <div className="d-flex align-items-center justify-content-center mt-3">
                 <Button variant="dark" disabled={props.isDayBlocked || selectedTimes.length===0 || isInBlockOperation} onClick={handleBlockHours}>Block Hours</Button>
             </div>
             <div className="time-display">
