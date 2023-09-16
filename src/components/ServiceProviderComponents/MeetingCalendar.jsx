@@ -142,7 +142,7 @@ const MeetingCalendar = () => {
 
     return (
         <div className="calendar-container">
-            <h1>React Calendar</h1>
+            <h1>Calendar</h1>
             <MyCalendar value={date} defaultView="month" onClickDay={onClickDate} tileClassName={getTitleClassName}/>
             <Time showTime={showTime} date={date} isDayBlocked={isDayBlocked} blockedTimeSlotOfDate={blockedTimeSlotOfDate} scheduledAppointments={currDateAppointments} setIsAfterBlockOperation={() => setIsAfterBlockOperation(!isAfterBlockOperation)} />
         </div>
