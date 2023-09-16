@@ -1,19 +1,30 @@
 /* ClientProfilePage.css */
 
+
+
+.client-profile-page{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    width: auto;
+    background-color: #96B6C5;
+}
+
 /* Main container for the profile page */
 .profile-container {
-    max-width: 600px;             /* Set a maximum width for the container */
-    margin: 50px auto;           /* Center the container on the page with 50px margin on top and bottom */
+    max-width: 50vh; 
+    margin-left: 70vh;  
+    margin-top: 20vh;          /* Set a maximum width for the container */  
     padding: 20px;               /* Add padding inside the container */
     border-radius: 8px;          /* Rounded corners for the container */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted effect */
     background-color: #ffffff;   /* White background color for the container */
     
 }
-.profile-page{
-    background-color:#96B6C5;
-    height: 100vh;
-}
+
 
 /* Styling for the title or header inside the container */
 .profile-container h2 {
