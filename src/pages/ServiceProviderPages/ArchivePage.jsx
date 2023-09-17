@@ -4,7 +4,7 @@ import "../../styles/ServiceProviderStyles/archive.css";
 import {isBefore, format} from "date-fns";
 import axios from "axios";
 import {useAuth} from "../../context/AuthContext";
-import {message} from "antd";
+import {message, Skeleton} from "antd";
 import {Navigate} from "react-router-dom";
 
 
@@ -167,7 +167,7 @@ const Archive = () => {
                 </>
             ) : (
             // Conditional rendering when appointments are empty
-                <h3 className="table-mt-3 mt-3">Loading appointments...</h3>
+                <Skeleton active />
             )}
         </div>
     );

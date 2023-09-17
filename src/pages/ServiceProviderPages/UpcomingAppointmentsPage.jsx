@@ -5,7 +5,7 @@ import {useAuth} from "../../context/AuthContext.jsx";
 import axios from "axios";
 import {Navigate} from "react-router-dom";
 import {isAfter, format} from "date-fns";
-import {message} from "antd";
+import {message, Skeleton} from "antd";
 
 
 const UpcomingAppointments = () => {
@@ -57,7 +57,7 @@ const UpcomingAppointments = () => {
     return (
         <>
             {isLoading ? (
-                <h1>Loading appointments...</h1>
+                <Skeleton active />
             ) : (
                 appointments.length === 0 ? (
                     <h1>No appointments scheduled yet!</h1>

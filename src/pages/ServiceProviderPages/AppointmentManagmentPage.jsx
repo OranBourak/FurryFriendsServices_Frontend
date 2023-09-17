@@ -6,7 +6,7 @@ import {isSameWeek, isSameMonth, isSameDay, format} from "date-fns";
 import "../../styles/ServiceProviderStyles/appManagment.css";
 import {useAuth} from "../../context/AuthContext.jsx";
 import axios from "axios";
-import {message} from "antd";
+import {message, Skeleton} from "antd";
 import {Navigate} from "react-router-dom";
 
 
@@ -163,7 +163,7 @@ const AppointmentsCalendar = () => {
             </ButtonGroup>
             <>
                 {isLoading ? (
-                    <h1>Loading appointments...</h1>
+                    <Skeleton active />
                 ) : (
                     filteredAppointments.length === 0 ? (
                         <h1>No appointments scheduled yet!</h1>
