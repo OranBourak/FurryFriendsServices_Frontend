@@ -5,7 +5,7 @@ import {useAuth} from "../../context/AuthContext";
 import {message} from "antd";
 import AppointmentTypeRevenueChart from "../../components/ServiceProviderComponents/AppointmentTypeRevenueChart.jsx";
 import "../../styles/ServiceProviderStyles/statisticsPage.css";
-import {Row, Col} from "antd";
+import {Row, Col, Skeleton} from "antd";
 import {useNavigate} from "react-router-dom";
 
 /**
@@ -26,6 +26,7 @@ function StatisticsPage() {
     const [revenueChartData, setRevenueChartData] = useState();
     const [isAppointments, setIsAppointments] = useState(false);
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
 
     const getData = async () => {
         if (loggedIn) {
@@ -57,9 +58,11 @@ function StatisticsPage() {
                 // Create a function for getting the index of an appointment type in the appointmentTypes objects array
                 // For each appointment, find the index of its appointment type and add to this index her price, don't forget not to include canceled apps
                 analizeData(appointments, appointmentTypes);
+                setIsLoading(false);
             } catch (error) {
                 console.log(error);
                 setIsAppointments(false);
+                setIsLoading(false);
             }
         }
     };
@@ -170,7 +173,8 @@ function StatisticsPage() {
 
     return (
         <div className="statistics-bg">
-            {isAppointments? (
+            {isLoading ? (<Skeleton active />
+            ) : (isAppointments ? (
                 <>
                     <div className="center-container">
                         <h1 className="statistics-page-title-text">Statistics</h1>
@@ -236,9 +240,8 @@ function StatisticsPage() {
                 </>
             ) : (
                 <h1>No appointments in the past six months!</h1>
-            )}
+            ))}
         </div>
-
     );
 }
 
