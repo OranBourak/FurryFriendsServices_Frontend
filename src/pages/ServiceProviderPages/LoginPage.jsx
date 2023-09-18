@@ -63,7 +63,7 @@ function LoginPage({onLogin}) {
      * @param {string} name - The user's name.
      * @param {string} token - The user's token
      * @param {string} email - The user's email
-     * @param {sting} id - The user's ID
+     * @param {string} id - The user's ID
      */
     const handleLogIn = (name, token, email, id) => {
         login(name, token, email, id, userType);
