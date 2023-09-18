@@ -133,7 +133,7 @@ function Appointments() {
                     </Form.Control>
                     <h2 style={{color: "white"}}>{selectedType} Appointments </h2>
                     {appointments !== null && appointments.filter((appointment) => appointment.status === selectedType).map((appointment) => (
-                        <Card key={appointment._id} className="mb-3">
+                        <Card key={appointment._id} className="appointment-card-mb-3">
                             <Card.Body>
                                 <div className="div-container">
                                     <Row>
