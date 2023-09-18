@@ -17,7 +17,7 @@ const desc = ["terrible", "bad", "normal", "good", "wonderful"];
  * @param {handleSearch} - using while the search button is clicked for update the search results
  * @return {React.Component} - form component
  */
-function SearchForm({handleSearch}) {
+function SearchForm({handleSearch, isLoading}) {
     // Define options for location and service type dropdowns
     const locationsOptions = ["Afula", "Akko",
         "Arad", "Ashdod", "Ashqelon", "Bat Yam", "Beersheba", "Bet Sheʾan", "Bet Sheʿarim", "Bnei Brak", "Caesarea", "Dimona", "Dor", "Elat", "En Gedi", "Givʿatayim", "H̱adera", "Haifa", "Herzliyya", "H̱olon", "Jerusalem", "Karmiʾel", "Kefar Sava", "Lod", "Meron", "Nahariyya", "Nazareth", "Netanya", "Petaẖ Tiqwa", "Qiryat Shemona", "Ramat Gan", "Ramla", "Reẖovot", "Rishon LeẔiyyon", "Sedom", "Tel Aviv–Yafo", "Tiberias", "Zefat"];
@@ -145,7 +145,7 @@ function SearchForm({handleSearch}) {
                 </Form.Group>
             </Row>
             {/* Search Button */}
-            <Button disabled={!isFormValid} type="submit">
+            <Button disabled={!isFormValid || isLoading} type="submit">
               Search
             </Button>
         </Form>
@@ -155,6 +155,7 @@ function SearchForm({handleSearch}) {
 
 SearchForm.propTypes = {
     handleSearch: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
 };
 
 // Export the component

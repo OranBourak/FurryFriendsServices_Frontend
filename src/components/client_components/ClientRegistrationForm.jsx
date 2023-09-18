@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import "../../styles/ClientStyles/clientRegistrationForm.css";
-import {message} from "antd";
+import {message, Modal} from "antd";
 import axios from "axios";
 
 
@@ -118,10 +118,14 @@ const ClientRegistrationForm = () => {
                 }, 3000);
             }
         } catch (e) {
-            console.log(e);
-            message.error({
-                content: "Registration Failed!",
-                style: {fontSize: "24px"},
+            const errorMessage = e.response && e.response.data && e.response.data.error ? e.response.data.error : "Unknown error";
+            Modal.error({
+                title: "Registration Failed!",
+                content: (
+                    <div>
+                        <p>{JSON.stringify(errorMessage)}</p>
+                    </div>
+                ),
             });
         }
     };

@@ -109,56 +109,62 @@ function ClientProfilePage() {
     };
 
     return (
-        <div className="profile-container">
-            <Form layout="vertical">
-                <Form.Item label="Name"
-                    help={(!nameValidationFlag && nameValidationFlag != null) ? "Name can only contain letters" : ""}
-                    validateStatus={(!nameValidationFlag && nameValidationFlag != null) ? "error" : "success"}>
-                    {isNameEditable ? (
-                        <div>
-                            <Input name="name" value={tempName} onChange={handleChange}/>
-                            <Button type="primary" onClick={handleSave} disabled={!nameValidationFlag}>Save </Button>
-                        </div>
-                    ) : (
-                        <div className="non-editable-field">
-                            <span>{client? client.name:""}</span>
-                            <Button className="non-editable-field button" type="link" onClick={() => {
-                                setNameEditable(true);
-                            }}>Edit</Button>
-                        </div>
-                    )}
-                </Form.Item>
+        <div className="client-profile-page">
+            <div className="profile-container">
+                <Form layout="vertical">
+                    <Form.Item label="Name"
+                        help={(!nameValidationFlag && nameValidationFlag != null) ? "Name can only contain letters" : ""}
+                        validateStatus={(!nameValidationFlag && nameValidationFlag != null) ? "error" : "success"}>
+                        {isNameEditable ? (
+                            <div>
+                                <Input name="name" value={tempName} onChange={handleChange}/>
+                                <Button type="primary" onClick={handleSave} disabled={!nameValidationFlag}>Save </Button>
+                            </div>
+                        ) : (
+                            <div className="non-editable-field">
+                                <span>{client? client.name:""}</span>
+                                <Button className="non-editable-field button" type="link" onClick={() => {
+                                    setNameEditable(true);
+                                }}>Edit</Button>
+                            </div>
+                        )}
+                    </Form.Item>
 
-                <Form.Item label="Phone Number"
-                    help={(!phoneValidationFlag && phoneValidationFlag != null) ? "Phone cannot be set." : ""}
-                    validateStatus={(!phoneValidationFlag && phoneValidationFlag != null) ? "error" : "success"}>
-                    {isPhoneEditable ? (
-                        <div className="editable-field">
-                            <ClientDropDown id="phone-prefix" dropDownName="phonePrefix" placeholder={tempPhone.prefix} attributes={phonePrefix} handleSelectedValue={handleChange} >
+                    <div style={{height: "2px", margin: "1vh", backgroundColor: "black"}}></div>
 
-                            </ClientDropDown>
-                            <Input
-                                name="phoneSuffix"
-                                value={tempPhone.suffix}
-                                onChange={handleChange}
-                                autoFocus
-                            />
-                            <Button type="primary" onClick={handleSave} disabled={!phoneValidationFlag}>Save</Button>
-                        </div>
-                    ) : (
-                        <div className="non-editable-field">
-                            <span>{`${client? client.phone:""}`}</span>
-                            <Button className="non-editable-field button" type="link" onClick={() => {
-                                setPhoneEditable(true);
-                            }}>Edit</Button>
-                        </div>
-                    )}
-                </Form.Item>
+                    <Form.Item label="Phone Number"
+                        help={(!phoneValidationFlag && phoneValidationFlag != null) ? "Phone cannot be set." : ""}
+                        validateStatus={(!phoneValidationFlag && phoneValidationFlag != null) ? "error" : "success"}>
+                        {isPhoneEditable ? (
+                            <div className="editable-field">
+                                <ClientDropDown id="phone-prefix" dropDownName="phonePrefix" placeholder={tempPhone.prefix} attributes={phonePrefix} handleSelectedValue={handleChange} >
 
-                <Form.Item label="Email">
-                    <Text label="Email">{userData.email}</Text>
-                </Form.Item>
-            </Form>
+                                </ClientDropDown>
+                                <Input
+                                    name="phoneSuffix"
+                                    value={tempPhone.suffix}
+                                    onChange={handleChange}
+                                    autoFocus
+                                />
+                                <Button type="primary" onClick={handleSave} disabled={!phoneValidationFlag}>Save</Button>
+                            </div>
+                        ) : (
+                            <div className="non-editable-field">
+                                <span>{`${client? client.phone:""}`}</span>
+                                <Button className="non-editable-field button" type="link" onClick={() => {
+                                    setPhoneEditable(true);
+                                }}>Edit</Button>
+                            </div>
+                        )}
+                    </Form.Item>
+
+                    <div style={{height: "2.5px", margin: "1vh", backgroundColor: "black"}}></div>
+
+                    <Form.Item label="Email">
+                        <Text label="Email">{userData.email}</Text>
+                    </Form.Item>
+                </Form>
+            </div>
         </div>
     );
 }

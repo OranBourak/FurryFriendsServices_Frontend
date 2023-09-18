@@ -9,14 +9,13 @@ h1 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: auto;
-    max-width: 800px;
+    max-width: 90%;
+    max-height: auto;
 }
 
 .ReviewCarousel h2 {
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 2em;
+    font-size: 20px;
     color: #333333;
 }
 
@@ -29,7 +28,7 @@ h1 {
 }
 
 .ReviewCarousel .ant-rate {
-    margin-bottom: 10px;
+    margin-bottom: 1vh;
 }
 
 .ReviewCarousel p {
@@ -43,8 +42,8 @@ h1 {
     margin: 5px;
     padding: 10px 20px;
     border-radius: 4px;
-    width: 120px;  
-    height: 40px;  
+    width: 10vh;  
+    height: 3.3vh;  
 }
 
 .ReviewCarousel .ant-btn:hover {

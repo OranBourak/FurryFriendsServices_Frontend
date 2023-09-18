@@ -3,8 +3,8 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #F1F0E8;
-    max-height: 100vh;
-    height: 520px;
+    max-height: 35%;
+    height: 35%;
     border: 2px solid black;
 }
 
@@ -12,7 +12,7 @@
 .list-container {
     padding: 0;
     margin: 0;
-    max-height: 410px;  /* Adjust this value based on your layout */
+    max-height: 30vh;  /* Adjust this value based on your layout */
     overflow-y: auto;
     
 }
