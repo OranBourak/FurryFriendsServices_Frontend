@@ -5,7 +5,8 @@ import {useAuth} from "../../context/AuthContext";
 import {message} from "antd";
 import AppointmentTypeRevenueChart from "../../components/ServiceProviderComponents/AppointmentTypeRevenueChart.jsx";
 import "../../styles/ServiceProviderStyles/statisticsPage.css";
-import {Row, Col} from "antd";
+import {Row, Col, Skeleton} from "antd";
+import {useNavigate} from "react-router-dom";
 
 /**
  * Statistics page component.
@@ -24,6 +25,8 @@ function StatisticsPage() {
     // Revenue per month
     const [revenueChartData, setRevenueChartData] = useState();
     const [isAppointments, setIsAppointments] = useState(false);
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
 
     const getData = async () => {
         if (loggedIn) {
@@ -55,9 +58,11 @@ function StatisticsPage() {
                 // Create a function for getting the index of an appointment type in the appointmentTypes objects array
                 // For each appointment, find the index of its appointment type and add to this index her price, don't forget not to include canceled apps
                 analizeData(appointments, appointmentTypes);
+                setIsLoading(false);
             } catch (error) {
                 console.log(error);
                 setIsAppointments(false);
+                setIsLoading(false);
             }
         }
     };
@@ -136,7 +141,7 @@ function StatisticsPage() {
         const currentMonth = currentDate.getMonth();
         const result = [];
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < numOfMonths; i++) {
             const index = (currentMonth - i + 12) % 12; // Handle wrapping around from January to December
             result.unshift(months[index]);
         }
@@ -150,15 +155,31 @@ function StatisticsPage() {
     };
 
     useEffect( () => {
+        // Redirect if not logged in
+        if (!loggedIn) {
+            // Use a navigation method here to redirect, for example:
+            navigate("/");
+            return; // Return early to prevent the rest of the code from executing
+        }
+
+        // Redirect if user type is not serviceProvider
+        if (userData.userType !== "serviceProvider") {
+            // Use a navigation method here to redirect, for example:
+            navigate("/error");
+            return; // Return early to prevent the rest of the code from executing
+        }
         getData();
     }, []);
 
     return (
-        <>
-            {isAppointments? (
+        <div className="statistics-bg">
+            {isLoading ? (<Skeleton active />
+            ) : (isAppointments ? (
                 <>
-                    <h1>Statistics</h1>
-                    <div className="statistic-page-bgcolor d-flex justify-content-center">
+                    <div className="center-container">
+                        <h1 className="statistics-page-title-text">Statistics</h1>
+                    </div>
+                    <div className="statistic-page-container d-flex justify-content-center">
                         <Col>
                             <Row>
                                 <Col className="chart-gap">
@@ -167,35 +188,38 @@ function StatisticsPage() {
                                         id="appointment-type-revenue-chart"
                                         series={[
                                             {
-                                                name: "Appointment Type",
+                                                name: "Revenue",
                                                 data: appTypeRevenueChartData,
                                             },
                                         ]}
                                         type="bar"
-                                        title="Revenue per appointment type in the last half of the year"
+                                        chartTitle="Revenue per Appointment Type"
                                     />
                                 </Col>
+                            </Row>
+                            <div className="my-4"></div> {/* Add space between the top tables and the bottom chart */}
+                            <Row>
                                 <Col className="chart-gap">
                                     <AppointmentTypeRevenueChart
                                         categories={canceledVsCompletedChartCategories}
                                         id="completed-vs-canceled-chart"
                                         series={[
                                             {
-                                                name: "completed",
+                                                name: "completed appointments",
                                                 data: completedData,
                                             },
                                             {
-                                                name: "canceled",
+                                                name: "canceled appointments",
                                                 data: canceledData,
                                             },
                                         ]}
                                         type="bar"
-                                        title="Completed vs. canceled appointments in the last half of the year"
+                                        chartTitle="Completed vs. Canceled Appointments"
                                     />
                                 </Col>
                             </Row>
                             <div className="my-4"></div> {/* Add space between the top tables and the bottom chart */}
-                            <Row className="d-flex justify-content-center">
+                            <Row className="chart-gap">
                                 <Col>
                                     <AppointmentTypeRevenueChart
                                         categories={canceledVsCompletedChartCategories}
@@ -207,7 +231,7 @@ function StatisticsPage() {
                                             },
                                         ]}
                                         type="line"
-                                        title="Revenue per Month"
+                                        chartTitle="Total Revenue per Month"
                                     />
                                 </Col>
                             </Row>
@@ -216,9 +240,8 @@ function StatisticsPage() {
                 </>
             ) : (
                 <h1>No appointments in the past six months!</h1>
-            )}
-        </>
-
+            ))}
+        </div>
     );
 }
 

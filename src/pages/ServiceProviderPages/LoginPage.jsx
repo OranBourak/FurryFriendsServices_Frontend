@@ -7,7 +7,7 @@ import "../../styles/ServiceProviderStyles/LoginPage.css";
 import {useNavigate} from "react-router-dom";
 import {ButtonGroup, ToggleButton} from "react-bootstrap";
 import {useAuth} from "../../context/AuthContext.jsx";
-import {message} from "antd";
+import {message, Row} from "antd";
 
 
 /**
@@ -42,7 +42,6 @@ function LoginPage({onLogin}) {
                 email: email,
                 password: password,
             });
-            // TODO: handle the token
             const {name, token, id} = response.data;
             setEmail(response.data.email);
             handleLogIn(name, token, email, id);
@@ -50,7 +49,7 @@ function LoginPage({onLogin}) {
             console.log("error: " + error);
             message.error({
 
-                content: `error: ${error}`,
+                content: `error: ${error.response.data.error}`,
 
                 style: {yIndex: 1000, fontSize: "24px"},
 
@@ -99,7 +98,7 @@ function LoginPage({onLogin}) {
 
     return (
         <div className="login-page-container">
-            <div className="container">
+            <div className="login-container">
                 <Form className="text-light p-4" onSubmit={handleSubmit} style={{
                     backgroundColor: "rgba(0, 0, 0, 0.5)", // Background color with transparency
                     padding: "20px",
@@ -108,7 +107,7 @@ function LoginPage({onLogin}) {
                 }}>
                     {error && <div className="text-danger mb-3">{error}</div>}
                     {/* user type */}
-                    <Form.Group className="mb-3" controlId="formBasicUserType">
+                    <Form.Group className="fields-group" controlId="formBasicUserType">
                         <Form.Label>User Type</Form.Label>
                         <div>
                             <ButtonGroup className="mb-2">
@@ -130,22 +129,24 @@ function LoginPage({onLogin}) {
                         </div>
                     </Form.Group>
                     {/* email input */}
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="fields-group" controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control name="email" type="email" placeholder="Enter email" onChange={handleEmail} required value={email} />
                         <Form.Text className="text-danger">We`ll never share your email with anyone else.</Form.Text>
                     </Form.Group>
                     {/* password input */}
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Group className="fields-group" controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
                         <Form.Control name="password" type="password" placeholder="Password" onChange={handlePassword} required value={password} />
                     </Form.Group>
                     {/* login button */}
-                    <Button variant="primary" type="submit" disabled={isFormIncomplete}>
+                    <Row className="fields-group-buttons">
+                        <Button variant="primary" type="submit" disabled={isFormIncomplete}>
                         Login
-                    </Button>
-                    {" "}
-                    <Button variant="secondary" onClick={loadPassRecoveryPage}>Forgot Password?</Button>
+                        </Button>
+                        {" "}
+                        <Button style={{marginLeft: "3%"}} variant="secondary" onClick={loadPassRecoveryPage}>Forgot Password?</Button>
+                    </Row>
                 </Form>
             </div>
         </div>

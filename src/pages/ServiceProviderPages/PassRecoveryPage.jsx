@@ -61,7 +61,7 @@ function PassRecoveryPage() {
             console.log("error: " + error);
             message.error({
 
-                content: `error: ${error}`,
+                content: `error: ${error.response.data.error}`,
 
                 style: {yIndex: 1000, fontSize: "24px"},
 
@@ -116,7 +116,7 @@ function PassRecoveryPage() {
             console.log(error);
             message.error({
 
-                content: `error: ${error}`,
+                content: `error: ${error.response.data.error}`,
 
                 style: {yIndex: 1000, fontSize: "24px"},
 
@@ -125,10 +125,22 @@ function PassRecoveryPage() {
         };
 
         if (successfulChange) {
-            window.alert("Password reset successfully");
+            message.success({
+
+                content: "Passwords reset successfully",
+
+                style: {fontSize: "24px"},
+
+            }, 2);
             navigate("/login");
         } else {
-            window.alert("Password reset failed");
+            message.error({
+
+                content: "Passwords reset failed",
+
+                style: {fontSize: "24px"},
+
+            }, 2);
         }
     };
 
@@ -176,7 +188,7 @@ function PassRecoveryPage() {
     ];
     return (
         <div className="page-background">
-            <h1 className="blue mb-3">Passwrod Recovery</h1>
+            <h1 className="blue mb-3">Password Recovery</h1>
             <div className="password-recovery-form">
                 <Form onSubmit={handleEmailSubmit} id="emailForm">
                     {/* user type */}

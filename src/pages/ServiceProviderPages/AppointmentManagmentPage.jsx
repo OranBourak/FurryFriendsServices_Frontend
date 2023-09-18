@@ -6,7 +6,8 @@ import {isSameWeek, isSameMonth, isSameDay, format} from "date-fns";
 import "../../styles/ServiceProviderStyles/appManagment.css";
 import {useAuth} from "../../context/AuthContext.jsx";
 import axios from "axios";
-import {message} from "antd";
+import {message, Skeleton} from "antd";
+import {Navigate} from "react-router-dom";
 
 
 const AppointmentsCalendar = () => {
@@ -19,22 +20,38 @@ const AppointmentsCalendar = () => {
 
 
     useEffect(() => {
+        // Redirect if not logged in
+        if (!loggedIn) {
+            return <Navigate to="/" />;
+        }
+
+        // Redirect if user type is not serviceProvider
+        if (userData && userData.userType !== "serviceProvider") {
+            return <Navigate to="/error" />;
+        }
+    }, [loggedIn, userData]);
+
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const response = await axios.get(`/serviceProvider/getAppointments/${userData.id}`, {
-                    headers: {
-                        Authorization: `Bearer ${userData.token}`,
-                    },
-                });
-                const apps = response.data.appointments;
-                setAppointments(apps);
-                setIsLoading(false);
+
+                // Check if userData is available before accessing its properties
+                if (userData) {
+                    const response = await axios.get(`/serviceProvider/getAppointments/${userData.id}`, {
+                        headers: {
+                            Authorization: `Bearer ${userData.token}`,
+                        },
+                    });
+                    const apps = response.data.appointments;
+                    setAppointments(apps);
+                    setIsLoading(false);
+                }
             } catch (error) {
                 console.error(error);
                 message.error({
 
-                    content: `${error}`,
+                    content: `${error.response.data.error}`,
 
                     style: {yIndex: 1000, fontSize: "24px"},
 
@@ -45,7 +62,7 @@ const AppointmentsCalendar = () => {
         if (loggedIn) {
             fetchData();
         }
-    }, [loggedIn, userData.id, userData.token]);
+    }, [loggedIn, userData]);
 
     // Use another useEffect to set filteredAppointments when appointments change
     useEffect(() => {
@@ -146,7 +163,7 @@ const AppointmentsCalendar = () => {
             </ButtonGroup>
             <>
                 {isLoading ? (
-                    <h1>Loading appointments...</h1>
+                    <Skeleton active />
                 ) : (
                     filteredAppointments.length === 0 ? (
                         <h1>No appointments scheduled yet!</h1>

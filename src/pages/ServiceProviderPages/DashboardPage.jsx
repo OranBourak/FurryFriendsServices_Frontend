@@ -2,11 +2,18 @@ import React from "react";
 import {Button, Container, Row, Col} from "react-bootstrap";
 import {RiUserSettingsLine, RiArchiveDrawerLine, RiCalendarLine, RiCalendarEventLine, RiFileListLine, RiBarChartHorizontalLine, RiCalendarCheckLine} from "react-icons/ri";
 import "../../styles/ServiceProviderStyles/dashboard.css";
-import {useNavigate} from "react-router-dom";
-
+import {useNavigate, Navigate} from "react-router-dom";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const {loggedIn, userData} = useAuth();
+
+    if (!loggedIn) {
+        return <Navigate to="/" />;
+    } else if (userData.userType !== "serviceProvider") {
+        return <Navigate to="/error"/>;
+    }
 
     return (
         <Container id="bg-gradient" className="db-container mt-4 p-5 border rounded ">

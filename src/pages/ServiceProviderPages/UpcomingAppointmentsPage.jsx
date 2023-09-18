@@ -5,13 +5,19 @@ import {useAuth} from "../../context/AuthContext.jsx";
 import axios from "axios";
 import {Navigate} from "react-router-dom";
 import {isAfter, format} from "date-fns";
-import {message} from "antd";
+import {message, Skeleton} from "antd";
 
 
 const UpcomingAppointments = () => {
-    const {loggedIn, userData} = useAuth();
     const [appointments, setAppointments] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const {loggedIn, userData} = useAuth();
+
+    if (!loggedIn) {
+        return <Navigate to="/" />;
+    } else if (userData.userType !== "serviceProvider") {
+        return <Navigate to="/error"/>;
+    }
 
     const getAppointments = async () => {
         if (loggedIn) {
@@ -35,7 +41,7 @@ const UpcomingAppointments = () => {
                 console.error(error);
                 message.error({
 
-                    content: `Error deleting appointment: ${error}`,
+                    content: `Error deleting appointment: ${error.response.data.error}`,
 
                     style: {yIndex: 1000, fontSize: "24px"},
 
@@ -48,17 +54,10 @@ const UpcomingAppointments = () => {
     }, []); // This effect runs only once on component mount
 
 
-    if (!loggedIn) {
-        // Redirect to the login page or another protected route
-        return <Navigate to="/login" />;
-    } else if (userData.userType !== "serviceProvider") {
-        return <Navigate to="/error"/>;
-    }
-
     return (
         <>
             {isLoading ? (
-                <h1>Loading appointments...</h1>
+                <Skeleton active />
             ) : (
                 appointments.length === 0 ? (
                     <h1>No appointments scheduled yet!</h1>

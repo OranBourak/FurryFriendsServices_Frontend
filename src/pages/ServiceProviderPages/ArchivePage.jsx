@@ -4,7 +4,8 @@ import "../../styles/ServiceProviderStyles/archive.css";
 import {isBefore, format} from "date-fns";
 import axios from "axios";
 import {useAuth} from "../../context/AuthContext";
-import {message} from "antd";
+import {message, Skeleton} from "antd";
+import {Navigate} from "react-router-dom";
 
 
 const Archive = () => {
@@ -13,6 +14,14 @@ const Archive = () => {
     const [activeButton, setActiveButton] = useState("All");
     const [filteredAppointments, setFilteredAppointments] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
+
+    if (!loggedIn) {
+        return <Navigate to="/" />;
+    } else if (userData.userType !== "serviceProvider") {
+        return <Navigate to="/error"/>;
+    }
+
 
     const getData = async () => {
         if (loggedIn) {
@@ -38,7 +47,7 @@ const Archive = () => {
                 console.log(error);
                 message.error({
 
-                    content: `${error}`,
+                    content: `${error.response.data.error}`,
 
                     style: {yIndex: 1000, fontSize: "24px"},
 
@@ -158,7 +167,7 @@ const Archive = () => {
                 </>
             ) : (
             // Conditional rendering when appointments are empty
-                <h3 className="table-mt-3 mt-3">Loading appointments...</h3>
+                <Skeleton active />
             )}
         </div>
     );

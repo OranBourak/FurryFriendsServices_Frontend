@@ -1,15 +1,16 @@
 import React, {useState, useEffect} from "react";
-import {Container, Row, Col, Image, Form, Alert, Button} from "react-bootstrap";
+import {Container, Row, Col, Image, Form, Alert, Button, Card} from "react-bootstrap";
 import "../../styles/ServiceProviderStyles/ProfilePage.css";
 import PhoneNumberEl from "../../components/ServiceProviderComponents/PhoneNumberEl.jsx";
 import ComboBoxDropdown from "../../components/ServiceProviderComponents/ComboBox.jsx";
 import {useAuth} from "../../context/AuthContext";
 import axios from "axios";
 import {Navigate} from "react-router-dom";
-import {message} from "antd";
+import {message, Divider} from "antd";
+import ReviewCarousel from "../../components/client_components/ServiceProviderReviews.jsx";
 
 const ProfilePage = () => {
-    const defaultImg = "https://cdn.pixabay.com/photo/2018/12/26/09/16/vet-3895477_960_720.jpg";
+    const defaultImg = "";
 
     const {loggedIn, userData, changeName} = useAuth();
     const [isEditing, setIsEditing] = useState(false);
@@ -29,8 +30,9 @@ const ProfilePage = () => {
     const [validationErrorEmail, setValidationErrorEmail] = useState(false);
     const [typeOfService, setTypeOfService] = useState("");
     const [validationErrorImage, setValidationErrorImage] = useState(false);
-
+    const [validationErrorPhone, setValidationErrorPhone] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
+    const [averageRating, setAverageRating] = useState("No reviews yet!");
 
     const israelCities = [
         "Afula",
@@ -75,6 +77,7 @@ const ProfilePage = () => {
 
     const getData = async () => {
         if (loggedIn) {
+            // get provider information
             try {
                 const response = await axios.get(`/serviceProvider/get/${userData.id}`, {
                     headers: {
@@ -88,16 +91,18 @@ const ProfilePage = () => {
                 setPhonePrefix(provider.phone.substr(0, 3));
                 setCountry(provider.country);
                 setGender(provider.gender);
-                // TODO: FIX IMAGE
                 setImage(provider.image);
                 setBio(provider.bio);
                 setTypeOfService(provider.typeOfService);
                 setCity(provider.city);
+                if (provider.averageRating > 0) {
+                    setAverageRating(provider.averageRating);
+                }
             } catch (error) {
                 console.log(error);
                 message.error({
 
-                    content: `error: ${error}`,
+                    content: `error: ${error.response.data.error}`,
 
                     style: {yIndex: 1000, fontSize: "24px"},
 
@@ -190,6 +195,7 @@ const ProfilePage = () => {
         }
         // if the phone number doesn't consists of 7 digits
         if (!/^\d{7}$/.test(phone)) {
+            setValidationErrorPhone(true);
             return;
         }
         if (!/[A-Za-z ]+/.test(name)) {
@@ -233,13 +239,15 @@ const ProfilePage = () => {
         } catch (error) {
             restoreBeforeEdit();
             console.log(error);
-            message.error({
+            if (error.response && error.response.data) {
+                message.error({
 
-                content: `error: ${error}`,
+                    content: `error: ${error.response.data.error}`,
 
-                style: {yIndex: 1000, fontSize: "24px"},
+                    style: {yIndex: 1000, fontSize: "24px"},
 
-            }, 2);
+                }, 2);
+            }
         }
         removeBeforeEdit();
     };
@@ -264,8 +272,10 @@ const ProfilePage = () => {
      * @param {Event} event - The input change event.
      */
     function handlePhoneNumber(event) {
+        const newPhoneNumber = event.target.value;
         console.log("handle phone number");
-        setPhone(event.target.value);
+        setPhone(newPhoneNumber);
+        setValidationErrorPhone(!/^\d{7}$/.test(newPhoneNumber));
     }
 
     const handleCityChange = (newCity) => {
@@ -299,164 +309,205 @@ const ProfilePage = () => {
     }
 
     return (
-        <Container className="container mt-5">
-            <Row className="profile-header">
-                <Col className="profile-image" xs={6} md={4}>
-                    <Image className="profile-picture" src={image? image : defaultImg} rounded fluid style={{maxHeight: "300px", maxWidth: "300px"}}/>
-                    {isEditingPicture && (
-                        <Form>
-                            <Form.Control
-                                type="input"
-                                label="Input an image url"
-                                onChange={handleImageUpload}
-                                placeholder="Input an image url"
-                                isInvalid={validationErrorImage}
-                                isValid={!validationErrorImage}
-                                required
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                Must be a valid image format
-                            </Form.Control.Feedback>
-                        </Form>
-                    )}
-                </Col>
-                <Col className="profile-name text-center" xs={6} md={4}>
-                    <h1>{name}</h1>
-                    <h3>{typeOfService}</h3>
-                </Col>
-            </Row>
-            <Row className="profile-section">
-                <Col className="profile-subsection">
-                    <h4 className="profile-subtitle">Name</h4>
-                    {isEditing ? (
-                        <Form>
-                            <Form.Group>
+        <div className="SP-profile-background">
+            <Container className="container mt-5">
+                <Row className="profile-header justify-content-start">
+                    {/* Column for the text and image */}
+                    <Col xs="auto" className="text-center">
+                        <Image
+                            className="profile-picture"
+                            src={image ? image : defaultImg}
+                            rounded
+                            fluid
+                            style={{maxHeight: "300px", maxWidth: "300px"}}
+                            height="300px"
+                            width="300px"
+                        />
+                        {isEditingPicture && (
+                            <Form>
                                 <Form.Control
-                                    type="text"
-                                    value={name}
-                                    onChange={handleNameChange}
-                                    isInvalid={validationErrorName}
-                                    isValid={!validationErrorName}
+                                    type="input"
+                                    label="Input an image URL"
+                                    onChange={handleImageUpload}
+                                    placeholder="Input an image URL"
+                                    isInvalid={validationErrorImage}
+                                    isValid={!validationErrorImage}
                                     required
                                 />
                                 <Form.Control.Feedback type="invalid">
+                    Must be a valid image format
+                                </Form.Control.Feedback>
+                            </Form>
+                        )}
+
+                    </Col>
+                    <Col xs="auto" className="text-center align-items-center">
+                        <p className="SP-Header">{name}</p>
+                        <p className="SP-Header2">{typeOfService}</p>
+                    </Col>
+                </Row>
+
+
+                <Divider/>
+                <Row className="SP-profile-section">
+                    <Col className="profile-subsection">
+                        <h4 className="profile-subtitle">Name</h4>
+                        {isEditing ? (
+                            <Form>
+                                <Form.Group>
+                                    <Form.Control
+                                        type="text"
+                                        value={name}
+                                        onChange={handleNameChange}
+                                        isInvalid={validationErrorName}
+                                        isValid={!validationErrorName}
+                                        required
+                                    />
+                                    <Form.Control.Feedback type="invalid">
                         Name must contain only letters and spaces.
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Form>
-                    ) : (
-                        <p>{name}</p>
-                    )}
-                </Col>
-                <Row className="profile-subsection">
-                    <h4 className="profile-subtitle">Contact Details</h4>
-                    {isEditing ? (
-                        <Form>
-                            <Form.Group >
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control
-                                    type="email"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                    isInvalid={validationErrorEmail}
-                                    isValid={!validationErrorEmail}
-                                    required
-                                />
-                                <Form.Control.Feedback type="invalid">
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Form>
+                        ) : (
+                            <p>{name}</p>
+                        )}
+                    </Col>
+                    <Divider />
+                    <Row className="profile-subsection">
+                        <h4 className="profile-subtitle">Contact Details</h4>
+                        {isEditing ? (
+                            <Form>
+                                <Form.Group >
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        type="email"
+                                        value={email}
+                                        onChange={handleEmailChange}
+                                        isInvalid={validationErrorEmail}
+                                        isValid={!validationErrorEmail}
+                                        required
+                                    />
+                                    <Form.Control.Feedback type="invalid">
                 Please provide a valid email.
-                                </Form.Control.Feedback>
-                                <Form.Label>Phone Number</Form.Label>
-                                <PhoneNumberEl
-                                    onSelectedValueChange={handlePhonePrefixChange}
-                                    onInputValueChange={handlePhoneNumber}
-                                    phoneInputPlaceholder = {phone}
-                                    comboBoxPlaceholder = {phonePrefix}
-                                    cbVariant="danger"
-                                />
-                                <Form.Label>Country</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    value={country}
-                                    onChange={(e) => setCountry(e.target.value)}
-                                    isInvalid={isFormIncomplete}
-                                    disabled={true}
-                                    required
-                                />
-                                <Form.Label>City</Form.Label>
-                                <ComboBoxDropdown onSelectedValueChange={handleCityChange} options={israelCities} placeholder={city} variant="success" id="city-cmb" />
-                            </Form.Group>
-                        </Form>
-                    ) : (
-                        <p>
+                                    </Form.Control.Feedback>
+                                    <Form.Label>Phone Number</Form.Label>
+                                    <PhoneNumberEl
+                                        onSelectedValueChange={handlePhonePrefixChange}
+                                        onInputValueChange={handlePhoneNumber}
+                                        phoneInputPlaceholder = {phone}
+                                        comboBoxPlaceholder = {phonePrefix}
+                                        cbVariant="danger"
+                                    />
+                                    <Form.Label>Country</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        value={country}
+                                        onChange={(e) => setCountry(e.target.value)}
+                                        isInvalid={isFormIncomplete}
+                                        disabled={true}
+                                        required
+                                    />
+                                    <Form.Label>City</Form.Label>
+                                    <ComboBoxDropdown onSelectedValueChange={handleCityChange} options={israelCities} placeholder={city} variant="success" id="city-cmb" />
+                                </Form.Group>
+                            </Form>
+                        ) : (
+                            <p>
               Email: {email}
-                            <br />
+                                <br />
               Phone: {`(${phonePrefix})`} {phone}
-                            <br />
+                                <br />
               Country: {country}
-                            <br />
+                                <br />
               City: {city}
-                        </p>
+                            </p>
+                        )}
+                    </Row>
+                    <Divider />
+                    <Col className="profile-subsection">
+                        <h4 className="profile-subtitle">Gender</h4>
+                        {isEditing ? (
+                            <Form.Control
+                                as="select"
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                            >
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </Form.Control>
+                        ) : (
+                            <p>{gender}</p>
+                        )}
+                    </Col>
+                    <Divider/>
+                </Row>
+                <Row className="SP-profile-section SP-profle-row-margin">
+                    <Card>
+                        <Card.Title className="profile-subtitle">Bio</Card.Title>
+                        {isEditing ? (
+                            <Form.Control
+                                as="textarea"
+                                value={bio}
+                                onChange={(e) => setBio(e.target.value)}
+                            />
+                        ) : (
+                            <Card.Text>{bio}</Card.Text>
+                        )}
+                    </Card>
+                </Row>
+                <Row>
+                    {(validationErrorName || validationErrorEmail || validationErrorImage || validationErrorPhone) && (
+                        <Alert variant="danger">
+          Please fix the validation errors before saving.
+                        </Alert>
+                    )}
+                    {}
+                    {!isEditing && !isEditingPicture ? (
+                        <>
+                            <Row className="justify-content-center SP-profle-row-margin">
+                                <Col xs="auto">
+                                    <Button
+                                        variant="primary"
+                                        onClick={handleEdit}>
+                                Edit Profile
+                                    </Button>
+                                </Col>
+                                <Col xs="auto">
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleEditPicture}>
+                                    Edit Profile Picture
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </>
+                    ) : (
+                        <Button
+                            variant="primary"
+                            onClick={handleSave}
+                            disabled={isFormIncomplete || validationErrorEmail || validationErrorName || validationErrorPhone}>
+                        Save
+                        </Button>
                     )}
                 </Row>
-                <Col className="profile-subsection">
-                    <h4 className="profile-subtitle">Gender</h4>
-                    {isEditing ? (
-                        <Form.Control
-                            as="select"
-                            value={gender}
-                            onChange={(e) => setGender(e.target.value)}
-                        >
-                            <option>Male</option>
-                            <option>Female</option>
-                            <option>Other</option>
-                        </Form.Control>
-                    ) : (
-                        <p>{gender}</p>
-                    )}
-                </Col>
-            </Row>
-            <Row className="profile-section">
-                <h4 className="profile-subtitle">Bio</h4>
-                {isEditing ? (
-                    <Form.Control
-                        as="textarea"
-                        value={bio}
-                        onChange={(e) => setBio(e.target.value)}
-                    />
-                ) : (
-                    <p>{bio}</p>
-                )}
-            </Row>
-            <Row>
-                {(validationErrorName || validationErrorEmail || validationErrorImage) && (
-                    <Alert variant="danger">
-          Please fix the validation errors before saving.
-                    </Alert>
-                )}
-                {}
-                {!isEditing && !isEditingPicture ? (
-                    <><Button variant="primary" onClick={handleEdit}>
-                        Edit Profile
-                    </Button><Button variant="secondary" onClick={handleEditPicture}>
-                            Edit Profile Picture
-                    </Button></>
-                ) : (
-                    <Button variant="primary" onClick={handleSave} disabled={isFormIncomplete}>
-                        Save
-                    </Button>
-                )}
-            </Row>
 
-            {formSubmitted && (<Row>
-                <Alert variant="success" onClose={() => setFormSubmitted(false)} dismissible>
+                {formSubmitted && (<Row>
+                    <Alert variant="success" onClose={() => setFormSubmitted(false)} dismissible>
                     Form submitted successfully!
-                </Alert>
-            </Row>)}
-            <Row className="profile-section">
-                <p>Rating: No rating</p>
-                <h2>Reviews</h2>
-            </Row>
-        </Container>
+                    </Alert>
+                </Row>)}
+                <Row className="SP-profile-section SP-profle-row-margin pb-3">
+                    <h2>Rating: {averageRating}</h2>
+                    <Divider />
+                    <div className="SP-profile-review-carusel">
+                        <ReviewCarousel
+                            providerID={userData.id}
+                        />
+                    </div>
+                </Row>
+            </Container>
+        </div>
     );
 };
 
