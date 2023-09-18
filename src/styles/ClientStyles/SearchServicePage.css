@@ -5,31 +5,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 2%;
   background-color: #96B6C5;
-  height: 100vh;
+  min-height: 100vh;
 }
 
   
   /* Container for the search form */
   .search-form-container {
-    width: 100%;
-    max-width: 800px;
-    margin-bottom: 20px;
+    width: 45%;
+    overflow-y: auto;
   }
 
   /* Container for the service provider results */ 
   .service-provider-results-container {
-    width: 100%;
-    max-width: 950px;
+    width: 60%;
+    overflow-y: auto;
   }
   
-  /* Additional styles for the Ant Design Card component */
-  .ant-card {
-    margin-top: 20px;
-  }
   
   /* Additional styles for the React Bootstrap Form */
   .Form {
-    margin-top: 20px;
+    margin-top: 2%;
   }

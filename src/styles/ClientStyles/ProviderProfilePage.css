@@ -1,18 +1,25 @@
-/* General styling for the Profile page */
+    /* General styling for the Profile page */
 .mainPage {
     font-family: Arial, sans-serif;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 2vh;
     background-color: #96B6C5;
-    height: 100vh;
+    height:auto;
 }
 
-h1 {
-    text-align: center;
+.SP-Header {
+    text-align: start;
+    text-decoration: underline;
     font-weight: bold;
-    margin-bottom: 20px;
-    font-size: 2.5em;
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.SP-Header2 {
+    text-align: start;
+    font-weight: normal;
+    font-size: 1.5rem;
     color: #333;
 }
 
@@ -35,6 +42,7 @@ h1 {
 .Col {
     padding: 10px;
     box-sizing: border-box;
+    height: 80%;
 }
 
 /* Service Provider Info */
@@ -44,7 +52,8 @@ h1 {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;  /* Added margin-bottom */
-    max-width: 700px;
+    width: 90%;
+    height: 60%;
     margin: auto;
 }
 
@@ -55,7 +64,8 @@ h1 {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 20px auto 20px auto;  /* Adjusted margin */
-    max-width: 700px;
+    width: 90%;
+    height: 40%;
 }
 
 /* Schedule Meeting */
@@ -63,7 +73,11 @@ h1 {
     background-color: #f9f9f9;
     padding: 20px;
     border-radius: 8px;
-    height: auto; 
+    height: 100%; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: auto;
+}
+
+.SP-profile-section {
+    border-radius: 10px;
 }
