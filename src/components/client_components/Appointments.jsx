@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {Button, Card, Container, Row, Col, Form} from "react-bootstrap";
+import ReviewModal from "./ReviewModal.jsx";
 import "../../styles/ClientStyles/Appointments.css";
 import {useAuth} from "../../context/AuthContext.jsx";
 import axios from "axios";
@@ -15,6 +16,9 @@ function Appointments() {
     const [selectedType, setSelectedType] = useState("Upcoming");
     const [selectedSort, setSelectedSort] = useState("Sort by date");
     const {userData} = useAuth();
+    const [serviceProviderId, setServiceProvider] = useState("");
+    const [reviewModalFlag, setReviewModalFlag] = useState(false);
+    const [reviewedAppointmentId, setReviewedAppointmentId] = useState("");
 
 
     useEffect(()=> {
@@ -72,6 +76,33 @@ function Appointments() {
         } else if (e.target.value === "Sort by service provider name") {
             appointments.sort((a, b) => a.serviceProviderId.name.localeCompare(b.serviceProviderId.name));
         }
+        const currDate = new Date();
+        console.log(appointments[0].date);
+        console.log(currDate);
+    };
+
+    /**
+     * sets the service provider, client and sets the reviewModalFlag to true.
+     * @param {*} appointment
+     */
+    const writeReview = async (appointment) => {
+        setServiceProvider(appointment.serviceProviderId._id);
+        setReviewModalFlag(true);
+        setReviewedAppointmentId(appointment._id);
+    };
+
+    /**
+     * checks if a given date is within 24 hours of the current date.
+     * @param {*} appointmentDate
+     * @return {Bool} true if the date is within 24 hours of the current date else false.
+     */
+    const isWithinLast24Hours = (appointmentDate) => {
+        const now = new Date();
+        const appointmentTime = new Date(appointmentDate.replace(/[TZ]/g, " ").substring(0, appointmentDate.length - 8));
+        // console.log(appointmentTime);
+        const timeDifference = now - appointmentTime; // in milliseconds
+        const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+        return timeDifference <= oneDay;
     };
 
     if (loading) return <div>Loading...</div>;
@@ -101,7 +132,7 @@ function Appointments() {
                         <option>Sort by service provider name</option>
                     </Form.Control>
                     <h2 style={{color: "white"}}>{selectedType} Appointments </h2>
-                    {appointments.filter((appointment) => appointment.status === selectedType).map((appointment) => (
+                    {appointments !== null && appointments.filter((appointment) => appointment.status === selectedType).map((appointment) => (
                         <Card key={appointment._id} className="mb-3">
                             <Card.Body>
                                 <div className="div-container">
@@ -127,7 +158,18 @@ function Appointments() {
                                     {selectedType === "Upcoming" && (
                                         <Button className="cancel-button" variant="danger" onClick={() => cancelAppointment(appointment._id)}>Cancel</Button>
                                     )}
+                                    {selectedType === "Completed" &&
+                                    isWithinLast24Hours(appointment.date) &&
+                                    appointment.review === null &&
+                                    (<Button className="review-button" variant="success" onClick={() => writeReview(appointment)}>Write review</Button>)}
                                 </div>
+                                <ReviewModal open={reviewModalFlag} onClose={() => {
+                                    setReviewModalFlag(false);
+                                }} clientId = {userData.id}
+                                serviceProviderId={serviceProviderId}
+                                appointmentId = {reviewedAppointmentId}
+                                clientAppointments = {appointments}
+                                setAppointments = {setAppointments}/>
                             </Card.Body>
                         </Card>
                     ))}

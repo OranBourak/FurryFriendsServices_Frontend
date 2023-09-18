@@ -37,6 +37,13 @@
     bottom: 5px;       /* This positions the button 10px from the bottom of the card body. Adjust as needed */
     
 }
+.card-body .review-button {
+    position:absolute;
+    left: 72%;
+    bottom: 5px;
+    white-space: nowrap;
+    /* width: 150px; */
+}
 
 /* Style for the appointment details */
 .card-text {
