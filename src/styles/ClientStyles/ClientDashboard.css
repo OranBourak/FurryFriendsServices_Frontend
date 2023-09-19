@@ -25,7 +25,7 @@
 .custom-button {
   margin-top: 13%;
   font-size: 30px; /* Larger font size */
-  width:500px;
+  width:400px;
   white-space: nowrap;
   text-overflow: ellipsis; 
   padding: 120px 20px; /* More padding for a bigger button */
