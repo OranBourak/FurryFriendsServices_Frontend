@@ -42,7 +42,7 @@ function App() {
             <NavbarCustom />
             {loggedInUserName && <Navigate to="login-alert"/>}
             <Routes>
-                <Route exact path="/" element={<Home/>} />
+                <Route exact path="https://furryfriends.onrender.com/" element={<Home/>} />
                 <Route path="/login" element={<LoginPage onLogin={handleLogin}/>} />
                 <Route path="/login-alert" element={<LoginAlert name={loggedInUserName}/>} />
                 <Route path="/provider-signup" element={<RegisterPage/>} />
