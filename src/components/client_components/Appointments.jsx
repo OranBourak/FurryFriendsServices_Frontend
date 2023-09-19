@@ -4,7 +4,7 @@ import ReviewModal from "./ReviewModal.jsx";
 import "../../styles/ClientStyles/Appointments.css";
 import {useAuth} from "../../context/AuthContext.jsx";
 import axios from "axios";
-import {Skeleton} from "antd";
+import {Skeleton, message} from "antd";
 
 /**
  *
@@ -15,7 +15,7 @@ function Appointments() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedType, setSelectedType] = useState("Upcoming");
-    const [selectedSort, setSelectedSort] = useState("Sort by date");
+    const [selectedSort, setSelectedSort] = useState("");
     const {userData} = useAuth();
     const [serviceProviderId, setServiceProvider] = useState("");
     const [reviewModalFlag, setReviewModalFlag] = useState(false);
@@ -50,6 +50,7 @@ function Appointments() {
             });
 
             setAppointments(updatedAppointments);
+            message.success("Appointment was sucessfully cancelled");
         } catch (err) {
             setError("Failed to cancel the appointment.");
         }
@@ -106,7 +107,7 @@ function Appointments() {
         return timeDifference <= oneDay;
     };
 
-    if (loading) return <Skeleton active shape="square"/>;
+    if (loading) return <Skeleton active/>;
     if (error) return <div>{error}</div>;
 
     return (
@@ -127,6 +128,7 @@ function Appointments() {
                         value={selectedSort}
                         onChange={sortByChoice}
                     >
+                        <option>No sorting method</option>
                         <option>Sort by date</option>
                         <option>Sort by price - descending</option>
                         <option>Sort by price - ascending</option>

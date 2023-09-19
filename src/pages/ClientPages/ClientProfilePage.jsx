@@ -92,19 +92,25 @@ function ClientProfilePage() {
             const clientData = JSON.parse(localStorage.getItem("user"));
             clientData.name = tempName;
             changeName(tempName);
-        } else if (phoneValidationFlag || phoneValidationFlag === null) {
+        } else if (phoneValidationFlag || phoneValidationFlag !== null) {
             /* call for backend */
             await axios.patch(`client/update/${userData.id}`, {id: userData.id, phone: (tempPhone.prefix + tempPhone.suffix)})
                 .then((response) => {
-                    console.log(response, "This is response!", client);
+                    console.log(response, "This is response!", client, tempPhone.prefix, tempPhone.suffix, phoneValidationFlag);
                 })
                 .catch((err) => {
                     console.log(err, " This is error");
                 });
             setPhoneEditable(false);
             setPhoneValidationFlag(null);
-            console.log(typeof tempPhone, tempPhone);
+            console.log(typeof tempPhone);
             setClient({...client, phone: tempPhone.prefix + tempPhone.suffix});
+        } else {
+            if (e.target.name === "name") {
+                setPhoneEditable(false);
+            } else {
+                setNameEditable(false);
+            }
         }
     };
 
@@ -118,7 +124,7 @@ function ClientProfilePage() {
                         {isNameEditable ? (
                             <div>
                                 <Input name="name" value={tempName} onChange={handleChange}/>
-                                <Button type="primary" onClick={handleSave} disabled={!nameValidationFlag}>Save </Button>
+                                <Button name="name" type="primary" onClick={handleSave} disabled={!nameValidationFlag && nameValidationFlag !== null}>Save </Button>
                             </div>
                         ) : (
                             <div className="non-editable-field">
@@ -133,8 +139,8 @@ function ClientProfilePage() {
                     <div style={{height: "2px", margin: "1vh", backgroundColor: "black"}}></div>
 
                     <Form.Item label="Phone Number"
-                        help={(!phoneValidationFlag && phoneValidationFlag != null) ? "Phone cannot be set." : ""}
-                        validateStatus={(!phoneValidationFlag && phoneValidationFlag != null) ? "error" : "success"}>
+                        help={(!phoneValidationFlag && phoneValidationFlag !== null) ? "Phone cannot be set." : ""}
+                        validateStatus={(!phoneValidationFlag && phoneValidationFlag !== null) ? "error" : "success"}>
                         {isPhoneEditable ? (
                             <div className="editable-field">
                                 <ClientDropDown id="phone-prefix" dropDownName="phonePrefix" placeholder={tempPhone.prefix} attributes={phonePrefix} handleSelectedValue={handleChange} >
@@ -146,7 +152,7 @@ function ClientProfilePage() {
                                     onChange={handleChange}
                                     autoFocus
                                 />
-                                <Button type="primary" onClick={handleSave} disabled={!phoneValidationFlag}>Save</Button>
+                                <Button name="name" type="primary" onClick={handleSave} disabled={!phoneValidationFlag && phoneValidationFlag !== null}>Save</Button>
                             </div>
                         ) : (
                             <div className="non-editable-field">
