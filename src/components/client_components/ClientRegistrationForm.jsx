@@ -84,7 +84,7 @@ const ClientRegistrationForm = () => {
             break;
         case "phoneSuffix":
             setFields({...fields, phoneSuffix: value});
-            setPhoneFlag(value.length === 7 && parseFloat(value)>0);
+            setPhoneFlag(value.length === 7 && parseFloat(value)>0 && /^[0-9]*$/.test(value));
             break;
         default:
             break;
@@ -204,7 +204,7 @@ const ClientRegistrationForm = () => {
                         isInvalid={!phoneFlag && phoneFlag !== null}
                         isValid={phoneFlag} />
                     <Form.Control.Feedback type="invalid">
-                    Phone number must contain only digits.
+                        The phone text field must contain 9 digits
                     </Form.Control.Feedback>
                 </Form.Group>
                 <br/>

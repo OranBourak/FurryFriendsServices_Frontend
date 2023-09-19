@@ -1,6 +1,8 @@
 /* Ensure the container takes the full height and centers its content */
 .appointments-container {
-    background-image: url("../../images/loginbackground.jpg");
+    /*background-image: url("../../images/loginbackground.jpg");*/
+    position: absolute;
+    background-color: #96B6C5;
     background-size: cover;
     background-position: center;
     display: flex;
