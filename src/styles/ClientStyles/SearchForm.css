@@ -1,8 +1,8 @@
 /* Container for the entire form */
 .Form {
     margin: 2rem auto;
-    max-width: 90vh;
-    max-height: 30vh;
+    max-width: 100%;
+    overflow: auto;
     padding: 1.5rem;
     border: 2px solid black; /* Changed border color */
     border-radius: 8px;
@@ -12,7 +12,7 @@
   
   /* Style for form groups */
   .Form .form-group {
-    margin-bottom: 2rem; /* Increased bottom margin */
+    margin-bottom: 1rem; /* Increased bottom margin */
   }
   
   /* Style for form labels */
@@ -71,3 +71,13 @@
     font-size: 1rem;
     color: #333;
   }
+
+  /* Responsive adjustments */
+@media (max-width: 768px) {
+  .Form {
+      padding: 1rem;  /* Reduce padding for small screens */
+  }
+  .Form .form-group {
+      margin-bottom: 1rem;  /* Reduce margin for small screens */
+  }
+}

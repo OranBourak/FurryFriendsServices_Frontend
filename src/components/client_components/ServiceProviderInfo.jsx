@@ -56,7 +56,7 @@ const ServiceProviderInfo = ({providerID}) => {
             <p><strong>City:</strong> {serviceProvider.city}</p>
             <p><strong>Gender:</strong> {serviceProvider.gender}</p>
             <p><strong>Type of Service:</strong> {serviceProvider.typeOfService}</p>
-            <p><strong>Average Rating:</strong> {serviceProvider.averageRating}</p>
+            <p><strong>Average Rating:</strong> {parseFloat(serviceProvider.averageRating.toFixed(1))}</p>
             <p><strong>Bio:</strong> {serviceProvider.bio}</p>
             <Tag color="blue">{serviceProvider.typeOfService}</Tag>
         </Card>

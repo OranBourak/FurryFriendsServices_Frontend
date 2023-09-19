@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import ClientDropDown from "./ClientDropDown.jsx";
-import {Rate} from "antd"; // Import Rate component from Ant Design
+import {Rate, notification} from "antd"; // Import Rate component from Ant Design
 import "../../styles/ClientStyles/SearchForm.css";
 import PropTypes from "prop-types";
 
@@ -38,24 +38,34 @@ function SearchForm({handleSearch, isLoading}) {
     // Handle changes to form fields
     const handleChange = (e) => {
         const {name, value} = e.target;
+        let validatedValue = value; // Initialize to the incoming value
+
+        // Check if the value is negative for minPrice and maxPrice fields
+        if (name === "minPrice" || name === "maxPrice") {
+            validatedValue = Math.max(0, parseFloat(value)); // Ensure the value is non-negative
+            if (validatedValue != value) {
+                validatedValue = "";
+            }
+            (!Number(value)) && notification.info({message: "Info", description: "Price fields can either be left empty or have a non-negative value."});
+        }
         switch (name) {
         // Update state based on the form field that changed
         case "service_type":
-            setFields({...fields, typeOfService: value});
+            setFields({...fields, typeOfService: validatedValue});
             break;
         case "service_location":
-            setFields({...fields, city: value});
+            setFields({...fields, city: validatedValue});
             break;
         case "minPrice":
-            setFields({...fields, minPrice: value});
+            setFields({...fields, minPrice: validatedValue});
             // Validate max price against min price
-            setMaxFlag(!(fields.maxPrice !== "" && parseFloat(fields.maxPrice) <= parseFloat(value)));
+            setMaxFlag(!(fields.maxPrice !== "" && parseFloat(fields.maxPrice) <= parseFloat(validatedValue)));
             setIsFormValid(maxFlag);
             break;
         case "maxPrice":
-            setFields({...fields, maxPrice: value});
+            setFields({...fields, maxPrice: validatedValue});
             // Validate min price against max price
-            setMaxFlag(!(fields.minPrice !== "" && (parseFloat(fields.minPrice) >= parseFloat(value))));
+            setMaxFlag(!(fields.minPrice !== "" && (parseFloat(fields.minPrice) >= parseFloat(validatedValue))));
             break;
         default:
             break;

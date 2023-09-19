@@ -19,7 +19,7 @@
 
   /* Container for the service provider results */ 
   .service-provider-results-container {
-    width: 60%;
+    width: 55%;
     overflow-y: auto;
   }
   

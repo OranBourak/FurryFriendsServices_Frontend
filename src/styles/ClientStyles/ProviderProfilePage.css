@@ -6,6 +6,7 @@
     padding: 2vh;
     background-color: #96B6C5;
     height:auto;
+    min-height: 100vh;
 }
 
 .SP-Header {
