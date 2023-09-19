@@ -4,6 +4,7 @@ import ReviewModal from "./ReviewModal.jsx";
 import "../../styles/ClientStyles/Appointments.css";
 import {useAuth} from "../../context/AuthContext.jsx";
 import axios from "axios";
+import {Skeleton} from "antd";
 
 /**
  *
@@ -105,7 +106,7 @@ function Appointments() {
         return timeDifference <= oneDay;
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <Skeleton active shape="square"/>;
     if (error) return <div>{error}</div>;
 
     return (
@@ -176,6 +177,7 @@ function Appointments() {
                 </Col>
             </Row>
         </Container>
+
     );
 }
 
