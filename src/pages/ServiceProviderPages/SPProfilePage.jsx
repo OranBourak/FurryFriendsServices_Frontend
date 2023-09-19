@@ -84,6 +84,7 @@ const ProfilePage = () => {
                         Authorization: `Bearer ${userData.token}`, // Replace 'userToken' with the actual user token
                     },
                 });
+                console.log(response);
                 const provider = response.data.serviceProvider;
                 setName(provider.name);
                 setEmail(provider.email);
